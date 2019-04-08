@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "299714124161",
+    "firebase_url": "https://minharep-6c7ba.firebaseio.com",
+    "project_id": "minharep-6c7ba",
+    "storage_bucket": "minharep-6c7ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299714124161:android:8d4e41f333ad27fa",
+        "android_client_info": {
+          "package_name": "com.invertase.rnfirebasestarter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTLqkN4BpLFOgVdrfd-fipqOH_6iayxbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299714124161-l439uclnsc4l0tqmat9k54e06gb03auj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

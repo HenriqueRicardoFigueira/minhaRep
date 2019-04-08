@@ -10,14 +10,13 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
-    firebase.auth().signInWithEmailAndPassword('henrislip@gmail.com', 'henri120792');
+    firebase.auth().signInWithEmailAndPassword('daniel@gmail.com', '123456');
   }
 
   render() {
     return (
       <ScrollView>
         <View style={styles.container}>
-          <Image source={require('./assets/ReactNativeFirebase.png')} style={[styles.logo]}/>
           <Text style={styles.welcome}>
             Welcome to {'\n'} React Native Firebase
           </Text>
