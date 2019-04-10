@@ -30,7 +30,7 @@ export default class Login extends Component {
   render() {
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={require('C:/Users/henri/Desktop/minharep/minhaRep/src/image/logo2.png')}/>
+            <Image style={styles.image} source={require('../image/logo2.png')}/>
             <TextInput style={styles.input}
             placeholder="Digite seu email"
             value={this.state.email}
@@ -39,6 +39,7 @@ export default class Login extends Component {
              <TextInput style={styles.input}
             placeholder="Digite sua senha"
             value={this.state.password}
+            secureTextEntry={true}
             onChangeText={password => this.setState({password})}
             /> 
             <TouchableOpacity style={styles.button} onPress={this.login}>
@@ -62,6 +63,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     input: {
+        paddingTop: 20,
         height: 45,
         backgroundColor: '#FFF',
         alignSelf: 'stretch',
