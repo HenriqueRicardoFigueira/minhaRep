@@ -31,22 +31,27 @@ export default class Login extends Component {
     return (
         <View style={styles.container}>
             <Image style={styles.image} source={require('../image/logo2.png')}/>
+
             <TextInput style={styles.input}
-            placeholder="Digite seu email"
-            value={this.state.email}
-            onChangeText={email => this.setState({email})}
-            /> 
-             <TextInput style={styles.input}
-            placeholder="Digite sua senha"
-            value={this.state.password}
-            secureTextEntry={true}
-            onChangeText={password => this.setState({password})}
-            /> 
+                placeholder="Digite seu email"
+                value={this.state.email}
+                autoCapitalize={'none'}
+                onChangeText={email => this.setState({email})}
+            />
+            <TextInput style={styles.input}
+                placeholder="Digite sua senha"
+                value={this.state.password}
+                secureTextEntry={true}
+                onChangeText={password => this.setState({password})}
+            />
             <TouchableOpacity style={styles.button} onPress={this.login}>
                 <Text style={styles.butonText}>Logar</Text>
             </TouchableOpacity>
-            <FacebookLogin/>
-            <GoogleLogin/>
+
+            <View style={styles.loginView}>
+                <FacebookLogin style={styles.loginButtons}/>
+                <GoogleLogin style={styles.loginButtons}/>
+            </View>
 
             {this.state.isAuthenticated ?<Text>Logado com sucesso</Text>: <Text/> }
         </View>
@@ -59,18 +64,21 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-        padding: 20,
+        backgroundColor: '#e6f7ff',
+        padding: 10,
     },
+
     input: {
-        paddingTop: 20,
+        paddingTop: 10,
         height: 45,
         backgroundColor: '#FFF',
         alignSelf: 'stretch',
-        borderColor: '#EEE',
+        borderColor: '#e6e6e6',
         borderWidth: 1,
         paddingHorizontal: 20,
         marginBottom: 30,
+        borderRadius: 50,
+        fontSize: 18
     },
 
     button: {
@@ -80,16 +88,22 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         justifyContent: 'center',
         alignItems: 'center',
+        borderRadius: 30
     },
-    
+
     butonText: {
         color: '#FFF',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontSize: 18
     },
-    
+
     image: {
-        width: 300,
-        height: 300,
-        justifyContent: 'center',
+        width: 180,
+        height: 180,
+        justifyContent: 'center'
+    },
+
+    loginView: {
+        paddingTop: 10
     }
 });
