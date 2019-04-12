@@ -18,13 +18,17 @@ export default class Login extends Component {
     login = async () => {
         const { email , password } = this.state;
 
-     try {
-        const user = await  firebase.auth().signInWithEmailAndPassword(email, password);
-        this.setState({isAuthenticated: true});
-        console.log(email, password);
-     } catch (err) {
-         console.log(err);
-     }
+        if(!email || !password) {
+            return;
+        }
+
+        try {
+            const user = await  firebase.auth().signInWithEmailAndPassword(email, password);
+            this.setState({isAuthenticated: true});
+            console.log(email, password);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
   render() {
@@ -42,6 +46,7 @@ export default class Login extends Component {
                 placeholder="Digite sua senha"
                 value={this.state.password}
                 secureTextEntry={true}
+                onEndEditing={this.login}
                 onChangeText={password => this.setState({password})}
             />
             <TouchableOpacity style={styles.button} onPress={this.login}>
