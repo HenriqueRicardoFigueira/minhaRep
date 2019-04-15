@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {GoogleSignin, statusCodes } from 'react-native-google-signin';
 import { Button, StyleSheet } from 'react-native';
 import firebase from 'react-native-firebase';
+import { withNavigation } from 'react-navigation'
 
 GoogleSignin.configure({ 
   scopes: ['https://www.googleapis.com/auth/drive.readonly'], 
@@ -12,7 +13,7 @@ GoogleSignin.configure({
   accountName: '',
 });
 
-export default class GoogleLogin extends Component {
+class GoogleLogin extends Component {
   signIn = async () => {
     try {
       // Add any configuration settings here:
@@ -26,6 +27,7 @@ export default class GoogleLogin extends Component {
       const currentUser = await firebase.auth().signInWithCredential(credential);
   
       console.log(currentUser);
+      this.props.navigation.navigate("Home");
     } catch (e) {
       console.error(e);
     }
@@ -35,6 +37,8 @@ export default class GoogleLogin extends Component {
     return <Button style={styles.button} title="Continue with Google" onPress={this.signIn}/>;
   }
 }
+
+export default withNavigation(GoogleLogin);
 
 
 const styles = StyleSheet.create({

@@ -1,21 +1,63 @@
 import React, { Component} from 'react';
-
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import FacebookLogin from './facebookLogin';
-import GoogleLogin from './googleLogin';
-import { withNavigation } from 'react-navigation';
-
-// import { Container } from './styles';
 import firebase from 'react-native-firebase';
 
+/*
+    Fields from User Register :
+    nome
+    email
+    password
+    cidade
+    idade
+*/
 
-class Login extends Component {
+export default class Register extends Component {
+
     state={
+        uid: '',
+        nome: '',
         email: '',
         password: '',
+        cidade: '',
+        idade: '',
+        isRegistrado: false,
         isAuthenticated: false,
+        isGravado: false
     };
 
+    registro = async () => {
+        const { nome, email , password, cidade, idade } = this.state;
+        try {
+            //REGISTRA O USUARIO NO AUTHENTICATION
+            const user = await  firebase.auth().createUserWithEmailAndPassword(email, password);
+            this.setState({isRegistrado: true});
+            this.uid = user.uid;
+
+            //APOS O REGISTRO O USUARIO É AUTENTICADO
+            //user = login();
+
+            /* 
+            // REGISTRA OS DADOS DO USUARIO NA DATABASE()
+            firebase.database().ref('Users/' + user.uid).set(
+                {
+                    Name: nome,
+                    Email: email,
+                    City: cidade
+                }
+            ).then(() => {
+                console.log('inserted')
+            }).catch((error) => {
+                console.log(error)
+            });
+            this.setState({isGravado: true});
+            */
+
+        } catch (err) {
+            console.log(err);
+        }
+
+    }
+    /*
     login = async () => {
         const { email , password } = this.state;
 
@@ -23,48 +65,45 @@ class Login extends Component {
         const user = await  firebase.auth().signInWithEmailAndPassword(email, password);
         this.setState({isAuthenticated: true});
         console.log(email, password);
-        this.props.navigation.navigate("Home");
+        return user;
      } catch (err) {
          console.log(err);
      }
     }
+    */
 
   render() {
     return (
         <View style={styles.container}>
-            <Image style={styles.image} source={require('../image/logo2.png')}/>
+
+            <Text h1>Tela de registro </Text>
 
             <TextInput style={styles.input}
                 placeholder="Digite seu email"
                 value={this.state.email}
-                autoCapitalize={'none'}
+                autoCapitalize={'none'} 
                 onChangeText={email => this.setState({email})}
             />
+
             <TextInput style={styles.input}
                 placeholder="Digite sua senha"
                 value={this.state.password}
                 secureTextEntry={true}
                 onChangeText={password => this.setState({password})}
             />
-            <TouchableOpacity style={styles.button} onPress={this.login}>
-                <Text style={styles.butonText}>Logar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={this.login}>
+
+            <TouchableOpacity style={styles.button} onPress={this.registro}>
                 <Text style={styles.butonText}>Registrar</Text>
             </TouchableOpacity>
 
-            <View style={styles.loginView}>
-                <FacebookLogin style={styles.loginButtons}/>
-                <GoogleLogin style={styles.loginButtons}/>
-            </View>
-
+            {this.state.isRegistrado ?<Text>Registrado com sucesso</Text>: <Text/> }
             {this.state.isAuthenticated ?<Text>Logado com sucesso</Text>: <Text/> }
+            {this.state.isGravado ?<Text>Chegou ao fim</Text>: <Text/> }
+
         </View>
     );
   }
 }
-
-export default withNavigation(Login);
 
 const styles = StyleSheet.create({
     container: {
@@ -72,7 +111,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#e6f7ff',
-        padding: 10,
+        padding: 30,
+        width:350,
+        height: 550
     },
 
     input: {
@@ -85,7 +126,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginBottom: 30,
         borderRadius: 50,
-        fontSize: 18
+        fontSize: 18,
     },
 
     button: {
@@ -96,6 +137,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 30
+
     },
 
     butonText: {
@@ -103,14 +145,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 18
     },
-
-    image: {
-        width: 180,
-        height: 180,
-        justifyContent: 'center'
-    },
-
-    loginView: {
-        paddingTop: 10
-    }
 });
