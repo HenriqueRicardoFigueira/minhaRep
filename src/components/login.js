@@ -46,7 +46,7 @@ export default class Login extends Component {
             <Image style={styles.image} source={require('../image/logo2.png')}/>
 
             <TextInput style={input(this.state.borderColorEmail)}
-                placeholder="Digite seu asaasdfasdf"
+                placeholder="Digite seu email"
                 value={this.state.email}
                 autoCapitalize={'none'}
                 onChangeText={email => this.setState({email})}
@@ -71,30 +71,41 @@ export default class Login extends Component {
     );
   }
 
-    // apenas verifica se a variável está sem valor
-    // se estiver, altera a cor da borda do input
-    newBorderColor = (field) => {
-        if(field == '') {
-            return '#ff0000';
-        } else {
-            return '#e6e6e6';
-        }
+  // utilizando um regex, verifica o email
+  emailColor = (email) => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if(re.test(String(email).toLowerCase())) {
+      return '#e6e6e6';
+    } else {
+      return '#ff0000';
     }
+  }
 
-    canLogin = () => {
+  // apenas verifica se a variável está sem valor
+  // se estiver, altera a cor da borda do input
+  passwordColor = (password) => {
+    if(password.length > 4) {
+      return '#e6e6e6';
+    } else {
+      return '#ff0000';
+    }
+  }
 
-        borderColorEmail = this.newBorderColor(this.state.email);
-        borderColorPassword = this.newBorderColor(this.state.password);
+  canLogin = () => {
 
-        // os dois são iguais? ou seja, se forem diferente já retorna false
-        // se os dois forem iguais e o email, por exemplo, for #e6e6e6, então os dois estão certos
-        var equals = borderColorEmail == borderColorPassword;
-        var canLogin = equals && borderColorEmail == '#e6e6e6';
+    borderColorEmail = this.emailColor(this.state.email);
+    borderColorPassword = this.passwordColor(this.state.password);
 
-        this.setState({
-            borderColorEmail: borderColorEmail,
-            borderColorPassword: borderColorPassword,
-            canLogin: canLogin
-        });;
-    };
+    // os dois são iguais? ou seja, se forem diferente já retorna false
+    // se os dois forem iguais e o email, por exemplo, for #e6e6e6, então os dois estão certos
+    var equals = borderColorEmail == borderColorPassword;
+    var canLogin = equals && borderColorEmail == '#e6e6e6';
+
+    this.setState({
+      borderColorEmail: borderColorEmail,
+      borderColorPassword: borderColorPassword,
+      canLogin: canLogin
+    });;
+  };
 }
