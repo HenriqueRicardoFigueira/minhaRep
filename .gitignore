@@ -1,8 +1,6 @@
 # OSX
 #
 .DS_Store
-config.json
-ios/*
 
 # Xcode
 #
