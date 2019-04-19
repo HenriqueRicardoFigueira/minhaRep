@@ -1,30 +1,43 @@
 import React, { Component} from 'react';
 
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import FacebookLogin from './facebookLogin';
 import GoogleLogin from './googleLogin';
 
 // import { Container } from './styles';
 import firebase from 'react-native-firebase';
 
+import {input, styles} from './styles';
 
 export default class Login extends Component {
-    state={
+    state = {
         email: '',
         password: '',
         isAuthenticated: false,
+        borderColorEmail: '#e6e6e6',
+        borderColorPassword: '#e6e6e6'
     };
 
     login = async () => {
         const { email , password } = this.state;
 
-     try {
-        const user = await  firebase.auth().signInWithEmailAndPassword(email, password);
-        this.setState({isAuthenticated: true});
-        console.log(email, password);
-     } catch (err) {
-         console.log(err);
-     }
+        // verifica se os campos email e password estão certos
+        // se não, altera suas bordas
+        result = canLogin(this.state);
+        this.forceUpdate();
+
+        // se alguns dos campos não está no padrão, então não prossegue para o login
+        if(!result) {
+            return;
+        }
+
+        try {
+            const user = await  firebase.auth().signInWithEmailAndPassword(email, password);
+            this.setState({isAuthenticated: true});
+            console.log(email, password);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
   render() {
@@ -32,13 +45,13 @@ export default class Login extends Component {
         <View style={styles.container}>
             <Image style={styles.image} source={require('../image/logo2.png')}/>
 
-            <TextInput style={styles.input}
+            <TextInput style={input(this.state.borderColorEmail)}
                 placeholder="Digite seu email"
                 value={this.state.email}
                 autoCapitalize={'none'}
                 onChangeText={email => this.setState({email})}
             />
-            <TextInput style={styles.input}
+            <TextInput style={input(this.state.borderColorPassword)}
                 placeholder="Digite sua senha"
                 value={this.state.password}
                 secureTextEntry={true}
@@ -62,51 +75,24 @@ export default class Login extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#e6f7ff',
-        padding: 10,
-    },
-
-    input: {
-        paddingTop: 10,
-        height: 45,
-        backgroundColor: '#FFF',
-        alignSelf: 'stretch',
-        borderColor: '#e6e6e6',
-        borderWidth: 1,
-        paddingHorizontal: 20,
-        marginBottom: 30,
-        borderRadius: 50,
-        fontSize: 18
-    },
-
-    button: {
-        height: 45,
-        backgroundColor: '#069',
-        alignSelf: 'stretch',
-        paddingHorizontal: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 30
-    },
-
-    butonText: {
-        color: '#FFF',
-        fontWeight: 'bold',
-        fontSize: 18
-    },
-
-    image: {
-        width: 180,
-        height: 180,
-        justifyContent: 'center'
-    },
-
-    loginView: {
-        paddingTop: 10
+// apenas verifica se a variável está sem valor
+// se estiver, altera a cor da borda do input
+function newBorderColor(field) {
+    if(field == '') {
+        return '#ff0000';
+    } else {
+        return '#e6e6e6';
     }
-});
+}
+
+function canLogin(state) {
+    const { email , password } = state;
+
+    state.borderColorEmail = newBorderColor(email);
+    state.borderColorPassword = newBorderColor(password);
+
+    // os dois são iguais? ou seja, se forem diferente já retorna false
+    var equals = state.borderColorEmail == state.borderColorPassword;
+    // se os dois forem iguais e o email, por exemplo, for #e6e6e6, então os dois estão certos
+    return equals && state.borderColorEmail == '#e6e6e6';
+};
