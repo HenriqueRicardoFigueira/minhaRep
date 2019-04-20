@@ -9,96 +9,113 @@ import firebase from 'react-native-firebase';
     password
     cidade
     idade
+    bio
+    tag: null
 */
 
 export default class Register extends Component {
 
     state={
-        uid: '',
         nome: '',
         email: '',
         password: '',
         cidade: '',
         idade: '',
+        bio: '',
         isRegistrado: false,
         isAuthenticated: false,
         isGravado: false
     };
 
     registro = async () => {
-        const { nome, email , password, cidade, idade } = this.state;
+        const { bio, cidade , email, id, idade, nome, password} = this.state;
         try {
             //REGISTRA O USUARIO NO AUTHENTICATION
             const user = await  firebase.auth().createUserWithEmailAndPassword(email, password);
             this.setState({isRegistrado: true});
-            this.uid = user.uid;
-
-            //APOS O REGISTRO O USUARIO É AUTENTICADO
-            //user = login();
-
-            /* 
+            
             // REGISTRA OS DADOS DO USUARIO NA DATABASE()
-            firebase.database().ref('Users/' + user.uid).set(
+            firebase.database().ref('users/' + user.uid).set(
                 {
-                    Name: nome,
-                    Email: email,
-                    City: cidade
+                    bio: bio,
+                    cidade: cidade,
+                    email: email,
+                    id: id,
+                    idade: idade,
+                    nome: nome,
                 }
             ).then(() => {
-                console.log('inserted')
+                this.setState({isGravado: true});
             }).catch((error) => {
                 console.log(error)
             });
-            this.setState({isGravado: true});
-            */
-
+                      
+            
         } catch (err) {
             console.log(err);
         }
 
-    }
-    /*
-    login = async () => {
-        const { email , password } = this.state;
+    }    
 
-     try {
-        const user = await  firebase.auth().signInWithEmailAndPassword(email, password);
-        this.setState({isAuthenticated: true});
-        console.log(email, password);
-        return user;
-     } catch (err) {
-         console.log(err);
-     }
-    }
+    /*
+    Fields from User Register :
+    nome
+    email
+    password
+    cidade
+    idade
+    bio
+    tag: null
     */
 
   render() {
     return (
-        <View style={styles.container}>
+        <View style = {styles.container}>
 
             <Text h1>Tela de registro </Text>
 
-            <TextInput style={styles.input}
-                placeholder="Digite seu email"
-                value={this.state.email}
-                autoCapitalize={'none'} 
-                onChangeText={email => this.setState({email})}
+            <TextInput style = {styles.input}
+                placeholder = "Nome"
+                value = {this.state.nome}
+                autoCapitalize = {'none'} 
+                onChangeText = {nome => this.setState({nome})}
             />
 
-            <TextInput style={styles.input}
-                placeholder="Digite sua senha"
-                value={this.state.password}
-                secureTextEntry={true}
-                onChangeText={password => this.setState({password})}
+            <TextInput style = {styles.input}
+                placeholder = "Email"
+                value = {this.state.email}
+                autoCapitalize = {'none'} 
+                onChangeText = {email => this.setState({email})}
             />
 
-            <TouchableOpacity style={styles.button} onPress={this.registro}>
-                <Text style={styles.butonText}>Registrar</Text>
+            <TextInput style = {styles.input}
+                placeholder = "Senha"
+                value = {this.state.password}
+                secureTextEntry = {true}
+                onChangeText = {password => this.setState({password})}
+            />
+
+            <TextInput style = {styles.input}
+                placeholder = "Cidade"
+                value = {this.state.cidade}
+                autoCapitalize = {'none'} 
+                onChangeText = {cidade => this.setState({cidade})}
+            />
+
+            <TextInput style = {styles.input}
+                placeholder = "Idade"
+                value = {this.state.idade}
+                onChangeText = {idade => this.setState({idade})}
+            />
+
+
+            <TouchableOpacity style = {styles.button} onPress = {this.registro}>
+                <Text style = {styles.butonText}>Registrar</Text>
             </TouchableOpacity>
 
-            {this.state.isRegistrado ?<Text>Registrado com sucesso</Text>: <Text/> }
-            {this.state.isAuthenticated ?<Text>Logado com sucesso</Text>: <Text/> }
-            {this.state.isGravado ?<Text>Chegou ao fim</Text>: <Text/> }
+            { this.state.isRegistrado ? <Text> Registrado com sucesso </Text>: <Text/> }
+            { this.state.isAuthenticated ? <Text> Logado com sucesso </Text>: <Text/> }
+            { this.state.isGravado ? <Text> Chegou ao fim </Text>: <Text/> }
 
         </View>
     );
@@ -112,7 +129,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#e6f7ff',
         padding: 30,
-        width:350,
+        width: 350,
         height: 550
     },
 
