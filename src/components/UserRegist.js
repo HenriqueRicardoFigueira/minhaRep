@@ -1,6 +1,7 @@
 import React, { Component} from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import firebase from 'react-native-firebase';
+import {validate} from '../validation/UserRegistValidation'
 
 /*
     Fields from User Register :
@@ -14,48 +15,135 @@ import firebase from 'react-native-firebase';
 */
 
 export default class Register extends Component {
+    constructor(props){
+        super(props)
 
-    state={
-        nome: '',
-        email: '',
-        password: '',
-        cidade: '',
-        idade: '',
-        bio: '',
-        isRegistrado: false,
-        isAuthenticated: false,
-        isGravado: false
+        this.ref = firebase.firestore().collection('users');
+
+        this.state={
+
+            nome: '',
+            nomeError: false,
+            nomeErrorMessage: '',
+
+            email: '',
+            emailError: false,
+            emailErrorMessage: '',
+
+            password: '',
+            passwordError: false,
+            passwordErrorMessage: '',
+
+            cidade: '',
+            cidadeError: false,
+            cidadeErrorMessage: '',
+
+            idade: '',
+            idadeError: false,
+            idadeErrorMessage: '',
+
+            bio: '',
+
+            uid: '',
+
+            isValidated: false,
+            isRegistrado: false,
+            isGravado: false,
+        }
     };
+    
+    validateFieldNome(){
+        let v = validate('nome', this.nome);
+        this.setState({
+            nomeError: !v[0],
+            nomeErrorMessage: v[1]
+        })
+    }
+    validateFieldEmail(){
+        let v = validate('email', this.email);
+        this.setState({
+            emailError: !v[0],
+            emailErrorMessage: v[1]
+        })
+    }
+    validateFieldPassword(){
+        let v = validate('password', this.password);
+        this.setState({
+            passwordError: !v[0],
+            passwordErrorMessage: v[1]
+        })
+    }
+    validateFieldCidade(){
+        let v = validate('cidade', this.cidade);
+        this.setState({
+            cidadeError: !v[0],
+            cidadeErrorMessage: v[1]
+        })
+    }
+    validateFieldIdade(){
+        let v = validate('idade', this.idade);
+        this.setState({
+            idadeError: !v[0],
+            idadeErrorMessage: v[1]
+        })
+    }
+
+    validateAll(){
+        validateFieldNome();
+        validateFieldEmail();
+        validateFieldPassword();
+        validateFieldCidade();
+        validateFieldIdade();
+        if(
+            nomeError == false && 
+            emailError == false && 
+            passwordError == false && 
+            cidadeError == false && 
+            idadeError == false
+        ) registro();
+    }
 
     registro = async () => {
-        const { bio, cidade , email, id, idade, nome, password} = this.state;
+        const { cidade , email, idade, nome, password} = this.state;
         try {
             //REGISTRA O USUARIO NO AUTHENTICATION
-            const user = await  firebase.auth().createUserWithEmailAndPassword(email, password);
+            const res = await  firebase.auth().createUserWithEmailAndPassword(email, password);
             this.setState({isRegistrado: true});
             
             // REGISTRA OS DADOS DO USUARIO NA DATABASE()
-            firebase.database().ref('users/' + user.uid).set(
-                {
-                    bio: bio,
-                    cidade: cidade,
-                    email: email,
-                    id: id,
-                    idade: idade,
-                    nome: nome,
-                }
-            ).then(() => {
-                this.setState({isGravado: true});
-            }).catch((error) => {
-                console.log(error)
+            this.ref.doc(res.user.uid).set({
+                bio: '',
+                cidade: cidade,
+                email: email,
+                uid: res.user.uid,
+                idade: idade,
+                nome: nome
             });
-                      
-            
+            // RESETA O .state
+            this.setState({
+                nome: '',
+                nomeError: false,
+                nomeErrorMessage: '',
+                email: '',
+                emailError: false,
+                emailErrorMessage: '',
+                password: '',
+                passwordError: false,
+                passwordErrorMessage: '',
+                cidade: '',
+                cidadeError: false,
+                cidadeErrorMessage: '',
+                idade: '',
+                idadeError: false,
+                idadeErrorMessage: '',
+                bio: '',
+                isGravado: true
+              });
         } catch (err) {
             console.log(err);
         }
-
     }    
+
 
     /*
     Fields from User Register :
@@ -77,7 +165,7 @@ export default class Register extends Component {
             <TextInput style = {styles.input}
                 placeholder = "Nome"
                 value = {this.state.nome}
-                autoCapitalize = {'none'} 
+                autoCapitalize = {'none'}
                 onChangeText = {nome => this.setState({nome})}
             />
 
@@ -105,16 +193,16 @@ export default class Register extends Component {
             <TextInput style = {styles.input}
                 placeholder = "Idade"
                 value = {this.state.idade}
+                keyboardType = 'number-pad'
                 onChangeText = {idade => this.setState({idade})}
             />
 
 
             <TouchableOpacity style = {styles.button} onPress = {this.registro}>
-                <Text style = {styles.butonText}>Registrar</Text>
+                <Text style = {styles.butonText}> Registrar </Text>
             </TouchableOpacity>
 
             { this.state.isRegistrado ? <Text> Registrado com sucesso </Text>: <Text/> }
-            { this.state.isAuthenticated ? <Text> Logado com sucesso </Text>: <Text/> }
             { this.state.isGravado ? <Text> Chegou ao fim </Text>: <Text/> }
 
         </View>
@@ -128,9 +216,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#e6f7ff',
-        padding: 30,
-        width: 350,
-        height: 550
+        paddingHorizontal: 30,
+        paddingTop: 30,
     },
 
     input: {
@@ -142,7 +229,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         paddingHorizontal: 20,
         marginBottom: 30,
-        borderRadius: 50,
+        borderRadius: 30,
         fontSize: 18,
     },
 
@@ -154,7 +241,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 30
-
     },
 
     butonText: {
