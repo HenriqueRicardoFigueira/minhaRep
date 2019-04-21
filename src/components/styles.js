@@ -11,7 +11,7 @@ var input = (borderColor) => {
         borderWidth: 1,
         paddingHorizontal: 20,
         marginBottom: 30,
-        borderRadius: 50,
+        borderRadius: 10,
         fontSize: 18
     }
 }
@@ -29,16 +29,16 @@ const styles = StyleSheet.create({
         height: 45,
         backgroundColor: '#069',
         alignSelf: 'stretch',
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 30
+        borderRadius: 10
     },
 
-    butonText: {
+    buttonText: {
         color: '#FFF',
         fontWeight: 'bold',
-        fontSize: 18
+        fontSize: 20
     },
 
     image: {
@@ -49,6 +49,11 @@ const styles = StyleSheet.create({
 
     loginView: {
         paddingTop: 10
+    },
+    scroll:{
+        flex: 1,
+        backgroundColor: '#e6f7ff',
+        padding: 10,
     }
 });
 

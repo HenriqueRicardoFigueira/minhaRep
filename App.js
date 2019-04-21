@@ -2,8 +2,11 @@ import React from 'react';
 import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-native';
 import Login from './src/components/login';
 import UserRegist from './src/components/UserRegist';
+import AppContainer from './src/components/routes';
+import { createAppContainer } from 'react-navigation';
 
-export default class App extends React.Component {
+
+class App extends React.Component {
   constructor() {
     super();
     this.state = {};
@@ -13,9 +16,9 @@ export default class App extends React.Component {
     return (
       <ScrollView>
         <View>
-          <UserRegist/>
+          <AppContainer/>
         </View>
       </ScrollView>
     );
   }
-}
+}export default createAppContainer(App)

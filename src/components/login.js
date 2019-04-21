@@ -60,10 +60,10 @@ class Login extends Component {
                 onChangeText={password => this.setState({password})}
             />
             <TouchableOpacity style={styles.button} onPress={this.login}>
-                <Text style={styles.butonText}>Logar</Text>
+                <Text style={styles.buttonText}>Logar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={this.login}>
-                <Text style={styles.butonText}>Registrar</Text>
+                <Text style={styles.buttonText}>Registrar</Text>
             </TouchableOpacity>
 
             <View style={styles.loginView}>
@@ -98,7 +98,7 @@ class Login extends Component {
   }
 
   canLogin = () => {
-
+    
     borderColorEmail = this.emailColor(this.state.email);
     borderColorPassword = this.passwordColor(this.state.password);
 

@@ -6,6 +6,7 @@ import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
@@ -43,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
           new RNFirebaseAuthPackage(),
           new RNFirebasePackage(),
           new FBSDKPackage(mCallbackManager),
+          new RNFirebaseFirestorePackage(),
           //googleauth
           new RNGoogleSigninPackage()
         );

@@ -35,6 +35,12 @@ class Home extends Component {
             <TouchableOpacity onPress={this.logout} style = {styles.button}>
                 <Text>Logout</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('RepForm')} style = {styles.button}>
+                <Text>Adicionar Rep</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('RepCRUD')} style = {styles.button}>
+                <Text>Gerenciar Rep</Text>
+            </TouchableOpacity>
         </View>
     );
   }
