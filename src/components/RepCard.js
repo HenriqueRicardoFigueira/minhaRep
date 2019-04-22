@@ -3,7 +3,7 @@ import { View, Image, Text, StyleSheet } from 'react-native';
 import { input, styles } from '../components/styles';
 import { Icon } from 'react-native-elements';
 
-export default class RepSwipe extends Component {
+export default class RepCard extends Component {
 
   constructor(props) {
     super(props);
@@ -97,7 +97,7 @@ const styleSwipe = StyleSheet.create({
 
 
 // propriedades padrão do componente
-RepSwipe.defaultProps = {
+RepCard.defaultProps = {
   title: 'Aman',
   imageLink: 'http://1.bp.blogspot.com/_i_YdICPTytk/Sas93kPVYvI/AAAAAAAAADA/-3QS7edM_6k/s400/AMAN.jpg'
 }
