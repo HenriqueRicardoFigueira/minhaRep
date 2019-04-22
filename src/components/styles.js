@@ -1,4 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height
+const SCREEN_WIDTH = Dimensions.get('window').width
 
 // para alterar a cor da borda dinamicamente
 var input = (borderColor) => {
@@ -54,7 +57,13 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#e6f7ff',
         padding: 10,
-    }
+    },
+    card: {
+        backgroundColor: '#ff6600',
+        width: SCREEN_WIDTH-50,
+        height: SCREEN_HEIGHT-50,
+        borderRadius: 20,
+      }
 });
 
 module.exports = {input, styles};
