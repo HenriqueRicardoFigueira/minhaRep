@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     card: {
-        backgroundColor: '#ff6600',
+        backgroundColor: '#ffffff',
         width: SCREEN_WIDTH-50,
         height: SCREEN_HEIGHT-50,
         borderRadius: 20,
