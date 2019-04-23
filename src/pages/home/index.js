@@ -5,6 +5,8 @@ import firebase from 'react-native-firebase';
 import { withNavigation } from 'react-navigation';
 import { styles } from '../../components/styles';
 
+
+
 class Home extends Component {
     state = {
         user: '',
@@ -24,7 +26,7 @@ class Home extends Component {
           }).catch(function(error) {
             console.log(error);
           });
-          this.props.navigation.navigate("LoginPage");
+          this.props.navigation.navigate("Login");
     }
 
 

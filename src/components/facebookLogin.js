@@ -4,45 +4,46 @@ import FBSDK, {GraphRequest} from 'react-native-fbsdk';
 import {styles} from './styles';
 import { withNavigation } from 'react-navigation';
 import firebase from 'react-native-firebase';
+import { bindExpression } from '@babel/types';
+
 
 
 class FacebookLogin extends Component {
+  constructor(props){
+    super(props);
+    this.face = this.face.bind(this);
+    }
 
+ 
   face = async () => (
     FBSDK.LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
       function (result) {
-        if (result.isCancelled) {
-          alert('Login was cancelled');
-        } else {
-          alert('Login was successful with permissions: '
-            + result.grantedPermissions.toString());
-        }
+        try {
+          if (result.isCancelled) {
+            alert('Login was cancelled');
+          } else {
+            alert('Login was successful with permissions: '
+              + result.grantedPermissions.toString());
+              
+          }
+          
+          FBSDK.AccessToken.getCurrentAccessToken()
+          .then(
+            (data) => {
+                const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
+                firebase.auth().signInWithCredential(credential);
+                console.log(firebase.auth().currentUser);
+               
+          }); 
         
-        FBSDK.AccessToken.getCurrentAccessToken()
-        .then(
-          (data) => {
-            /*let req = new GraphRequest('/me', {
-              httpMethod: 'GET',
-              version: 'v2.5',
-              parameters: {
-                  'fields': {
-                      'string' : 'email,name'
-                  }
-              }
-              }, (err, res) => {
-                console.log(err, res);
-              });
-              console.log(req.parameters.fields);
-              */
-              const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
-              firebase.auth().signInWithCredential(credential);
-              console.log(firebase.auth().currentUser);
-        }); 
-      },
-      function(error) {
-        console.log('Login failed with error: ' + error);
+          
+        } catch (error) {
+          console.log('Login failed with error: ' + error);
+        }
+       
       }
     )
+    
   );
 
   render() {
