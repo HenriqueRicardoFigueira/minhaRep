@@ -65,6 +65,9 @@ class Login extends Component {
             <TouchableOpacity style={styles.button} onPress={this.login}>
                 <Text style={styles.buttonText}>Registrar</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={this.login}>
+                <Text style={styles.butonText}>Registrar</Text>
+            </TouchableOpacity>
 
             <View style={styles.loginView}>
                 <FacebookLogin style={styles.loginButtons}/>
