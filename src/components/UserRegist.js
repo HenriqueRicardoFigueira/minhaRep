@@ -1,7 +1,6 @@
 import React, { Component} from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import firebase from 'react-native-firebase';
-import {validate} from '../validation/UserRegistValidation'
 
 /*
     Fields from User Register :
@@ -21,129 +20,93 @@ export default class Register extends Component {
         this.ref = firebase.firestore().collection('users');
 
         this.state={
-
             nome: '',
-            nomeError: false,
-            nomeErrorMessage: '',
-
             email: '',
-            emailError: false,
-            emailErrorMessage: '',
-
             password: '',
-            passwordError: false,
-            passwordErrorMessage: '',
-
             cidade: '',
-            cidadeError: false,
-            cidadeErrorMessage: '',
-
             idade: '',
-            idadeError: false,
-            idadeErrorMessage: '',
-
             bio: '',
-
             uid: '',
 
-            isValidated: false,
+            isDeleted: false,
             isRegistrado: false,
             isGravado: false,
         }
     };
-    
-    validateFieldNome(){
-        let v = validate('nome', this.nome);
-        this.setState({
-            nomeError: !v[0],
-            nomeErrorMessage: v[1]
-        })
-    }
-    validateFieldEmail(){
-        let v = validate('email', this.email);
-        this.setState({
-            emailError: !v[0],
-            emailErrorMessage: v[1]
-        })
-    }
-    validateFieldPassword(){
-        let v = validate('password', this.password);
-        this.setState({
-            passwordError: !v[0],
-            passwordErrorMessage: v[1]
-        })
-    }
-    validateFieldCidade(){
-        let v = validate('cidade', this.cidade);
-        this.setState({
-            cidadeError: !v[0],
-            cidadeErrorMessage: v[1]
-        })
-    }
-    validateFieldIdade(){
-        let v = validate('idade', this.idade);
-        this.setState({
-            idadeError: !v[0],
-            idadeErrorMessage: v[1]
-        })
-    }
 
-    validateAll(){
-        validateFieldNome();
-        validateFieldEmail();
-        validateFieldPassword();
-        validateFieldCidade();
-        validateFieldIdade();
-        if(
-            nomeError == false && 
-            emailError == false && 
-            passwordError == false && 
-            cidadeError == false && 
-            idadeError == false
-        ) registro();
-    }
-
-    registro = async () => {
+    _registerUser = async () => {
         const { cidade , email, idade, nome, password} = this.state;
         try {
-            //REGISTRA O USUARIO NO AUTHENTICATION
-            const res = await  firebase.auth().createUserWithEmailAndPassword(email, password);
+            // REGISTRA O USUARIO NO AUTHENTICATION
+            // RETORNA UM OBJETO DO TIPO user
+            const usr = await  firebase.auth().createUserWithEmailAndPassword(email, password); 
             this.setState({isRegistrado: true});
             
             // REGISTRA OS DADOS DO USUARIO NA DATABASE()
-            this.ref.doc(res.user.uid).set({
+            this.ref.doc(usr.user.uid).set({
                 bio: '',
                 cidade: cidade,
                 email: email,
-                uid: res.user.uid,
+                uid: usr.user.uid,
                 idade: idade,
                 nome: nome
+            }).catch((error) => {
+                console.error("Error registering user: ", error);
             });
+
             // RESETA O .state
             this.setState({
                 nome: '',
-                nomeError: false,
-                nomeErrorMessage: '',
                 email: '',
-                emailError: false,
-                emailErrorMessage: '',
                 password: '',
-                passwordError: false,
-                passwordErrorMessage: '',
                 cidade: '',
-                cidadeError: false,
-                cidadeErrorMessage: '',
                 idade: '',
-                idadeError: false,
-                idadeErrorMessage: '',
                 bio: '',
                 isGravado: true
               });
         } catch (err) {
             console.log(err);
         }
-    }    
+    }
 
+    _deleteUser = (usr) => {
+        // ESPERA UM OBJETO DO TIPO user
+        // O USUARIO A SER DELETADO DEVE ESTAR LOGANO NO SISTEMA PARA SER EXCLUIDO 
+        //fonte da informação : https://stackoverflow.com/questions/38800414/delete-a-specific-user-from-firebase
+        //const {navigation} = this.props
+        this.ref.doc(usr.user.uid).delete().then(() => {
+            console.log("Document successfully deleted!");
+        }).catch((error) => {
+            console.error("Error removing document: ", error);
+        });
+        //navigation.goBack();
+    }
+
+    _editUser = (usr) => {
+        // ESPERA UM OBJETO DO TIPO user
+        const { cidade , email, idade, nome, password} = this.state;
+        // EDITA OS DADOS DO USUARIO "usr" NA DATABASE()
+        this.ref.doc(usr.user.uid).set({
+            bio: '',
+            cidade: cidade,
+            email: email,
+            uid: usr.user.uid,
+            idade: idade,
+            nome: nome
+        }).catch((error) => {
+            console.error("Error editing document: ", error);
+        });
+        // RESETA O .state
+        this.setState({
+            nome: '',
+            email: '',
+            password: '',
+            cidade: '',
+            idade: '',
+            bio: '',
+            isGravado: true
+          });
+    }
 
     /*
     Fields from User Register :
@@ -161,7 +124,7 @@ export default class Register extends Component {
         <View style = {styles.container}>
 
             <Text h1>Tela de registro </Text>
-
+            
             <TextInput style = {styles.input}
                 placeholder = "Nome"
                 value = {this.state.nome}
@@ -197,8 +160,7 @@ export default class Register extends Component {
                 onChangeText = {idade => this.setState({idade})}
             />
 
-
-            <TouchableOpacity style = {styles.button} onPress = {this.registro}>
+            <TouchableOpacity style = {styles.button} onPress = {this._registerUser}>
                 <Text style = {styles.butonText}> Registrar </Text>
             </TouchableOpacity>
 
@@ -221,7 +183,6 @@ const styles = StyleSheet.create({
     },
 
     input: {
-        paddingTop: 10,
         height: 45,
         backgroundColor: '#FFF',
         alignSelf: 'stretch',
