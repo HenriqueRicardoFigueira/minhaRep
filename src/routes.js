@@ -5,6 +5,7 @@ import RepForm from './pages/repForm';
 import RepCRUD from './pages/repCRUD';
 import RepEdit from './pages/repEdit';
 import RepCard from './pages/repCard';
+import UserRegist from './pages/userRegist';
 
 const Routes = createAppContainer(
     createSwitchNavigator({
@@ -13,7 +14,8 @@ const Routes = createAppContainer(
         RepCRUD: RepCRUD,
         RepEdit: RepEdit,
         RepForm: RepForm,
-        RepCard: RepCard
+        RepCard: RepCard,
+        UserRegist: UserRegist
     }, {
         initialRouteName: 'Login'
     })

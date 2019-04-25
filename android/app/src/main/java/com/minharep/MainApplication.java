@@ -48,7 +48,6 @@ public class MainApplication extends Application implements ReactApplication {
           new RNFirebaseFirestorePackage(),
           //googleauth
           new RNGoogleSigninPackage(),
-          new RNFirebaseFirestorePackage(),
           new RNFirebaseDatabasePackage()
         );
     }
