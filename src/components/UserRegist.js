@@ -1,6 +1,8 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import firebase from 'react-native-firebase';
+
+import { withNavigation } from 'react-navigation';
 
 /*
     Fields from User Register :
@@ -9,140 +11,215 @@ import firebase from 'react-native-firebase';
     password
     cidade
     idade
+    bio
+    tag: null
 */
 
-export default class Register extends Component {
+class UserRegist extends Component {
+  constructor(props) {
+    super(props)
 
-    state={
-        uid: '',
+    this.ref = firebase.firestore().collection('users');
+
+    this.state = {
+      nome: '',
+      email: '',
+      password: '',
+      cidade: '',
+      idade: '',
+      bio: '',
+      uid: '',
+
+      isDeleted: false,
+      isRegistrado: false,
+      isGravado: false,
+    }
+  };
+
+  _registerUser = async () => {
+    const { cidade, email, idade, nome, password } = this.state;
+    //try {
+      // REGISTRA O USUARIO NO AUTHENTICATION
+      // RETORNA UM OBJETO DO TIPO user
+      const usr = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      this.setState({ isRegistrado: true });
+
+      // REGISTRA OS DADOS DO USUARIO NA DATABASE()
+      this.ref.doc(usr.user.uid).set({
+        bio: '',
+        cidade: cidade,
+        email: email,
+        uid: usr.user.uid,
+        idade: idade,
+        nome: nome
+      }).catch((error) => {
+        console.error("Error registering user: ", error);
+      });
+
+      // RESETA O .state
+      this.setState({
         nome: '',
         email: '',
         password: '',
         cidade: '',
         idade: '',
-        isRegistrado: false,
-        isAuthenticated: false,
-        isGravado: false
-    };
+        bio: '',
+        isGravado: true,
+      });
+      this.props.navigation.navigate("Home");
+    /*} catch (err) {
+      console.log(err);
+    }   */
+  }
 
-    registro = async () => {
-        const { nome, email , password, cidade, idade } = this.state;
-        try {
-            //REGISTRA O USUARIO NO AUTHENTICATION
-            const user = await  firebase.auth().createUserWithEmailAndPassword(email, password);
-            this.setState({isRegistrado: true});
-            this.uid = user.uid;
+  _deleteUser = (usr) => {
+    // ESPERA UM OBJETO DO TIPO user
+    // O USUARIO A SER DELETADO DEVE ESTAR LOGANO NO SISTEMA PARA SER EXCLUIDO 
+    //fonte da informação : https://stackoverflow.com/questions/38800414/delete-a-specific-user-from-firebase
+    //const {navigation} = this.props
+    this.ref.doc(usr.user.uid).delete().then(() => {
+      console.log("Document successfully deleted!");
+    }).catch((error) => {
+      console.error("Error removing document: ", error);
+    });
+    //navigation.goBack();
+  }
 
-            //APOS O REGISTRO O USUARIO É AUTENTICADO
-            //user = login();
+  _editUser = (usr) => {
+    // ESPERA UM OBJETO DO TIPO user
+    const { cidade, email, idade, nome, password } = this.state;
+    // EDITA OS DADOS DO USUARIO "usr" NA DATABASE()
+    this.ref.doc(usr.user.uid).set({
+      bio: '',
+      cidade: cidade,
+      email: email,
+      uid: usr.user.uid,
+      idade: idade,
+      nome: nome
+    }).catch((error) => {
+      console.error("Error editing document: ", error);
+    });
+    // RESETA O .state
+    this.setState({
+      nome: '',
+      email: '',
+      password: '',
+      cidade: '',
+      idade: '',
+      bio: '',
+      isGravado: true
+    });
+  }
 
-            /* 
-            // REGISTRA OS DADOS DO USUARIO NA DATABASE()
-            firebase.database().ref('Users/' + user.uid).set(
-                {
-                    Name: nome,
-                    Email: email,
-                    City: cidade
-                }
-            ).then(() => {
-                console.log('inserted')
-            }).catch((error) => {
-                console.log(error)
-            });
-            this.setState({isGravado: true});
-            */
+  _goBack = () => {
+    this.props.navigation.navigate("Login");
+  }
 
-        } catch (err) {
-            console.log(err);
-        }
-
-    }
-    /*
-    login = async () => {
-        const { email , password } = this.state;
-
-     try {
-        const user = await  firebase.auth().signInWithEmailAndPassword(email, password);
-        this.setState({isAuthenticated: true});
-        console.log(email, password);
-        return user;
-     } catch (err) {
-         console.log(err);
-     }
-    }
-    */
+  /*
+  Fields from User Register :
+  nome
+  email
+  password
+  cidade
+  idade
+  bio
+  tag: null
+  */
 
   render() {
     return (
-        <View style={styles.container}>
+      <View style={styles.container}>
 
-            <Text h1>Tela de registro </Text>
+        <Text h1>Tela de registro </Text>
 
-            <TextInput style={styles.input}
-                placeholder="Digite seu email"
-                value={this.state.email}
-                autoCapitalize={'none'} 
-                onChangeText={email => this.setState({email})}
-            />
+        <TextInput style={styles.input}
+          placeholder="Nome"
+          value={this.state.nome}
+          autoCapitalize={'none'}
+          onChangeText={nome => this.setState({ nome })}
+        />
 
-            <TextInput style={styles.input}
-                placeholder="Digite sua senha"
-                value={this.state.password}
-                secureTextEntry={true}
-                onChangeText={password => this.setState({password})}
-            />
+        <TextInput style={styles.input}
+          placeholder="Email"
+          value={this.state.email}
+          autoCapitalize={'none'}
+          onChangeText={email => this.setState({ email })}
+        />
 
-            <TouchableOpacity style={styles.button} onPress={this.registro}>
-                <Text style={styles.butonText}>Registrar</Text>
-            </TouchableOpacity>
+        <TextInput style={styles.input}
+          placeholder="Senha"
+          value={this.state.password}
+          secureTextEntry={true}
+          onChangeText={password => this.setState({ password })}
+        />
 
-            {this.state.isRegistrado ?<Text>Registrado com sucesso</Text>: <Text/> }
-            {this.state.isAuthenticated ?<Text>Logado com sucesso</Text>: <Text/> }
-            {this.state.isGravado ?<Text>Chegou ao fim</Text>: <Text/> }
+        <TextInput style={styles.input}
+          placeholder="Cidade"
+          value={this.state.cidade}
+          autoCapitalize={'none'}
+          onChangeText={cidade => this.setState({ cidade })}
+        />
 
-        </View>
+        <TextInput style={styles.input}
+          placeholder="Idade"
+          value={this.state.idade}
+          keyboardType='number-pad'
+          onChangeText={idade => this.setState({ idade })}
+        />
+
+        <TouchableOpacity style={styles.button} onPress={this._registerUser}>
+          <Text style={styles.butonText}> Registrar </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={this._goBack}>
+          <Text style={styles.butonText}> Voltar </Text>
+        </TouchableOpacity>
+
+        {this.state.isRegistrado ? <Text> Registrado com sucesso </Text> : <Text />}
+        {this.state.isGravado ? <Text> Chegou ao fim </Text> : <Text />}
+
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#e6f7ff',
-        padding: 30,
-        width:350,
-        height: 550
-    },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e6f7ff',
+    paddingHorizontal: 30,
+    paddingTop: 30,
+  },
 
-    input: {
-        paddingTop: 10,
-        height: 45,
-        backgroundColor: '#FFF',
-        alignSelf: 'stretch',
-        borderColor: '#e6e6e6',
-        borderWidth: 1,
-        paddingHorizontal: 20,
-        marginBottom: 30,
-        borderRadius: 50,
-        fontSize: 18,
-    },
+  input: {
+    height: 45,
+    backgroundColor: '#FFF',
+    alignSelf: 'stretch',
+    borderColor: '#e6e6e6',
+    borderWidth: 1,
+    paddingHorizontal: 20,
+    marginBottom: 30,
+    borderRadius: 30,
+    fontSize: 18,
+  },
 
-    button: {
-        height: 45,
-        backgroundColor: '#069',
-        alignSelf: 'stretch',
-        paddingHorizontal: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 30
+  button: {
+    height: 45,
+    backgroundColor: '#069',
+    alignSelf: 'stretch',
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30
+  },
 
-    },
-
-    buttonText: {
-        color: '#FFF',
-        fontWeight: 'bold',
-        fontSize: 18
-    },
+  butonText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 18
+  },
 });
+
+export default withNavigation(UserRegist);

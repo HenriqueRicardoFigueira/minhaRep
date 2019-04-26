@@ -42,6 +42,10 @@ class Login extends Component {
      }
     }
 
+    userRegist = async () =>{
+      this.props.navigation.navigate("UserRegist");
+    }
+
   render() {
     return (
         <View style={styles.container}>
@@ -62,7 +66,7 @@ class Login extends Component {
             <TouchableOpacity style={styles.button} onPress={this.login}>
                 <Text style={styles.buttonText}>Logar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={this.login}>
+            <TouchableOpacity style={styles.button} onPress={this.userRegist}>
                 <Text style={styles.buttonText}>Registrar</Text>
             </TouchableOpacity>
 

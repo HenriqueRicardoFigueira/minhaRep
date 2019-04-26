@@ -143,6 +143,7 @@ dependencies {
     implementation project(':react-native-maps')
     implementation project(':react-native-gesture-handler')
     implementation project(':react-native-vector-icons')
+    implementation project(':react-native-gesture-handler')
     implementation project(':react-native-fbsdk')
     implementation project(':react-native-google-signin')
     implementation project(':react-native-firebase')
@@ -154,8 +155,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.6'
     // BIBLIOTECA PARA AUTENTICAÇÃO
     implementation 'com.google.firebase:firebase-auth:16.0.1'
+    // BIBLIOTECA PARA FIRESTORE()
     implementation 'com.google.firebase:firebase-firestore:18.0.1'
-    
+    // BIBLIOTECA PARA DATABASE()
+    implementation 'com.google.firebase:firebase-database:16.0.6'
+
     implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.android.support:multidex:1.0.0'
     //maps
