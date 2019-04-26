@@ -140,6 +140,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-maps')
     implementation project(':react-native-gesture-handler')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-fbsdk')
@@ -157,6 +158,15 @@ dependencies {
     
     implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.android.support:multidex:1.0.0'
+    //maps
+       implementation(project(':react-native-maps')){
+       exclude group: 'com.google.android.gms', module: 'play-services-base'
+       exclude group: 'com.google.android.gms', module: 'play-services-maps'
+   }
+   implementation 'com.google.android.gms:play-services-base:10.0.1'
+   implementation 'com.google.android.gms:play-services-maps:10.0.1'
+
+ 
 }
 
 // Run this once to be able to run the application with BUCK

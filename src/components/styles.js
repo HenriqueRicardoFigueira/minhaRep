@@ -63,7 +63,11 @@ const styles = StyleSheet.create({
         width: SCREEN_WIDTH-50,
         height: SCREEN_HEIGHT-50,
         borderRadius: 20,
-      }
+      },
+    map: {
+        flex: 1,
+        ...StyleSheet.absoluteFillObject
+      },
 });
 
 module.exports = {input, styles};

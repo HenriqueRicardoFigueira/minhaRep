@@ -9,13 +9,15 @@
   },
   "dependencies": {
     "native-base": "^2.12.1",
+    "prop-types": "^15.7.2",
     "react": "16.8.3",
     "react-native": "0.59.2",
-    "react-native-elements": "^1.1.0",
+    "react-native-elements": "^1.0.0-beta8",
     "react-native-fbsdk": "^0.8.0",
     "react-native-firebase": "^5.3.1",
     "react-native-gesture-handler": "^1.1.0",
     "react-native-google-signin": "1.2.2",
+    "react-native-maps": "^0.24.2",
     "react-native-vector-icons": "^6.4.2",
     "react-navigation": "^3.7.1",
     "validate.js": "^0.12.0"
