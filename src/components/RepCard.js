@@ -40,7 +40,7 @@ export default class RepCard extends Component {
 
           {/* VIEW INTERMEDIÁRIA */}
           <View>
-            <Image style={styleSwipe.repImage} source={{ uri: this.state.repImage }} />
+            <Image style={styleSwipe.repImage} source={this.getImage()} />
           </View>
 
           {/* TERCEIRA VIEW */}
@@ -61,6 +61,16 @@ export default class RepCard extends Component {
       </View>
     );
   }
+
+  // se for passado uma imagem para o componente, então recupera pelo link
+  // se não, recupera localmente a imagem
+  getImage = () => {
+    if(this.state.repImage == '../image/houseIcon.png') {
+      return require('../image/houseIcon.png');
+    } else {
+      return { uri: this.state.repImage }
+    }
+  }
 };
 
 const styleSwipe = StyleSheet.create({
@@ -76,8 +86,8 @@ const styleSwipe = StyleSheet.create({
     backgroundColor: '#ffb380',
   },
   repTitle: {
-    width: 220,
-    fontSize: 35,
+    width: 190,
+    fontSize: 25,
     paddingLeft: 5,
     color: '#ff6600',
     flexDirection: 'column',
@@ -98,6 +108,6 @@ const styleSwipe = StyleSheet.create({
 
 // propriedades padrão do componente
 RepCard.defaultProps = {
-  title: 'Aman',
-  imageLink: 'http://1.bp.blogspot.com/_i_YdICPTytk/Sas93kPVYvI/AAAAAAAAADA/-3QS7edM_6k/s400/AMAN.jpg'
+  title: 'Título da República',
+  imageLink: '../image/houseIcon.png'
 }
