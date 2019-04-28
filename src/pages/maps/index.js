@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import RepEdit from '../../components/RepEdit';
+import Maps from '../../components/maps';
 
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 
-export default class RepEditPage extends Component {
+export default class MapsPage extends Component {
 
   componentWillMount() {
     handleAndroidBackButton(this.props.navigation.navigate, 'Home');
@@ -15,6 +15,6 @@ export default class RepEditPage extends Component {
   }
 
   render() {
-    return <RepEdit />;
+    return <Maps />;
   }
 }
