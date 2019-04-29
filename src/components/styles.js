@@ -79,8 +79,8 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#ffffff',
-    width: SCREEN_WIDTH - 50,
-    height: SCREEN_HEIGHT - 50,
+    width: SCREEN_WIDTH*0.95,
+    height: SCREEN_HEIGHT*0.90,
     borderRadius: 20,
   },
   map: {
