@@ -5,19 +5,17 @@ import firebase from 'react-native-firebase';
 import { withNavigation } from 'react-navigation';
 import { styles } from '../../components/styles';
 
-
+import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 
 class Home extends Component {
-    state = {
-        user: '',
-    }
-    
-    componentDidMount() {
-        var user = firebase.auth().currentUser;
-        var name = user.email;
-        this.setState({user: name});
-        console.log(user);
-    }
+
+  componentWillMount() {
+    handleAndroidBackButton(this.props.navigation.navigate, 'Login');
+  }
+
+  componentWillUnmount() {
+    removeAndroidBackButtonHandler();
+  }
 
     logout = async () => {
         firebase.auth().signOut().then(function() {
@@ -32,8 +30,12 @@ class Home extends Component {
 
     render() {
     return(
+        
+    
         <View style = {styles.container}>
-            <Text> hello {this.state.user} !</Text>
+           
+     
+            <Text> hello  !</Text>
             <TouchableOpacity onPress={this.logout} style = {styles.button}>
                 <Text>Logout</Text>
             </TouchableOpacity>
@@ -45,6 +47,12 @@ class Home extends Component {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('UserProfile')} style = {styles.button}>
                 <Text>Gerenciar Perfil</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('RepCard')} style = {styles.button}>
+                <Text>Buscar Rep</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps')} style = {styles.button}>
+                <Text>Mapa</Text>
             </TouchableOpacity>
         </View>
     );

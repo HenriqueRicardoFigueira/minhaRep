@@ -2,10 +2,19 @@ import React, { Component } from 'react';
 
 import RepForm from '../../components/RepForm';
 
-import { Container } from '../../components/styles';
+import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 
 export default class RepFormPage extends Component {
-    render() {
-        return <RepForm />;
-    }
+
+  componentWillMount() {
+    handleAndroidBackButton(this.props.navigation.navigate, 'Home');
+  }
+
+  componentWillUnmount() {
+    removeAndroidBackButtonHandler();
+  }
+
+  render() {
+    return <RepForm />;
+  }
 }

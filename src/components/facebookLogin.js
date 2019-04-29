@@ -12,10 +12,18 @@ class FacebookLogin extends Component {
   constructor(props){
     super(props);
     this.face = this.face.bind(this);
-    }
-
+    this.navega = this.navega.bind(this);
+  }
+  
+  navega = () => {
+    user = firebase.auth().currentUser;
+    if(user)
+      console.log(user);
+     
+  }
  
-  face = async () => (
+  face = async () => {
+    const {navigation } = this.props;
     FBSDK.LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
       function (result) {
         try {
@@ -32,19 +40,21 @@ class FacebookLogin extends Component {
             (data) => {
                 const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
                 firebase.auth().signInWithCredential(credential);
-                console.log(firebase.auth().currentUser);
+                navigation.navigate('Home');
+    
+                
                
-          }); 
+          });
         
-          
         } catch (error) {
           console.log('Login failed with error: ' + error);
         }
        
+       
       }
     )
-    
-  );
+    this.navega();
+  };
 
   render() {
     return (
