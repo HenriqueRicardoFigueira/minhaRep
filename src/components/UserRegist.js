@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import firebase from 'react-native-firebase';
+//import styles from './styles';
 
 import { withNavigation } from 'react-navigation';
 
@@ -17,7 +18,7 @@ import { withNavigation } from 'react-navigation';
 
 class UserRegist extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.ref = firebase.firestore().collection('users');
 
@@ -29,11 +30,7 @@ class UserRegist extends Component {
       idade: '',
       bio: '',
       uid: '',
-
-      isDeleted: false,
-      isRegistrado: false,
-      isGravado: false,
-    }
+    };
   };
 
   _registerUser = async () => {
@@ -46,7 +43,7 @@ class UserRegist extends Component {
 
       // REGISTRA OS DADOS DO USUARIO NA DATABASE()
       this.ref.doc(usr.user.uid).set({
-        bio: '',
+        bio: 'Conte um pouco sobre você',
         cidade: cidade,
         email: email,
         uid: usr.user.uid,
@@ -174,10 +171,7 @@ class UserRegist extends Component {
         <TouchableOpacity style={styles.button} onPress={this._goBack}>
           <Text style={styles.butonText}> Voltar </Text>
         </TouchableOpacity>
-
-        {this.state.isRegistrado ? <Text> Registrado com sucesso </Text> : <Text />}
-        {this.state.isGravado ? <Text> Chegou ao fim </Text> : <Text />}
-
+        
       </View>
     );
   }
