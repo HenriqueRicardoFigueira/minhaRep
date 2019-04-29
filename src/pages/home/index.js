@@ -38,10 +38,13 @@ class Home extends Component {
                 <Text>Logout</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('RepForm')} style = {styles.button}>
-                <Text>Adicionar Rep</Text>
+                <Text>Adicionar Republica</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('RepCRUD')} style = {styles.button}>
-                <Text>Gerenciar Rep</Text>
+                <Text>Gerenciar Republica</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('UserProfile')} style = {styles.button}>
+                <Text>Gerenciar Perfil</Text>
             </TouchableOpacity>
         </View>
     );
