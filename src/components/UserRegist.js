@@ -168,10 +168,6 @@ class UserRegist extends Component {
           <Text style={styles.butonText}> Registrar </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={this._goBack}>
-          <Text style={styles.butonText}> Voltar </Text>
-        </TouchableOpacity>
-        
       </View>
     );
   }
