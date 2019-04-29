@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { View, Animated, Image, PanResponder, Text } from 'react-native';
 import RepCard from '../../components/RepCard';
 import { input, styles } from '../../components/styles';
+import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 
 // apenas para teste
 const Reps = [
-  { id: '1', title: 'BOPE', imageLink: 'http://imgsapp.diariodepernambuco.com.br/app/noticia_127983242361/2018/06/26/755973/20180626183045743252o.jpeg' },
-  { id: '2', title: 'Centro de Instrução de Guerra na Selva', imageLink: 'http://www.passeiosemmanaus.com/wp-content/uploads/2018/04/Zool%C3%B3gico-do-CIGS-Zona-Oeste-de-Manaus.jpg' },
-  { id: '3', title: 'Academia Militar das Agulhas Negras', imageLink: 'http://1.bp.blogspot.com/_i_YdICPTytk/Sas93kPVYvI/AAAAAAAAADA/-3QS7edM_6k/s400/AMAN.jpg' },
-  { id: '4', title: 'CIOpEsp', imageLink: 'http://www.forte.jor.br/wp-content/uploads/2011/03/ciopesp.jpg' },
+  { id: '1', title: 'Rep Quadrada', imageLink: 'https://i.stack.imgur.com/kCKn5.png' },
+  { id: '2', title: 'República em Preto e Branco', imageLink: 'https://i.pinimg.com/originals/8f/86/2a/8f862a8f25893382e3ebc97e6af0cdd9.jpg' },
+  { id: '3', title: 'Nome Médio', imageLink: 'https://www.guildford-institute.org.uk/wp-content/uploads/2018/10/Songul-Meier-Drawing-for-Beginners2-400x400.jpg' },
+  { id: '4', title: 'Rep', imageLink: 'https://content2.jdmagicbox.com/comp/nashik/s5/0253px253.x253.170913162921.y2s5/catalogue/shubhara-art-gallery-drawing-classes-sinnar-nashik-drawing-classes-3uzll.jpg?fit=around%7C400%3A400&crop=400%3A400%3B%2A%2C%2A' },
 ]
 
 export default class App extends React.Component {
@@ -61,6 +62,8 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
+    handleAndroidBackButton(this.props.navigation.navigate, 'Home');
+
     this.PanResponder = PanResponder.create({
 
       onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -161,5 +164,9 @@ export default class App extends React.Component {
         </View>
       </View>
     );
+  }
+
+  componentWillUnmount() {
+    removeAndroidBackButtonHandler();
   }
 }

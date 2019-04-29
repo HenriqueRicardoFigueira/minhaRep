@@ -45,6 +45,9 @@ class Home extends Component {
             <TouchableOpacity onPress={() => this.props.navigation.navigate('RepCRUD')} style = {styles.button}>
                 <Text>Gerenciar Rep</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('RepCard')} style = {styles.button}>
+                <Text>Buscar Rep</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps')} style = {styles.button}>
                 <Text>Mapa</Text>
             </TouchableOpacity>
