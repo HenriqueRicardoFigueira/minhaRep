@@ -6,10 +6,10 @@ import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../a
 
 // apenas para teste
 const Reps = [
-  { id: '1', title: 'Rep Quadrada', imageLink: 'https://i.stack.imgur.com/kCKn5.png' },
-  { id: '2', title: 'República em Preto e Branco', imageLink: 'https://i.pinimg.com/originals/8f/86/2a/8f862a8f25893382e3ebc97e6af0cdd9.jpg' },
-  { id: '3', title: 'Nome Médio', imageLink: 'https://www.guildford-institute.org.uk/wp-content/uploads/2018/10/Songul-Meier-Drawing-for-Beginners2-400x400.jpg' },
-  { id: '4', title: 'Rep', imageLink: 'https://content2.jdmagicbox.com/comp/nashik/s5/0253px253.x253.170913162921.y2s5/catalogue/shubhara-art-gallery-drawing-classes-sinnar-nashik-drawing-classes-3uzll.jpg?fit=around%7C400%3A400&crop=400%3A400%3B%2A%2C%2A' },
+  { id: '1', title: 'Camargo Correia', localization: 'Rua das Tipuanas Amarelas, 70', imageLink: 'https://i.pinimg.com/originals/fd/e9/a4/fde9a48af9b22286c716df53e99d0b26.jpg' },
+  { id: '2', title: 'República em Preto e Branco', localization: 'Rua São Paulo, 902', imageLink: 'https://i.pinimg.com/originals/58/5e/ba/585ebab40b803e11f92a6b9fb657b809.jpg' },
+  { id: '3', title: 'República Diamente Jortão Castro', localization: 'Rua Gerondinos, 839', imageLink: 'https://i.pinimg.com/originals/d5/ee/b7/d5eeb71aaeaa6d8fb801e7981e033ae7.jpg' },
+  { id: '4', title: 'Trovão', localization: 'Rua Rafael Brasilio Gerônimo Antes, 73', imageLink: 'http://customerscares.co/wp-content/uploads/2019/03/tiny-house-pinterest-style-tiny-house-awesome-best-old-houses-images-on-small-house-interior-design-pinterest.jpg' },
 ]
 
 export default class App extends React.Component {
@@ -119,7 +119,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard title={item.title} imageLink={item.imageLink} />
+            <RepCard title={item.title} imageLink={item.imageLink} localization={item.localization}/>
 
           </Animated.View>
         )
@@ -140,7 +140,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard title={item.title} imageLink={item.imageLink} />
+            <RepCard title={item.title} imageLink={item.imageLink} localization={item.localization}/>
 
           </Animated.View>
         )

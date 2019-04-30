@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Image, Text, StyleSheet, Alert } from 'react-native';
+import { TouchableOpacity, View, Image, Text, StyleSheet, Alert } from 'react-native';
 import { input, styles } from '../components/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Button } from 'native-base';
 
 export default class RepCard extends Component {
 
@@ -9,8 +10,9 @@ export default class RepCard extends Component {
     super(props);
 
     this.state = {
-      repTitle: props.title,
-      repImage: props.imageLink
+      title: props.title,
+      repImage: props.imageLink,
+      localization: props.localization
     }
   }
 
@@ -23,8 +25,8 @@ export default class RepCard extends Component {
           <View style={styleSwipe.viewImage}>
             <Image style={styleSwipe.repImage} source={this.getImage()} />
             <View style={styleSwipe.viewText}>
-              <Text style={styleSwipe.repTitle}>República Federativa do Bllll</Text>
-              <Text style={styleSwipe.repLocalization}>Avenida Juscelino Kubtcheck</Text>
+              <Text style={styleSwipe.repTitle}>{this.state.title}</Text>
+              <Text style={styleSwipe.repLocalization}>{this.state.localization}</Text>
             </View>
           </View>
 
@@ -47,6 +49,16 @@ export default class RepCard extends Component {
                 <Icon name='map-o' size={35} color='#000' onPress={() => Alert.alert('', 'Mapa da República', [{ text: 'OK' }])} />
               </View>
             </View>
+          </View>
+
+          <View style={styleSwipe.lastView}>
+            <TouchableOpacity style={{alignContent: 'center'}} >
+              <Text style={styleSwipe.lastButton}>SIM</Text>
+            </TouchableOpacity>
+            <Text style={styleSwipe.lastText}>12 Vagas</Text>
+            <TouchableOpacity style={{alignContent: 'center'}} >
+              <Text style={styleSwipe.lastButton}>NÃO</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -105,7 +117,21 @@ const styleSwipe = StyleSheet.create({
     borderColor: '#8c8c8c',
     width: styles.card.width * 0.97,
     height: styles.card.height * 0.75,
-  }
+  },
+  lastText: {
+    fontSize: 20,
+  },
+  lastButton: {
+    padding: 5,
+    backgroundColor: '#ff4d4d',
+    width: styles.card.width * 0.2,
+    height: styles.card.width * 0.09,
+  },
+  lastView: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+  },
 });
 
 // propriedades padrão do componente
