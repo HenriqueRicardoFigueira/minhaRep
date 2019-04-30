@@ -19,65 +19,34 @@ export default class RepCard extends Component {
       <View style={styles.container}>
         {/* O cartão que será 'arrastado' */}
         <View style={styles.card}>
-
           {/* VIEW SUPERIOR */}
-          <View style={styleSwipe.view1}>
-            {/* View com a foto */}
-            <View>
-              <Image style={styleSwipe.iconPhoto} source={require('../image/houseIcon.png')} />
-            </View>
-            {/* View com o nome da rep e as tags */}
-            <View>
-              <Text style={styleSwipe.repTitle}>{this.state.repTitle}</Text>
-              <View style={styleSwipe.iconViewTop}>
-                <View style={styleSwipe.iconTop}>
-                  <Icon size={30} name='snowflake-o' color='#000' />
-                </View>
-                <View style={styleSwipe.iconTop}>
-                  <Icon size={30} name='wheelchair-alt' color='#000'/>
-                </View>
-                <View style={styleSwipe.iconTop}>
-                  <Icon size={30} name='bicycle' color='#000'/>
-                </View>
-                <View style={styleSwipe.iconTop}>
-                  <Icon size={30} name='youtube' color='#000'/>
-                </View>
-                <View style={styleSwipe.iconTop}>
-                  <Icon size={30} name='steam' color='#000'/>
-                </View>
-              </View>
+          <View style={styleSwipe.viewImage}>
+            <Image style={styleSwipe.repImage} source={this.getImage()} />
+            <View style={styleSwipe.viewText}>
+              <Text style={styleSwipe.repTitle}>República Federativa do Bllll</Text>
+              <Text style={styleSwipe.repLocalization}>Avenida Juscelino Kubtcheck</Text>
             </View>
           </View>
 
           {/* VIEW INTERMEDIÁRIA */}
           <View>
-            <Image style={styleSwipe.repImage} source={this.getImage()} />
-          </View>
-
-          {/* TERCEIRA VIEW */}
-          <View>
             <View style={styleSwipe.iconViewButton}>
-              <View style={styleSwipe.iconButton} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
+              <View style={styleSwipe.icon} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
                 <Icon name='bathtub' size={35} color='#000' />
               </View>
-              <View style={styleSwipe.iconButton} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
+              <View style={styleSwipe.icon} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
                 <Icon name='bed' size={35} color='#000' onPress={() => Alert.alert('', 'Quantidade de Camas', [{ text: 'OK' }])} />
               </View>
-              <View style={styleSwipe.iconButton} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
+              <View style={styleSwipe.icon} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
                 <Icon name='users' size={35} color='#000' onPress={() => Alert.alert('', 'Quantidade de Membros', [{ text: 'OK' }])} />
               </View>
-              <View style={styleSwipe.iconButton} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
+              <View style={styleSwipe.icon} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
                 <Icon name='money' size={35} color='#000' onPress={() => Alert.alert('', 'Preço do Aluguel', [{ text: 'OK' }])} />
               </View>
-              <View style={styleSwipe.iconButton} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
+              <View style={styleSwipe.icon} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
                 <Icon name='map-o' size={35} color='#000' onPress={() => Alert.alert('', 'Mapa da República', [{ text: 'OK' }])} />
               </View>
             </View>
-          </View>
-
-          {/* VIEW FINAL */}
-          <View>
-
           </View>
         </View>
       </View>
@@ -96,38 +65,22 @@ export default class RepCard extends Component {
 };
 
 const styleSwipe = StyleSheet.create({
-  view1: {
-    padding: 5,
-    flexDirection: 'row',
+  viewImage: {
+    paddingTop: 5,
+    width: styles.screen.width * 0.97,
   },
-  iconPhoto: {
-    borderRadius: 10,
-    resizeMode: 'cover',
-    backgroundColor: '#ffb380',
-    width: styles.screen.width * 0.25,
-    height: styles.screen.width * 0.25,
+  viewText: {
+    paddingLeft: 5,
+    paddingTop: styles.screen.height * 0.57,
+    position: 'absolute',
   },
   repTitle: {
-    width: 190,
-    fontSize: 25,
-    paddingLeft: 5,
-    color: '#ff6600',
-    flexDirection: 'column',
+    fontSize: 22,
+    color: '#ffffff',
   },
-  iconViewTop: {
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: styles.screen.width * 0.5,
-  },
-  iconTop: {
-    margin: 2,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ff944d',
-    width: styles.screen.width*0.11,
-    height: styles.screen.width*0.11,
+  repLocalization: {
+    fontSize: 15,
+    color: '#ffffff',
   },
   iconViewButton: {
     padding: 10,
@@ -136,7 +89,7 @@ const styleSwipe = StyleSheet.create({
     justifyContent: 'space-between',
     width: styles.screen.width * 0.85,
   },
-  iconButton: {
+  icon: {
     margin: 1.8,
     borderRadius: 100,
     alignItems: 'center',
@@ -150,11 +103,10 @@ const styleSwipe = StyleSheet.create({
     borderRadius: 10,
     alignSelf: 'center',
     borderColor: '#8c8c8c',
-    width: styles.card.width * 0.95,
-    height: styles.card.height * 0.6,
+    width: styles.card.width * 0.97,
+    height: styles.card.height * 0.75,
   }
 });
-
 
 // propriedades padrão do componente
 RepCard.defaultProps = {
