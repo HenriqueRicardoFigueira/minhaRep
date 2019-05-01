@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {TouchableOpacity , Text} from 'react-native';
+import {TouchableOpacity , Text, Image} from 'react-native';
 import FBSDK, {GraphRequest} from 'react-native-fbsdk';
 import {styles} from './styles';
 import { withNavigation } from 'react-navigation';
@@ -58,8 +58,9 @@ class FacebookLogin extends Component {
 
   render() {
     return (
-      <TouchableOpacity style={styles.button} onPress={this.face}>
-        <Text style={styles.butonText}> Continue with Facebook </Text>
+      <TouchableOpacity style={styles.fbButton} onPress={this.face}>
+        <Image style={styles.fbImg} source={require('../image/flogo_rgb_hex-brc-site-250.png')} />
+        <Text style={styles.fbButtonText}> Continuar com o Facebook </Text>
       </TouchableOpacity>
     );
   }

@@ -1,8 +1,10 @@
 import React, { Component} from 'react';
 
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Button, Item, Input, Label} from 'native-base';
 import FacebookLogin from './facebookLogin';
 import GoogleLogin from './googleLogin';
+
 import { withNavigation } from 'react-navigation';
 
 // import { Container } from './styles';
@@ -50,24 +52,26 @@ class Login extends Component {
     return (
         <View style={styles.container}>
             <Image style={styles.image} source={require('../image/logo2.png')}/>
-
-            <TextInput style={input(this.state.borderColorEmail)}
-                placeholder="Digite seu email"
-                value={this.state.email}
-                autoCapitalize={'none'}
-                onChangeText={email => this.setState({email})}
-            />
-            <TextInput style={input(this.state.borderColorPassword)}
-                placeholder="Digite sua senha"
-                value={this.state.password}
-                secureTextEntry={true}
-                onChangeText={password => this.setState({password})}
-            />
-            <TouchableOpacity style={styles.button} onPress={this.login}>
+            <Item floatingLabel style = {styles.floatInput}>
+              <Label>Digite seu email:</Label>
+                <Input
+                  value={this.state.email}
+                  onChangeText={(email) => this.setState({ email })}
+                ></Input>
+             </Item>
+             <Item floatingLabel style = {styles.floatInput}>
+              <Label>Digite sua senha:</Label>
+                <Input
+                  value={this.state.password}
+                  secureTextEntry={true}
+                  onChangeText={(password) => this.setState({ password })}
+                ></Input>
+             </Item>
+            <Button style={styles.button} onPress={this.login}>
                 <Text style={styles.buttonText}>Logar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={this.userRegist}>
-                <Text style={styles.buttonText}>Registrar</Text>
+            </Button>
+            <TouchableOpacity style={styles.registerButton} onPress={this.userRegist}>
+              <Text style={styles.registerText}>Registrar</Text>
             </TouchableOpacity>
 
             <View style={styles.loginView}>

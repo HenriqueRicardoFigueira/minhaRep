@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {GoogleSignin, statusCodes } from 'react-native-google-signin';
+import {GoogleSignin, statusCodes, GoogleSigninButton} from 'react-native-google-signin';
 import { Button, StyleSheet } from 'react-native';
 import firebase from 'react-native-firebase';
 import { withNavigation } from 'react-navigation'
@@ -34,7 +34,7 @@ class GoogleLogin extends Component {
   };  
 
   render() {
-    return <Button style={styles.button} title="Continue with Google" onPress={this.signIn}/>;
+    return <GoogleSigninButton style={styles.button} size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Light} onPress={this.signIn}/>;
   }
 }
 
@@ -43,8 +43,9 @@ export default withNavigation(GoogleLogin);
 
 const styles = StyleSheet.create({
     button: {
-        height: 45,
-        alignSelf: 'stretch',
+        height: 48,
+        width: 312,
+        alignSelf: 'center',
         paddingHorizontal: 20,
         justifyContent: 'center',
         alignItems: 'center',
