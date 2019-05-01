@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
+import { Button, Item, Input, Label } from 'native-base';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import firebase from 'react-native-firebase';
-//import styles from './styles';
+import {styles} from './styles';
 
 import { withNavigation } from 'react-navigation';
 
 /*
     Fields from User Register :
-    nome
+    name
     email
     password
-    cidade
-    idade
+    city
+    age
     bio
     tag: null
 */
@@ -23,47 +24,44 @@ class UserRegist extends Component {
     this.ref = firebase.firestore().collection('users');
 
     this.state = {
-      nome: '',
+      name: '',
       email: '',
       password: '',
-      cidade: '',
-      idade: '',
+      age: '',
       bio: '',
       uid: '',
     };
   };
 
   _registerUser = async () => {
-    const { cidade, email, idade, nome, password } = this.state;
+    const { email, age, name, password } = this.state;
     //try {
-      // REGISTRA O USUARIO NO AUTHENTICATION
-      // RETORNA UM OBJETO DO TIPO user
-      const usr = await firebase.auth().createUserWithEmailAndPassword(email, password);
-      this.setState({ isRegistrado: true });
+    // REGISTRA O USUARIO NO AUTHENTICATION
+    // RETORNA UM OBJETO DO TIPO user
+    const usr = await firebase.auth().createUserWithEmailAndPassword(email, password);
+    this.setState({ isRegistrado: true });
 
-      // REGISTRA OS DADOS DO USUARIO NA DATABASE()
-      this.ref.doc(usr.user.uid).set({
-        bio: 'Conte um pouco sobre você',
-        cidade: cidade,
-        email: email,
-        uid: usr.user.uid,
-        idade: idade,
-        nome: nome
-      }).catch((error) => {
-        console.error("Error registering user: ", error);
-      });
+    // REGISTRA OS DADOS DO USUARIO NA DATABASE()
+    this.ref.doc(usr.user.uid).set({
+      bio: 'Conte um pouco sobre você',
+      email: email,
+      uid: usr.user.uid,
+      age: age,
+      name: name
+    }).catch((error) => {
+      console.error("Error registering user: ", error);
+    });
 
-      // RESETA O .state
-      this.setState({
-        nome: '',
-        email: '',
-        password: '',
-        cidade: '',
-        idade: '',
-        bio: '',
-        isGravado: true,
-      });
-      this.props.navigation.navigate("Home");
+    // RESETA O .state
+    this.setState({
+      name: '',
+      email: '',
+      password: '',
+      age: '',
+      bio: '',
+      isSubmited: true,
+    });
+    this.props.navigation.navigate("Home");
     /*} catch (err) {
       console.log(err);
     }   */
@@ -84,27 +82,25 @@ class UserRegist extends Component {
 
   _editUser = (usr) => {
     // ESPERA UM OBJETO DO TIPO user
-    const { cidade, email, idade, nome, password } = this.state;
+    const { email, age, name, password } = this.state;
     // EDITA OS DADOS DO USUARIO "usr" NA DATABASE()
     this.ref.doc(usr.user.uid).set({
       bio: '',
-      cidade: cidade,
       email: email,
       uid: usr.user.uid,
-      idade: idade,
-      nome: nome
+      age: age,
+      name: name
     }).catch((error) => {
       console.error("Error editing document: ", error);
     });
     // RESETA O .state
     this.setState({
-      nome: '',
+      name: '',
       email: '',
       password: '',
-      cidade: '',
-      idade: '',
+      age: '',
       bio: '',
-      isGravado: true
+      isSubmited: true
     });
   }
 
@@ -114,11 +110,10 @@ class UserRegist extends Component {
 
   /*
   Fields from User Register :
-  nome
+  name
   email
   password
-  cidade
-  idade
+  age
   bio
   tag: null
   */
@@ -129,87 +124,47 @@ class UserRegist extends Component {
 
         <Text h1>Tela de registro </Text>
 
-        <TextInput style={styles.input}
-          placeholder="Nome"
-          value={this.state.nome}
-          autoCapitalize={'none'}
-          onChangeText={nome => this.setState({ nome })}
-        />
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Digite seu nome:</Label>
+          <Input
+            value={this.state.name}
+            onChangeText={(name) => this.setState({ name })}
+          ></Input>
+        </Item>
 
-        <TextInput style={styles.input}
-          placeholder="Email"
-          value={this.state.email}
-          autoCapitalize={'none'}
-          onChangeText={email => this.setState({ email })}
-        />
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Digite seu email:</Label>
+          <Input
+            value={this.state.email}
+            onChangeText={(email) => this.setState({ email })}
+          ></Input>
+        </Item>
 
-        <TextInput style={styles.input}
-          placeholder="Senha"
-          value={this.state.password}
-          secureTextEntry={true}
-          onChangeText={password => this.setState({ password })}
-        />
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Digite sua senha:</Label>
+          <Input
+            value={this.state.password}
+            secureTextEntry={true}
+            onChangeText={(password) => this.setState({ password })}
+          ></Input>
+        </Item>
 
-        <TextInput style={styles.input}
-          placeholder="Cidade"
-          value={this.state.cidade}
-          autoCapitalize={'none'}
-          onChangeText={cidade => this.setState({ cidade })}
-        />
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Digite sua idade:</Label>
+          <Input
+            value={this.state.age}
+            keyboardType='number-pad'
+            onChangeText={(age) => this.setState({ age })}
+          ></Input>
+        </Item>
 
-        <TextInput style={styles.input}
-          placeholder="Idade"
-          value={this.state.idade}
-          keyboardType='number-pad'
-          onChangeText={idade => this.setState({ idade })}
-        />
-
-        <TouchableOpacity style={styles.button} onPress={this._registerUser}>
-          <Text style={styles.butonText}> Registrar </Text>
-        </TouchableOpacity>
+        <Button style={styles.button} onPress={this._registerUser}>
+          <Text style={styles.buttonText}> Registrar </Text>
+        </Button>
 
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e6f7ff',
-    paddingHorizontal: 30,
-    paddingTop: 30,
-  },
-
-  input: {
-    height: 45,
-    backgroundColor: '#FFF',
-    alignSelf: 'stretch',
-    borderColor: '#e6e6e6',
-    borderWidth: 1,
-    paddingHorizontal: 20,
-    marginBottom: 30,
-    borderRadius: 30,
-    fontSize: 18,
-  },
-
-  button: {
-    height: 45,
-    backgroundColor: '#069',
-    alignSelf: 'stretch',
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30
-  },
-
-  butonText: {
-    color: '#FFF',
-    fontWeight: 'bold',
-    fontSize: 18
-  },
-});
 
 export default withNavigation(UserRegist);

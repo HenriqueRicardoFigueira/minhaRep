@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import firebase from 'react-native-firebase';
-//import styles from './styles';
-
+import { styles } from './styles';
+import { Button, Item, Input, Label } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 class UserProfile extends Component {
@@ -12,11 +12,10 @@ class UserProfile extends Component {
     this.ref = firebase.firestore().collection('users');
 
     this.state = {
-      nome: '', //EDITAVEL
+      name: '', //EDITAVEL
       email: '', //
       password: '', // q
-      cidade: '', //EDITAVEL
-      idade: '', //EDITAVEL
+      age: '', //EDITAVEL
       bio: '', //EDITAVEL
       uid: '', //PK
 
@@ -26,11 +25,10 @@ class UserProfile extends Component {
 
   /* CAMPOS DA DATABASE 
     bio,
-    cidade,
     email,
     uid,
-    idade,
-    nome
+    age,
+    name
   */
 
   componentDidMount() {
@@ -42,11 +40,10 @@ class UserProfile extends Component {
         if (userData.exists) {
           const userP = userData.data();
           this.setState({
-            nome: userP.nome,
-            email:userP.email,
+            name: userP.name,
+            email: userP.email,
             bio: userP.bio,
-            idade: userP.idade,
-            cidade: userP.cidade,
+            age: userP.age,
             uid: user.uid
           })
         } else {
@@ -56,16 +53,15 @@ class UserProfile extends Component {
   }
 
   editUser = () => {
-    const { cidade, idade, nome, bio, email } = this.state;
+    const { age, name, bio, email } = this.state;
     var user = firebase.auth().currentUser;
     this.ref.doc(user.uid)
       .set({
         bio: bio,
-        cidade: cidade,
         email: email,
         uid: user.uid,
-        idade: idade,
-        nome: nome
+        age: age,
+        name: name
       });
     this.setState({ isEditado: true });
   }
@@ -77,97 +73,42 @@ class UserProfile extends Component {
   render() {
     return (
       <View style={styles.container}>
-
         <Text h1>Tela de Perfil</Text>
 
-        <TextInput style={styles.input}
-          label='Nome'
-          placeholder={this.state.nome}
-          value={this.state.nome}
-          autoCapitalize={'none'}
-          onChangeText={nome => this.setState({ nome })}
-        />
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Digite seu nome:</Label>
+          <Input
+            value={this.state.name}
+            onChangeText={(name) => this.setState({ name })}
+          ></Input>
+        </Item>
 
-        <TextInput style={styles.input}
-          label='Email'
-          placeholder={this.state.email}
-          value={this.state.email}
-          autoCapitalize={'none'}
-          editable={false}
-          onChangeText={email => this.setState({ email })}
-        />
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Digite seu email:</Label>
+          <Input
+            value={this.state.email}
+            onChangeText={(email) => this.setState({ email })}
+          ></Input>
+        </Item>
 
-        <TextInput style={styles.input}
-          label='Cidade'
-          placeholder={this.state.cidade}
-          value={this.state.cidade}
-          autoCapitalize={'none'}
-          onChangeText={cidade => this.setState({ cidade })}
-        />
-
-        <TextInput style={styles.input}
-          label='Idade'
-          placeholder={this.state.idade}
-          value={this.state.idade}
-          keyboardType='number-pad'
-          onChangeText={idade => this.setState({ idade })}
-        />
-
-        <TextInput style={styles.input}
-          label='Bio'
-          placeholder={this.state.bio}
-          value={this.state.bio}
-          onChangeText={bio => this.setState({ bio })}
-        />
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Digite sua idade:</Label>
+          <Input
+            value={this.state.age}
+            keyboardType='number-pad'
+            onChangeText={(age) => this.setState({ age })}
+          ></Input>
+        </Item>
 
         {this.state.isEditado ? <Text> Editado com sucesso </Text> : <Text />}
 
-        <TouchableOpacity style={styles.button} onPress={this.editUser}>
-          <Text style={styles.butonText}> Editar </Text>
-        </TouchableOpacity>
+        <Button style={styles.button} onPress={this.editUser}>
+          <Text style={styles.buttonText}> Editar </Text>
+        </Button>
 
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e6f7ff',
-    paddingHorizontal: 30,
-    paddingTop: 30,
-  },
-
-  input: {
-    height: 45,
-    backgroundColor: '#FFF',
-    alignSelf: 'stretch',
-    borderColor: '#e6e6e6',
-    borderWidth: 1,
-    paddingHorizontal: 20,
-    marginBottom: 30,
-    borderRadius: 30,
-    fontSize: 18,
-  },
-
-  button: {
-    height: 45,
-    backgroundColor: '#069',
-    alignSelf: 'stretch',
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30
-  },
-
-  butonText: {
-    color: '#FFF',
-    fontWeight: 'bold',
-    fontSize: 18
-  },
-});
 
 export default withNavigation(UserProfile);

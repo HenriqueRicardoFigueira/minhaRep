@@ -10,7 +10,7 @@ import { withNavigation } from 'react-navigation';
 // import { Container } from './styles';
 import firebase from 'react-native-firebase';
 
-import {input, styles} from './styles';
+import {styles} from './styles';
 
 class Login extends Component {
     state = {
@@ -52,6 +52,7 @@ class Login extends Component {
     return (
         <View style={styles.container}>
             <Image style={styles.image} source={require('../image/logo2.png')}/>
+            
             <Item floatingLabel style = {styles.floatInput}>
               <Label>Digite seu email:</Label>
                 <Input
@@ -59,6 +60,7 @@ class Login extends Component {
                   onChangeText={(email) => this.setState({ email })}
                 ></Input>
              </Item>
+             
              <Item floatingLabel style = {styles.floatInput}>
               <Label>Digite sua senha:</Label>
                 <Input
@@ -67,9 +69,11 @@ class Login extends Component {
                   onChangeText={(password) => this.setState({ password })}
                 ></Input>
              </Item>
+            
             <Button style={styles.button} onPress={this.login}>
                 <Text style={styles.buttonText}>Logar</Text>
             </Button>
+            
             <TouchableOpacity style={styles.registerButton} onPress={this.userRegist}>
               <Text style={styles.registerText}>Registrar</Text>
             </TouchableOpacity>

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { View, ScrollView, Text, TextInput, Image, TouchableOpacity } from 'react-native'
-import { Form, Input, Label, Item, Container } from 'native-base'
+import { Button, Input, Label, Item, } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import firebase from 'react-native-firebase'
 
-import { input, styles } from './styles'
+import { styles } from './styles'
 
 
 class RepForm extends Component {
@@ -22,7 +22,7 @@ class RepForm extends Component {
       borderColor: '#e6e6e6'
     }
   };
-  
+
   addRep = () => {
     this.ref.add({
       name: this.state.name,
@@ -49,49 +49,46 @@ class RepForm extends Component {
 
   render() {
     return (
-      <Container>
-        <Form>
-          <Item floatingLabel>
-            <Label>Nome da república:</Label>
-            <Input
-              value={this.state.name}
-              onChangeText={(name) => this.setState({ name })}
-              /*onBlur={() => {
-                this.setState({
-                  nameError: validate('name', this.state.name)
-                })
-              }}*/></Input>
-          </Item>
-          <Item floatingLabel>
-            <Label>Descrição:</Label>
-            <Input
-              value={this.state.bio}
-              onChangeText={(bio) => this.setState({ bio })}
-            ></Input>
-          </Item>
-          <Item floatingLabel>
-            <Label>Membros:</Label>
-            <Input
-              value={this.state.members}
-              onChangeText={(members) => this.setState({ members })}
-            ></Input>
-          </Item>
-          <Item floatingLabel>
-            <Label>Tags:</Label>
-            <Input
-              value={this.state.tags}
-              onChangeText={(tags) => this.setState({ tags })}
-            ></Input>
-          </Item>
-        </Form>
-        <TouchableOpacity
-          style={styles.button}
-          placeholder={'Submeter'}
-          disabled={!this.state.name.length || !this.state.bio.length}
-          onPress={() => this.addRep()}>
+      <View style={styles.container}>
+
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Nome da república:</Label>
+          <Input
+            value={this.state.name}
+            onChangeText={(name) => this.setState({ name })}
+          ></Input>
+        </Item>
+
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Descrição:</Label>
+          <Input
+            value={this.state.bio}
+            onChangeText={(bio) => this.setState({ bio })}
+          ></Input>
+        </Item>
+
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Membros:</Label>
+          <Input
+            value={this.state.members}
+            onChangeText={(members) => this.setState({ members })}
+          ></Input>
+        </Item>
+
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Tags:</Label>
+          <Input
+            value={this.state.tags}
+            onChangeText={(tags) => this.setState({ tags })}
+          ></Input>
+        </Item>
+
+        <Button style={styles.button} onPress={() => this.addRep()}
+          disabled={!this.state.name.length || !this.state.bio.length}>
           <Text style={styles.buttonText}>Submeter</Text>
-        </TouchableOpacity>
-      </Container>
+        </Button>
+
+      </View>
     );
   }
 }
