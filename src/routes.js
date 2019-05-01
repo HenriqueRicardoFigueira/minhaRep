@@ -21,7 +21,7 @@ const Routes = createAppContainer(
         UserRegist: UserRegist,
         UserProfile: UserProfile
     }, {
-        initialRouteName: 'RepCRUD'
+        initialRouteName: 'Login'
     })
 );
 
