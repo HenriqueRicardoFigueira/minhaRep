@@ -32,49 +32,49 @@ export default class RepCard extends Component {
         {/* O cartão que será 'arrastado' */}
         <View style={styles.card}>
           {/* VIEW SUPERIOR */}
-          <View style={styleSwipe.viewImage}>
-            <Image style={styleSwipe.repImage} source={this.getImage()} />
-            <View style={styleSwipe.viewText}>
-              <Text style={styleSwipe.repTitle}>{this.state.vacancies}</Text>
-              <Text style={styleSwipe.repTitle}>{this.state.title}</Text>
-              <Text style={styleSwipe.repLocalization}>{this.state.localization}</Text>
+          <View style={styles.viewImage}>
+            <Image style={styles.repImage} source={this.getImage()} />
+            <View style={styles.viewText}>
+              <Text style={styles.repTitle}>{this.state.vacancies}</Text>
+              <Text style={styles.repTitle}>{this.state.title}</Text>
+              <Text style={styles.repLocalization}>{this.state.localization}</Text>
             </View>
           </View>
 
           {/* VIEW ICONES */}
           <View>
-            <View style={styleSwipe.iconView}>
+            <View style={styles.iconView}>
               {/*icone banheiros*/}
-              <View style={styleSwipe.iconViewText} >
-                <View style={styleSwipe.icon} >
+              <View style={styles.iconViewText} >
+                <View style={styles.icon} >
                   <Icon name='bathtub' size={this.iconSize} color='#000' onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} />
                 </View>
-                <Text style={styleSwipe.iconText}>{this.state.bathroom}</Text>
+                <Text style={styles.iconText}>{this.state.bathroom}</Text>
               </View>
               {/*icone quartos*/}
-              <View style={styleSwipe.iconViewText} >
-                <View style={styleSwipe.icon} >
+              <View style={styles.iconViewText} >
+                <View style={styles.icon} >
                   <Icon name='bed' size={this.iconSize} color='#000' onPress={() => Alert.alert('', 'Quantidade de Camas', [{ text: 'OK' }])} />
                 </View>
-                <Text style={styleSwipe.iconText}>{this.state.bed}</Text>
+                <Text style={styles.iconText}>{this.state.bed}</Text>
               </View>
               {/*icone membros*/}
-              <View style={styleSwipe.iconViewText}>
-                <View style={styleSwipe.icon} >
+              <View style={styles.iconViewText}>
+                <View style={styles.icon} >
                   <Icon name='users' size={this.iconSize} color='#000' onPress={() => Alert.alert('', 'Quantidade de Membros', [{ text: 'OK' }])} />
                 </View>
-                <Text style={styleSwipe.iconText}>{this.state.users}</Text>
+                <Text style={styles.iconText}>{this.state.users}</Text>
               </View>
               {/*icone preco*/}
-              <View style={styleSwipe.iconViewText}>
-                <View style={styleSwipe.icon} >
+              <View style={styles.iconViewText}>
+                <View style={styles.icon} >
                   <Icon name='money' size={this.iconSize} color='#000' onPress={() => Alert.alert('', 'Preço do Aluguel', [{ text: 'OK' }])} />
                 </View>
-                <Text style={styleSwipe.iconText}>{this.state.price}</Text>
+                <Text style={styles.iconText}>{this.state.price}</Text>
               </View>
               {/*icone mapa*/}
-              <View style={styleSwipe.iconViewText}>
-                <View style={styleSwipe.icon} >
+              <View style={styles.iconViewText}>
+                <View style={styles.icon} >
                   <Icon name='map-o' size={35} color='#000' />
                 </View>
               </View>
@@ -96,57 +96,6 @@ export default class RepCard extends Component {
     }
   }
 };
-
-const styleSwipe = StyleSheet.create({
-  viewImage: {
-    paddingTop: 5,
-    width: styles.screen.width * 0.97,
-  },
-  viewText: {
-    paddingLeft: 5,
-    paddingTop: styles.screen.height * 0.58,
-    position: 'absolute',
-  },
-  repTitle: {
-    fontSize: 20,
-    color: '#ffffff',
-  },
-  repLocalization: {
-    fontSize: 15,
-    color: '#ffffff',
-  },
-  iconView: {
-    padding: 7,
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
-    width: styles.screen.width * 0.85,
-  },
-  icon: {
-    margin: 1.8,
-    borderRadius: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ff944d',
-    width: styles.screen.width * 0.17,
-    height: styles.screen.width * 0.17,
-  },
-  repImage: {
-    borderWidth: 2,
-    borderRadius: 10,
-    alignSelf: 'center',
-    borderColor: '#8c8c8c',
-    width: styles.card.width * 0.97,
-    height: styles.card.height * 0.80,
-  },
-  iconViewText: {
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  iconText: {
-    fontSize: 15
-  }
-});
 
 // propriedades padrão do componente
 RepCard.defaultProps = {

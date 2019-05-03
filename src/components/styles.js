@@ -114,11 +114,58 @@ const styles = StyleSheet.create({
     flex: 1,
     ...StyleSheet.absoluteFillObject
   },
-
   screen: {
     height: SCREEN_HEIGHT,
     width: SCREEN_WIDTH,
   },
+  viewImage: {
+    paddingTop: 5,
+    width: SCREEN_WIDTH * 0.97,
+  },
+  viewText: {
+    paddingLeft: 5,
+    paddingTop: SCREEN_HEIGHT * 0.58,
+    position: 'absolute',
+  },
+  repTitle: {
+    fontSize: 20,
+    color: '#ffffff',
+  },
+  repLocalization: {
+    fontSize: 15,
+    color: '#ffffff',
+  },
+  iconView: {
+    padding: 7,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    width: SCREEN_WIDTH * 0.85,
+  },
+  icon: {
+    margin: 1.8,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ff944d',
+    width: SCREEN_WIDTH * 0.17,
+    height: SCREEN_WIDTH * 0.17,
+  },
+  repImage: {
+    borderWidth: 2,
+    borderRadius: 10,
+    alignSelf: 'center',
+    borderColor: '#8c8c8c',
+    width: SCREEN_WIDTH * 0.98 * 0.97,
+    height: SCREEN_HEIGHT * 0.90 * 0.80,
+  },
+  iconViewText: {
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  iconText: {
+    fontSize: 15
+  }
 });
 
 module.exports = { input, styles };
