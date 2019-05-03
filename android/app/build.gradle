@@ -160,6 +160,8 @@ dependencies {
     // BIBLIOTECA PARA DATABASE()
     implementation 'com.google.firebase:firebase-database:16.0.6'
 
+    implementation(project(":react-native-google-signin"))
+
     implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.android.support:multidex:1.0.0'
     //maps

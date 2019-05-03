@@ -23,13 +23,21 @@
           }
         },
         {
+          "client_id": "299714124161-7tvpdmpuk5dhmp3e25f0ujb6tkgtf1eu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.invertase.rnfirebasestarter",
+            "certificate_hash": "f52b2067168a52a1f33374e8defdba7bce0ef768"
+          }
+        },
+        {
           "client_id": "299714124161-ep25s0g4qc46d4jjnsjbqk4e3a53a2su.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAbWowhh-x9eWWPnbEags3yucHpl9dTGtw"
+          "current_key": "AIzaSyA_zdS-vlFbRsYiXFBGjBvTmJ-EMjPp_uQ"
         }
       ],
       "services": {
@@ -58,7 +66,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAbWowhh-x9eWWPnbEags3yucHpl9dTGtw"
+          "current_key": "AIzaSyA_zdS-vlFbRsYiXFBGjBvTmJ-EMjPp_uQ"
         }
       ],
       "services": {
