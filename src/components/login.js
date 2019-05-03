@@ -57,6 +57,7 @@ class Login extends Component {
               <Label>Digite seu email:</Label>
                 <Input
                   value={this.state.email}
+                  autoCapitalize={'none'}
                   onChangeText={(email) => this.setState({ email })}
                 ></Input>
              </Item>
