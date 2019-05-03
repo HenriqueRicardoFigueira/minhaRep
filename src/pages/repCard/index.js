@@ -6,10 +6,10 @@ import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../a
 
 // apenas para teste
 const Reps = [
-  { id: '1', title: 'Camargo Correia', localization: 'Rua das Tipuanas Amarelas, 70', imageLink: 'https://i.pinimg.com/originals/fd/e9/a4/fde9a48af9b22286c716df53e99d0b26.jpg' },
-  { id: '2', title: 'República em Preto e Branco', localization: 'Rua São Paulo, 902', imageLink: 'https://i.pinimg.com/originals/58/5e/ba/585ebab40b803e11f92a6b9fb657b809.jpg' },
-  { id: '3', title: 'República Diamente Jortão Castro', localization: 'Rua Gerondinos, 839', imageLink: 'https://i.pinimg.com/originals/d5/ee/b7/d5eeb71aaeaa6d8fb801e7981e033ae7.jpg' },
-  { id: '4', title: 'Trovão', localization: 'Rua Rafael Brasilio Gerônimo Antes, 73', imageLink: 'http://customerscares.co/wp-content/uploads/2019/03/tiny-house-pinterest-style-tiny-house-awesome-best-old-houses-images-on-small-house-interior-design-pinterest.jpg' },
+  { id: '1', title: 'Camargo Correia', localization: 'Rua das Tipuanas Amarelas, 70', imageLink: 'https://i.pinimg.com/originals/fd/e9/a4/fde9a48af9b22286c716df53e99d0b26.jpg', bathroom: 2, bed: 5, users: 4, price: 400, vacancies: 1},
+  { id: '2', title: 'República em Preto e Branco', localization: 'Rua São Paulo, 902', imageLink: 'https://i.pinimg.com/originals/58/5e/ba/585ebab40b803e11f92a6b9fb657b809.jpg', bathroom: 1, bed: 3, users: 2, price: 430, vacancies: 1},
+  { id: '3', title: 'República Diamente Jortão Castro', localization: 'Rua Gerondinos, 839', imageLink: 'https://i.pinimg.com/originals/d5/ee/b7/d5eeb71aaeaa6d8fb801e7981e033ae7.jpg', bathroom: 2, bed: 5, users: 3, price: 350, vacancies: 2},
+  { id: '4', title: 'Trovão', localization: 'Rua Rafael Brasilio Gerônimo Antes, 73', imageLink: 'http://customerscares.co/wp-content/uploads/2019/03/tiny-house-pinterest-style-tiny-house-awesome-best-old-houses-images-on-small-house-interior-design-pinterest.jpg', bathroom: 2, bed: 5, users: 3, price: 350, vacancies: 2},
 ]
 
 export default class App extends React.Component {
@@ -119,7 +119,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard title={item.title} imageLink={item.imageLink} localization={item.localization}/>
+            <RepCard rep={item}/>
 
           </Animated.View>
         )
@@ -140,7 +140,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard title={item.title} imageLink={item.imageLink} localization={item.localization}/>
+            <RepCard rep={item}/>
 
           </Animated.View>
         )
