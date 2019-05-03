@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, View, Image, Text, StyleSheet, Alert } from 'react-native';
-import { input, styles } from '../components/styles';
+import { View, Image, Text, StyleSheet, Alert } from 'react-native';
+import { styles } from '../components/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button } from 'native-base';
 
 export default class RepCard extends Component {
 
@@ -12,13 +11,13 @@ export default class RepCard extends Component {
     this.state = {
       title: props.title,
       repImage: props.imageLink,
-      localization: props.localization
+      localization: props.localization,
     }
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.container} >
         {/* O cartão que será 'arrastado' */}
         <View style={styles.card}>
           {/* VIEW SUPERIOR */}
@@ -30,35 +29,45 @@ export default class RepCard extends Component {
             </View>
           </View>
 
-          {/* VIEW INTERMEDIÁRIA */}
+          {/* VIEW ICONES */}
           <View>
             <View style={styleSwipe.iconViewButton}>
-              <View style={styleSwipe.icon} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
-                <Icon name='bathtub' size={35} color='#000' />
-              </View>
-              <View style={styleSwipe.icon} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
-                <Icon name='bed' size={35} color='#000' onPress={() => Alert.alert('', 'Quantidade de Camas', [{ text: 'OK' }])} />
-              </View>
-              <View style={styleSwipe.icon} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
-                <Icon name='users' size={35} color='#000' onPress={() => Alert.alert('', 'Quantidade de Membros', [{ text: 'OK' }])} />
-              </View>
-              <View style={styleSwipe.icon} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
-                <Icon name='money' size={35} color='#000' onPress={() => Alert.alert('', 'Preço do Aluguel', [{ text: 'OK' }])} />
-              </View>
-              <View style={styleSwipe.icon} onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} >
-                <Icon name='map-o' size={35} color='#000' onPress={() => Alert.alert('', 'Mapa da República', [{ text: 'OK' }])} />
-              </View>
-            </View>
-          </View>
 
-          <View style={styleSwipe.lastView}>
-            <TouchableOpacity style={{alignContent: 'center'}} >
-              <Text style={styleSwipe.lastButton}>SIM</Text>
-            </TouchableOpacity>
-            <Text style={styleSwipe.lastText}>12 Vagas</Text>
-            <TouchableOpacity style={{alignContent: 'center'}} >
-              <Text style={styleSwipe.lastButton}>NÃO</Text>
-            </TouchableOpacity>
+              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <View style={styleSwipe.icon} >
+                  <Icon name='bathtub' size={35} color='#000' onPress={() => Alert.alert('', 'Quantidade de Banheiros', [{ text: 'OK' }])} />
+                </View>
+                <Text>123</Text>
+              </View>
+
+              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <View style={styleSwipe.icon} >
+                  <Icon name='bed' size={35} color='#000' onPress={() => Alert.alert('', 'Quantidade de Camas', [{ text: 'OK' }])} />
+                </View>
+                <Text>123</Text>
+              </View>
+
+              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <View style={styleSwipe.icon} >
+                  <Icon name='users' size={35} color='#000' onPress={() => Alert.alert('', 'Quantidade de Membros', [{ text: 'OK' }])} />
+                </View>
+                <Text>123</Text>
+              </View>
+
+              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <View style={styleSwipe.icon} >
+                  <Icon name='money' size={35} color='#000' onPress={() => Alert.alert('', 'Preço do Aluguel', [{ text: 'OK' }])} />
+                </View>
+                <Text>123</Text>
+              </View>
+
+              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <View style={styleSwipe.icon} >
+                  <Icon name='map-o' size={35} color='#000' onPress={() => Alert.alert('', 'Mapa da República', [{ text: 'OK' }])} />
+                </View>
+              </View>
+
+            </View>
           </View>
         </View>
       </View>
