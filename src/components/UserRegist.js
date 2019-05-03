@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Item, Input, Label } from 'native-base';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text} from 'react-native';
 import firebase from 'react-native-firebase';
 import {styles} from './styles';
 
@@ -11,10 +11,7 @@ import { withNavigation } from 'react-navigation';
     name
     email
     password
-    city
     age
-    bio
-    tag: null
 */
 
 class UserRegist extends Component {
@@ -33,7 +30,7 @@ class UserRegist extends Component {
     };
   };
 
-  _registerUser = async () => {
+  registerUser = async () => {
     const { email, age, name, password } = this.state;
     //try {
     // REGISTRA O USUARIO NO AUTHENTICATION
@@ -47,7 +44,8 @@ class UserRegist extends Component {
       email: email,
       uid: usr.user.uid,
       age: age,
-      name: name
+      name: name,
+      imgUrl: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381'
     }).catch((error) => {
       console.error("Error registering user: ", error);
     });
@@ -62,50 +60,6 @@ class UserRegist extends Component {
       isSubmited: true,
     });
     this.props.navigation.navigate("Home");
-    /*} catch (err) {
-      console.log(err);
-    }   */
-  }
-
-  _deleteUser = (usr) => {
-    // ESPERA UM OBJETO DO TIPO user
-    // O USUARIO A SER DELETADO DEVE ESTAR LOGANO NO SISTEMA PARA SER EXCLUIDO 
-    //fonte da informação : https://stackoverflow.com/questions/38800414/delete-a-specific-user-from-firebase
-    //const {navigation} = this.props
-    this.ref.doc(usr.user.uid).delete().then(() => {
-      console.log("Document successfully deleted!");
-    }).catch((error) => {
-      console.error("Error removing document: ", error);
-    });
-    //navigation.goBack();
-  }
-
-  _editUser = (usr) => {
-    // ESPERA UM OBJETO DO TIPO user
-    const { email, age, name, password } = this.state;
-    // EDITA OS DADOS DO USUARIO "usr" NA DATABASE()
-    this.ref.doc(usr.user.uid).set({
-      bio: '',
-      email: email,
-      uid: usr.user.uid,
-      age: age,
-      name: name
-    }).catch((error) => {
-      console.error("Error editing document: ", error);
-    });
-    // RESETA O .state
-    this.setState({
-      name: '',
-      email: '',
-      password: '',
-      age: '',
-      bio: '',
-      isSubmited: true
-    });
-  }
-
-  _goBack = () => {
-    this.props.navigation.navigate("Login");
   }
 
   /*
@@ -158,7 +112,7 @@ class UserRegist extends Component {
           ></Input>
         </Item>
 
-        <Button style={styles.button} onPress={this._registerUser}>
+        <Button style={styles.button} onPress={this.registerUser}>
           <Text style={styles.buttonText}> Registrar </Text>
         </Button>
 

@@ -1,4 +1,5 @@
 package com.invertase.rnfirebasestarter;
+import com.imagepicker.ImagePickerPackage;
 
 import android.app.Application;
 
@@ -8,6 +9,7 @@ import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
@@ -48,6 +50,9 @@ public class MainApplication extends Application implements ReactApplication {
           new RNFirebasePackage(),
           new FBSDKPackage(mCallbackManager),
           new RNFirebaseFirestorePackage(),
+          new RNFirebaseStoragePackage(),
+          // Image Upload Packages:
+          new ImagePickerPackage(),
           //googleauth
           new RNGoogleSigninPackage(),
           new MapsPackage(),

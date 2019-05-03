@@ -1,7 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-native';
-import Login from './src/components/login';
-import UserRegist from './src/components/UserRegist';
+import { View, ScrollView } from 'react-native';
 import AppContainer from './src/components/routes';
 import { createAppContainer } from 'react-navigation';
 
