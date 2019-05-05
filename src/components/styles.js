@@ -25,13 +25,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#eff7f9',
-    padding: 25,
+    padding: SCREEN_HEIGHT*0.025,
   },
   registerButton:{
     alignSelf: 'center',
-    width: 320, 
-    height: 50,
-    marginBottom: 10,
+    width: SCREEN_WIDTH*0.8, 
+    height:SCREEN_HEIGHT*0.07,
+    marginBottom: SCREEN_WIDTH*0.01,
     //paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -53,10 +53,10 @@ const styles = StyleSheet.create({
   },
   fbButton:{
     alignSelf: 'center',
-    width: 303, 
-    height: 42,
+    width: SCREEN_WIDTH*0.715, 
+    height: SCREEN_HEIGHT*0.055,
     backgroundColor: '#fff',
-    marginBottom: 2,
+    marginBottom: SCREEN_WIDTH*0.002,
     //paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -68,11 +68,11 @@ const styles = StyleSheet.create({
   },
   button: {
     alignSelf: 'center',
-    width: 320, 
-    height: 50,
+    width: SCREEN_WIDTH *0.8, 
+    height: SCREEN_HEIGHT*0.050,
     backgroundColor: '#F0803C',
-    marginTop: 15,
-    marginBottom: 5,
+    marginTop: SCREEN_WIDTH*0.015,
+    marginBottom: SCREEN_WIDTH*0.005,
     //paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -92,11 +92,11 @@ const styles = StyleSheet.create({
     width: 180,
     height: 180,
     justifyContent: 'center',
-    marginBottom: 50
+    marginBottom:SCREEN_WIDTH * 0.05
   },
 
   loginView: {
-    paddingTop: 10,
+    paddingTop: SCREEN_WIDTH * 0.010,
     alignItems: 'center',
   },
   scroll: {
@@ -114,11 +114,58 @@ const styles = StyleSheet.create({
     flex: 1,
     ...StyleSheet.absoluteFillObject
   },
-
   screen: {
     height: SCREEN_HEIGHT,
     width: SCREEN_WIDTH,
   },
+  viewImage: {
+    paddingTop: 5,
+    width: SCREEN_WIDTH * 0.97,
+  },
+  viewText: {
+    paddingLeft: 5,
+    paddingTop: SCREEN_HEIGHT * 0.58,
+    position: 'absolute',
+  },
+  repTitle: {
+    fontSize: 20,
+    color: '#ffffff',
+  },
+  repLocalization: {
+    fontSize: 15,
+    color: '#ffffff',
+  },
+  iconView: {
+    padding: 7,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    width: SCREEN_WIDTH * 0.85,
+  },
+  icon: {
+    margin: 1.8,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ff944d',
+    width: SCREEN_WIDTH * 0.17,
+    height: SCREEN_WIDTH * 0.17,
+  },
+  repImage: {
+    borderWidth: 2,
+    borderRadius: 10,
+    alignSelf: 'center',
+    borderColor: '#8c8c8c',
+    width: SCREEN_WIDTH * 0.98 * 0.97,
+    height: SCREEN_HEIGHT * 0.90 * 0.80,
+  },
+  iconViewText: {
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  iconText: {
+    fontSize: 15
+  }
 });
 
 module.exports = { input, styles };

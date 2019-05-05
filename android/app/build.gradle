@@ -163,6 +163,8 @@ dependencies {
     // BIBLIOTECA PARA STORAGE()
     implementation 'com.google.firebase:firebase-storage:16.1.0'
 
+    implementation(project(":react-native-google-signin"))
+
     implementation 'com.google.firebase:firebase-ads:15.0.1'
     implementation 'com.android.support:multidex:1.0.0'
     //maps
