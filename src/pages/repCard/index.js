@@ -6,10 +6,10 @@ import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../a
 
 // apenas para teste
 const Reps = [
-  { id: '1', title: 'Camargo Correia', localization: 'Rua das Tipuanas Amarelas, 70', imageLink: 'https://i.pinimg.com/originals/fd/e9/a4/fde9a48af9b22286c716df53e99d0b26.jpg', bathroom: 2, bed: 5, users: 4, price: 400, vacancies: 1},
-  { id: '2', title: 'República em Preto e Branco', localization: 'Rua São Paulo, 902', imageLink: 'https://i.pinimg.com/originals/58/5e/ba/585ebab40b803e11f92a6b9fb657b809.jpg', bathroom: 1, bed: 3, users: 2, price: 430, vacancies: 1},
-  { id: '3', title: 'República Diamente Jortão Castro', localization: 'Rua Gerondinos, 839', imageLink: 'https://i.pinimg.com/originals/d5/ee/b7/d5eeb71aaeaa6d8fb801e7981e033ae7.jpg', bathroom: 2, bed: 5, users: 3, price: 350, vacancies: 2},
-  { id: '4', title: 'Trovão', localization: 'Rua Rafael Brasilio Gerônimo Antes, 73', imageLink: 'http://customerscares.co/wp-content/uploads/2019/03/tiny-house-pinterest-style-tiny-house-awesome-best-old-houses-images-on-small-house-interior-design-pinterest.jpg', bathroom: 2, bed: 5, users: 3, price: 350, vacancies: 2},
+  { id: '1', title: 'Camargo Correia', localization: 'Rua das Tipuanas Amarelas, 70', imageLink: 'https://i.pinimg.com/originals/fd/e9/a4/fde9a48af9b22286c716df53e99d0b26.jpg', bathroom: 2, bed: 5, users: 4, price: 400, vacancies: 1, latitude: -24.04766912, longitude: -52.3788321 },
+  { id: '2', title: 'República em Preto e Branco', localization: 'Rua São Paulo, 902', imageLink: 'https://i.pinimg.com/originals/58/5e/ba/585ebab40b803e11f92a6b9fb657b809.jpg', bathroom: 1, bed: 3, users: 2, price: 430, vacancies: 1, latitude: -24.04400474, longitude: -52.38975406 },
+  { id: '3', title: 'República Diamente Jortão Castro', localization: 'Rua Gerondinos, 839', imageLink: 'https://i.pinimg.com/originals/d5/ee/b7/d5eeb71aaeaa6d8fb801e7981e033ae7.jpg', bathroom: 2, bed: 5, users: 3, price: 350, vacancies: 2, latitude: -24.03970338, longitude: -52.38467932 },
+  { id: '4', title: 'Trovão', localization: 'Rua Rafael Brasilio Gerônimo Antes, 73', imageLink: 'http://customerscares.co/wp-content/uploads/2019/03/tiny-house-pinterest-style-tiny-house-awesome-best-old-houses-images-on-small-house-interior-design-pinterest.jpg', bathroom: 2, bed: 5, users: 3, price: 350, vacancies: 2, latitude: -24.0437598, longitude: -52.37944365 },
 ]
 
 export default class App extends React.Component {
@@ -61,6 +61,33 @@ export default class App extends React.Component {
     })
   }
 
+  removeSim = (gestureState) => {
+    Animated.spring(this.position, {
+      toValue: { x: styles.screen.width + 100, y: gestureState.dy }
+    }).start(() => {
+      this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
+        this.position.setValue({ x: 0, y: 0 });
+      })
+    })
+  }
+
+  removeNao = (gestureState) => {
+    Animated.spring(this.position, {
+      toValue: { x: -styles.screen.width - 100, y: gestureState.dy }
+    }).start(() => {
+      this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
+        this.position.setValue({ x: 0, y: 0 });
+      })
+    })
+  }
+
+  voltaAnimacao = () => {
+    Animated.spring(this.position, {
+      toValue: { x: 0, y: 0 },
+      friction: 4
+    }).start()
+  }
+
   componentWillMount() {
     handleAndroidBackButton(this.props.navigation.navigate, 'Home');
 
@@ -73,29 +100,27 @@ export default class App extends React.Component {
       },
       onPanResponderRelease: (evt, gestureState) => {
 
-        if (gestureState.dx > 120) {
-          Animated.spring(this.position, {
-            toValue: { x: styles.screen.width + 100, y: gestureState.dy }
-          }).start(() => {
-            this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
-              this.position.setValue({ x: 0, y: 0 });
-            })
-          })
-        }
-        else if (gestureState.dx < -120) {
-          Animated.spring(this.position, {
-            toValue: { x: -styles.screen.width - 100, y: gestureState.dy }
-          }).start(() => {
-            this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
-              this.position.setValue({ x: 0, y: 0 });
-            })
-          })
-        }
-        else {
-          Animated.spring(this.position, {
-            toValue: { x: 0, y: 0 },
-            friction: 4
-          }).start()
+        // se a distancia é igual a 0, então clicou
+        if (gestureState.dx == 0 && gestureState.dy == 0) {
+          // se clicou na região do botão
+          if (gestureState.y0 > 410 && gestureState.y0 < 460) {
+            // clicou no botão do não
+            if (gestureState.x0 > 10 && gestureState.x0 < 40) {
+              this.removeNao(gestureState)
+              console.log('clicou no não')
+            } else if (gestureState.x0 > 270 && gestureState.x0 < 315) {
+              this.removeSim(gestureState)
+              console.log('clicou no sim');
+            }
+          }
+        } else {    // não foi clicado, foi movido
+          if (gestureState.dx > 120) {
+            this.removeSim(gestureState)
+          } else if (gestureState.dx < -120) {
+            this.removeNao(gestureState)
+          } else {
+            this.voltaAnimacao()
+          }
         }
       }
     })
@@ -119,7 +144,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard rep={item}/>
+            <RepCard rep={item} />
 
           </Animated.View>
         )
@@ -140,7 +165,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard rep={item}/>
+            <RepCard rep={item} />
 
           </Animated.View>
         )

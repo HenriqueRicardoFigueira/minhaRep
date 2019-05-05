@@ -13,8 +13,10 @@ export default class RepCard extends Component {
       title: props.rep.title,
       price: props.rep.price,
       users: props.rep.users,
+      latitude: props.rep.latitude,
       bathroom: props.rep.bathroom,
       repImage: props.rep.imageLink,
+      longitude: props.rep.longitude,
       vacancies: props.rep.vacancies,
       localization: props.rep.localization,
     }
@@ -44,6 +46,10 @@ export default class RepCard extends Component {
           {/* VIEW ICONES */}
           <View>
             <View style={styles.iconView}>
+              {/*BOTÃO NÃO */}
+              <View style={styles.iconViewText}>
+                <Icon name='close' size={this.iconSize} color='#FF0000' />
+              </View>
               {/*icone banheiros*/}
               <View style={styles.iconViewText} >
                 <View style={styles.icon} >
@@ -72,13 +78,10 @@ export default class RepCard extends Component {
                 </View>
                 <Text style={styles.iconText}>{this.state.price}</Text>
               </View>
-              {/*icone mapa*/}
+              {/*BOTÃO SIM*/}
               <View style={styles.iconViewText}>
-                <View style={styles.icon} >
-                  <Icon name='map-o' size={35} color='#000' />
-                </View>
+                <Icon name='check' size={this.iconSize} color='#008000' />
               </View>
-
             </View>
           </View>
         </View>
