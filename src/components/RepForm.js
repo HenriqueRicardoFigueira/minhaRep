@@ -19,16 +19,28 @@ class RepForm extends Component {
       localization: '',
       tags: '',
       isSubmited: false,
-      borderColor: '#e6e6e6'
+      borderColor: '#e6e6e6',
+
+      userUID: ''
     }
   };
 
+  componentDidMount() {
+    var user = firebase.auth().currentUser;
+
+    this.setState({
+      userUID: user.uid,
+    })
+
+  }
+
   addRep = () => {
-    this.ref.add({
+    this.ref.doc(this.state.userUID).set({
       name: this.state.name,
       bio: this.state.bio,
       members: this.state.members,
       tags: this.state.tags,
+      admUID: this.state.userUID,
     });
     this.props.navigation.navigate("RepCRUD");
   }
@@ -68,9 +80,10 @@ class RepForm extends Component {
         </Item>
 
         <Item floatingLabel style={styles.floatInput}>
-          <Label>Membros:</Label>
+          <Label>Quantidade de Membros:</Label>
           <Input
             value={this.state.members}
+            keyboardType='number-pad'
             onChangeText={(members) => this.setState({ members })}
           ></Input>
         </Item>
