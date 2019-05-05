@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Animated, Image, PanResponder, Text } from 'react-native';
 import RepCard from '../../components/RepCard';
-import { input, styles } from '../../components/styles';
+import { styles } from '../../components/styles';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 
 // apenas para teste
@@ -103,14 +103,18 @@ export default class App extends React.Component {
         // se a distancia é igual a 0, então clicou
         if (gestureState.dx == 0 && gestureState.dy == 0) {
           // se clicou na região do botão
-          if (gestureState.y0 > 410 && gestureState.y0 < 460) {
-            // clicou no botão do não
-            if (gestureState.x0 > 10 && gestureState.x0 < 40) {
+          regionYmin = Math.floor(styles.screen.height * 0.785)
+          regionYmax = Math.floor(styles.screen.height * 0.885)
+          if (gestureState.y0 > regionYmin && gestureState.y0 < regionYmax) {
+            // recupera a região do botão NÃO e SIM
+            regionXminN = Math.floor(styles.screen.width * 0.03125)
+            regionXmaxN = Math.floor(styles.screen.width * 0.125)
+            regionXminS = Math.floor(styles.screen.width * 0.84375)
+            regionXmaxS = Math.floor(styles.screen.width * 0.98438)
+            if (gestureState.x0 > regionXminN && gestureState.x0 < regionXmaxN) { // clicou no botão do NÃO
               this.removeNao(gestureState)
-              console.log('clicou no não')
-            } else if (gestureState.x0 > 270 && gestureState.x0 < 315) {
+            } else if (gestureState.x0 > regionXminS && gestureState.x0 < regionXmaxS) {  // clicou no botão do SIM
               this.removeSim(gestureState)
-              console.log('clicou no sim');
             }
           }
         } else {    // não foi clicado, foi movido
