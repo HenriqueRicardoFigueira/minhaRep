@@ -16,23 +16,19 @@ class Login extends Component {
   state = {
     email: '',
     password: '',
-    canLogin: false,
     isAuthenticated: false,
     borderColorEmail: '#e6e6e6',
     borderColorPassword: '#e6e6e6'
   };
 
   login = (email, password) => {
-    //const { email , password } = this.state;
 
     // verifica se os campos email e password estão certos
     // se não, altera suas bordas
-    /*this.canLogin(email, password);
-
     // se alguns dos campos não está no padrão, então não prossegue para o login
-    if (!this.state.canLogin) {
-      return;
-    }*/
+    if (!this.canLogin(email, password)) {
+      return
+    }
 
     try {
       const user = firebase.auth().signInWithEmailAndPassword(email, password);
@@ -53,21 +49,25 @@ class Login extends Component {
       <View style={styles.container}>
         <Image style={styles.image} source={require('../image/logo2.png')} />
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorEmail }}>
           <Label>Digite seu email:</Label>
           <Input
             value={this.state.email}
             autoCapitalize={'none'}
             onChangeText={(email) => this.setState({ email })}
+            onEndEditing={() => { this.emailColor(this.state.email) }}
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorPassword }}>
           <Label>Digite sua senha:</Label>
           <Input
             value={this.state.password}
             secureTextEntry={true}
             onChangeText={(password) => this.setState({ password })}
+            onEndEditing={() => { this.passwordColor(this.state.password) }}
           ></Input>
         </Item>
 
@@ -92,39 +92,47 @@ class Login extends Component {
   // utilizando um regex, verifica o email
   emailColor = (email) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
+    var newColor = null
     if (re.test(String(email).toLowerCase())) {
-      return '#e6e6e6';
+      newColor = '#e6e6e6'
     } else {
-      return '#ff0000';
+      newColor = '#ff0000'
     }
+
+    this.setState({
+      borderColorEmail: newColor
+    })
+
+    return newColor
   }
 
   // apenas verifica se a variável está sem valor
   // se estiver, altera a cor da borda do input
   passwordColor = (password) => {
+    var newColor = null
     if (password.length > 4) {
-      return '#e6e6e6';
+      newColor = '#e6e6e6'
     } else {
-      return '#ff0000';
+      newColor = '#ff0000'
     }
+
+    this.setState({
+      borderColorPassword: newColor
+    })
+
+    return newColor
   }
 
   canLogin = (email, password) => {
 
-    borderColorEmail = this.emailColor(email);
-    borderColorPassword = this.passwordColor(password);
+    newColorEmail = this.emailColor(email);
+    newColorPassword = this.passwordColor(password);
 
     // os dois são iguais? ou seja, se forem diferente já retorna false
     // se os dois forem iguais e o email, por exemplo, for #e6e6e6, então os dois estão certos
-    var equals = borderColorEmail == borderColorPassword;
-    var canLogin = equals && borderColorEmail == '#e6e6e6';
+    var canLoginNow = (newColorEmail == newColorPassword) && (newColorPassword == '#e6e6e6') && (this.state.email != '') && (this.state.password != '')
 
-    this.setState({
-      borderColorEmail: borderColorEmail,
-      borderColorPassword: borderColorPassword,
-      canLogin: canLogin
-    });;
+    return canLoginNow
   };
 }
 
