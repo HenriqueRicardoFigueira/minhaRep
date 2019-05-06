@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Alert } from 'react-native';
 
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Button, Item, Input, Label } from 'native-base';
@@ -17,6 +18,7 @@ class Login extends Component {
     email: '',
     password: '',
     isAuthenticated: false,
+    disableLoginButton: false,
     borderColorEmail: '#e6e6e6',
     borderColorPassword: '#e6e6e6'
   };
@@ -31,10 +33,20 @@ class Login extends Component {
     }
 
     try {
-      const user = firebase.auth().signInWithEmailAndPassword(email, password);
-      this.setState({ isAuthenticated: true });
-      console.log(email, password);
-      this.props.navigation.navigate("Home");
+      const user = firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((firebaseUser) => { // login com sucesso
+          this.setState({ isAuthenticated: true });
+          console.log(email, password);
+          this.props.navigation.navigate("Home");
+        }).catch((error) => {   // erro no login
+          /* PRECISA VERIFICAR O TIPO DE ERRO */
+          Alert.alert('Email ou senha incorretos', '',[{ text: 'OK' }])
+          // insere a borda vermelha nos campos do login
+          this.setState({
+            borderColorPassword: '#ff0000',
+            borderColorEmail: '#ff0000',
+          })
+        })
     } catch (err) {
       console.log(err);
     }
