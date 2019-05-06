@@ -5,14 +5,19 @@ import { styles } from './styles';
 import { Button, Item, Input, Label, Thumbnail } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
+import RNFetchBlob from 'react-native-fetch-blob';
+
+
+const Blob = RNFetchBlob.polyfill.Blob
+const fs = RNFetchBlob.fs
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+window.Blob = Blob
 
 const options = {
   title: 'Select Profile Pic',
   takePhotoButtonTitle: 'Use Your Camera',
   chooseFromLibraryButtonTitle: 'Open From Library'
 }
-
-
 
 class UserProfile extends Component {
   constructor(props) {
@@ -30,8 +35,8 @@ class UserProfile extends Component {
       uid: '', //PK
 
       avatarSource: null,
-      imgUrl: '',
-      uri: '',
+      imgUrl: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381',
+      uri: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381',
 
       isEditado: false
     };
@@ -60,7 +65,7 @@ class UserProfile extends Component {
             bio: userP.bio,
             age: userP.age,
             uid: user.uid,
-            imgUrl: userP.imgUrl
+            //imgUrl: userP.imgUrl
           })
         } else {
           console.log("Não existe usuário");
@@ -68,10 +73,38 @@ class UserProfile extends Component {
       })
   }
 
-  imageUpload = (uri, imageName, mime = 'image/jpg') => {
+  uploadImage = async (uri, imageName, mime = 'image/jpg') => {
     return new Promise((resolve, reject) => {
       const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+      
+      let uploadBlob = null
       const imageRef = firebase.storage().ref().child('userImages').child(imageName);
+      //console.log(typeof(imageName))
+      fs.readFile(uploadUri, 'base64')
+        .then((data) => {
+          return Blob.build(data, { type: `${mime};BASE64` })
+        })
+        .then((blob) => {
+          uploadBlob = blob
+          return imageRef.put(blob._ref, { contentType: mime })
+        })
+        .then(() => {
+          uploadBlob.close()
+          return imageRef.getDownloadURL()
+        })
+        .then((url) => {
+          resolve(url)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  }
+
+  /*imageUpload = (uri, imageName, mime = 'image/jpg') => {
+    return new Promise((resolve, reject) => {
+      const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+      const imageRef = firebase.storage().ref('userImages').child(imageName);
 
       imageRef.put(uploadUri, { contentType: mime })
         .then(() => {
@@ -84,7 +117,7 @@ class UserProfile extends Component {
           reject(error)
         })
     })
-  }
+  }*/
 
   imageSelect = () => {
     ImagePicker.showImagePicker(options, (response) => { // ABRE A TELA DE GALERIA OU CAMERA
@@ -94,20 +127,22 @@ class UserProfile extends Component {
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        const source = { uri: response.uri };
+        /*const source = { uri: response.uri };
         this.setState({
           avatarSource: source,
         });
-        this.imageUpload(source.uri, this.state.uid); // UPA A FOTO PARA A STORAGE COM O NOME this.state.uid
+        console.log(typeof(source.uri))*/
+        this.uploadImage(response.uri, this.state.uid)
+        .then(url => { alert('uploaded'); this.setState({imgUrl:url}) })
+        .catch (error => console.log(error)) // UPA A FOTO PARA A STORAGE COM O NOME this.state.uid
 
         // A PARTIR DAQUI TA CAGADO
-        const url = firebase.storage().ref().child('userImages').child(this.state.uid).getDownloadURL().then(function(url) {
-          return url;
-        }); // ESSA DROGA DE FUNÇÃO RETORNA UM OBJETO NAO UMA STRING
-
+        const url = firebase.storage().ref('userImages').child(this.state.uid).getDownloadURL(); // ESSA DROGA DE FUNÇÃO RETORNA UM OBJETO NAO UMA STRING
+        console.log('url '+ url)
         this.setState({
           imgUrl: url // ESTÁ ADCIONANDO ESSE OBJETO NO STATE
         });
+        console.log('imgUrl ' + this.imgUrl)
         this.editUser(); // ATUALIZA O DATABASE MAS ATUALIZA ERRADO
       }
     });

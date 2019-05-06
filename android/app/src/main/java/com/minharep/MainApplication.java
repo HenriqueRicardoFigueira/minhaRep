@@ -13,6 +13,8 @@ import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.RNFetchBlob.RNFetchBlobPackage;
+
 //googleauth
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 //facebook
@@ -51,12 +53,12 @@ public class MainApplication extends Application implements ReactApplication {
           new FBSDKPackage(mCallbackManager),
           new RNFirebaseFirestorePackage(),
           new RNFirebaseStoragePackage(),
+          new RNFetchBlobPackage(),
           // Image Upload Packages:
           new ImagePickerPackage(),
           //googleauth
           new RNGoogleSigninPackage(),
-          new MapsPackage(),
-
+          new MapsPackage(),    
          
           new RNFirebaseDatabasePackage()
         );
