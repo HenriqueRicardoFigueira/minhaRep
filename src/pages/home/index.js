@@ -54,6 +54,9 @@ class Home extends Component {
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps')} style={styles.button}>
           <Text>Mapa</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Anuncio')} style={styles.button}>
+          <Text>Anuncio</Text>
+        </TouchableOpacity>
       </View>
     );
   }

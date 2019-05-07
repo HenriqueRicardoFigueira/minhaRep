@@ -8,6 +8,7 @@ import Maps from './pages/maps';
 import RepCard from './pages/repCard';
 import UserRegist from './pages/userRegist';
 import UserProfile from './pages/userProfile';
+import Anuncio from './pages/anuncio';
 
 const Routes = createAppContainer(
     createSwitchNavigator({
@@ -19,9 +20,10 @@ const Routes = createAppContainer(
         Maps: Maps,
         RepCard: RepCard,
         UserRegist: UserRegist,
-        UserProfile: UserProfile
+        UserProfile: UserProfile,
+        Anuncio: Anuncio
     }, {
-        initialRouteName: 'UserProfile'
+        initialRouteName: 'Login'
     })
 );
 
