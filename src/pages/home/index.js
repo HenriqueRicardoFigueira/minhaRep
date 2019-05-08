@@ -5,12 +5,12 @@ import firebase from 'react-native-firebase';
 import { withNavigation } from 'react-navigation';
 import { styles } from '../../components/styles';
 
-import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
+import { handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert } from '../../androidBackButton';
 
 class Home extends Component {
 
   componentWillMount() {
-    handleAndroidBackButton(this.props.navigation.navigate, 'Home');
+    handleAndroidBackButton(exitAlert);
   }
 
   componentWillUnmount() {
