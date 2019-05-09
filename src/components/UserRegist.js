@@ -4,6 +4,8 @@ import { View, Text } from 'react-native';
 import firebase from 'react-native-firebase';
 import { styles } from './styles';
 
+import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
+
 import { withNavigation } from 'react-navigation';
 
 /*
@@ -93,7 +95,7 @@ class UserRegist extends Component {
           <Input
             value={this.state.name}
             onChangeText={(name) => this.setState({ name })}
-            onEndEditing={() => this.nameColor(this.state.name)}
+            onEndEditing={() => nameColor.call(this, this.state.name)}
           ></Input>
         </Item>
 
@@ -104,7 +106,7 @@ class UserRegist extends Component {
             value={this.state.email}
             autoCapitalize={'none'}
             onChangeText={(email) => this.setState({ email })}
-            onEndEditing={() => this.emailColor(this.state.email)}
+            onEndEditing={() => emailColor.call(this, this.state.email)}
           ></Input>
         </Item>
 
@@ -116,7 +118,7 @@ class UserRegist extends Component {
             secureTextEntry={true}
             autoCapitalize={'none'}
             onChangeText={(password) => this.setState({ password })}
-            onEndEditing={() => this.passwordColor(this.state.password)}
+            onEndEditing={() => passwordColor.call(this, this.state.password)}
           ></Input>
         </Item>
 
@@ -127,7 +129,7 @@ class UserRegist extends Component {
             value={this.state.age}
             keyboardType='number-pad'
             onChangeText={(age) => this.setState({ age })}
-            onEndEditing={() => this.ageColor(this.state.age)}
+            onEndEditing={() => ageColor.call(this, this.state.age)}
           ></Input>
         </Item>
 
@@ -139,64 +141,13 @@ class UserRegist extends Component {
     );
   }
 
-  color = (field, regex) => {
-    var newColor = null
-    if (regex.test(String(field).toLowerCase())) {
-      newColor = '#e6e6e6'
-    } else {
-      newColor = '#ff0000'
-    }
-
-    return newColor
-  }
-
-  nameColor = (name) => {
-    newColor = this.color(name, /^(?=.*[A-Za-z0-9]$)[A-Za-z][A-Za-z\d.-]{0,19}$/)
-
-    this.setState({
-      borderColorName: newColor,
-    })
-
-    return newColor == '#e6e6e6'
-  }
-
-  emailColor = (email) => {
-    newColor = this.color(email, /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
-
-    this.setState({
-      borderColorEmail: newColor,
-    })
-
-    return newColor == '#e6e6e6'
-  }
-
-  passwordColor = (password) => {
-    newColor = this.color(password, /^([a-zA-Z0-9@*#]{4,15})$/)
-
-    this.setState({
-      borderColorPassword: newColor,
-    })
-
-    return newColor == '#e6e6e6'
-  }
-
-  ageColor = (age) => {
-    newColor = this.color(age, /^[0-9][0-9]$/)
-
-    this.setState({
-      borderColorAge: newColor
-    })
-
-    return newColor == '#e6e6e6'
-  }
-
   canRegister = (email, age, name, password) => {
     // se fizer as chamadas de função no retorno
     // só vai alterar a cor do primeiro que estiver fora do padrão
-    boolAge = this.ageColor(age)
-    boolName = this.nameColor(name)
-    boolEmail = this.emailColor(email)
-    boolPassword = this.passwordColor(password)
+    boolAge = ageColor.call(this, age)
+    boolName = nameColor.call(this, name)
+    boolEmail = emailColor.call(this, email)
+    boolPassword = passwordColor.call(this, password)
 
     return boolAge && boolName && boolEmail && boolPassword
   }

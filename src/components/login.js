@@ -8,6 +8,8 @@ import GoogleLogin from './googleLogin';
 
 import { withNavigation } from 'react-navigation';
 
+import { emailColor, passwordColor } from '../formValidation';
+
 // import { Container } from './styles';
 import firebase from 'react-native-firebase';
 
@@ -68,7 +70,7 @@ class Login extends Component {
             value={this.state.email}
             autoCapitalize={'none'}
             onChangeText={(email) => this.setState({ email })}
-            onEndEditing={() => { this.emailColor(this.state.email) }}
+            onEndEditing={() => { emailColor.call(this, this.state.email) }}
           ></Input>
         </Item>
 
@@ -79,7 +81,7 @@ class Login extends Component {
             value={this.state.password}
             secureTextEntry={true}
             onChangeText={(password) => this.setState({ password })}
-            onEndEditing={() => { this.passwordColor(this.state.password) }}
+            onEndEditing={() => { passwordColor.call(this, this.state.password) }}
           ></Input>
         </Item>
 
@@ -101,44 +103,10 @@ class Login extends Component {
     );
   }
 
-  // utilizando um regex, verifica o email
-  emailColor = (email) => {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    var newColor = null
-    if (re.test(String(email).toLowerCase())) {
-      newColor = '#e6e6e6'
-    } else {
-      newColor = '#ff0000'
-    }
-
-    this.setState({
-      borderColorEmail: newColor
-    })
-
-    return newColor
-  }
-
-  // apenas verifica se a variável está sem valor
-  // se estiver, altera a cor da borda do input
-  passwordColor = (password) => {
-    var newColor = null
-    if (password.length > 4) {
-      newColor = '#e6e6e6'
-    } else {
-      newColor = '#ff0000'
-    }
-
-    this.setState({
-      borderColorPassword: newColor
-    })
-
-    return newColor
-  }
-
   canLogin = (email, password) => {
 
-    newColorEmail = this.emailColor(email);
-    newColorPassword = this.passwordColor(password);
+    newColorEmail = emailColor.call(this, email);
+    newColorPassword = passwordColor.call(this, password);
 
     // os dois são iguais? ou seja, se forem diferente já retorna false
     // se os dois forem iguais e o email, por exemplo, for #e6e6e6, então os dois estão certos
