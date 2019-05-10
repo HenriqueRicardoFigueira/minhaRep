@@ -10,7 +10,7 @@ color = (field, regex) => {
 }
 
 function nameColor(name) {
-  newColor = color(name, /^(?=.*[A-Za-z0-9]$)[A-Za-z][A-Za-z\d.-]{0,19}$/)
+  newColor = name.length > 32 ? '#ff0000' : color(name, /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/)
 
   this.setState({
     borderColorName: newColor,
@@ -21,7 +21,7 @@ function nameColor(name) {
 
 // utilizando um regex, verifica o email
 function emailColor(email) {
-  console.log(email)
+
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   var newColor = null
   if (re.test(String(email).toLowerCase())) {
@@ -64,4 +64,24 @@ function ageColor(age) {
   return newColor == '#e6e6e6'
 }
 
-module.exports = { nameColor, emailColor, passwordColor, ageColor };
+function bioColor(bio) {
+  newColor = color(bio, /^(.|\s)*[a-zA-Z]+(.|\s)*$/)
+
+  this.setState({
+    borderColorBio: newColor
+  })
+
+  return newColor == '#e6e6e6'
+}
+
+function numberColor(number) {
+  newColor = color(number, /^[0-9][0-9]$/)
+
+  this.setState({
+    borderColorNumber: newColor
+  })
+
+  return newColor == '#e6e6e6'
+}
+
+module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor };

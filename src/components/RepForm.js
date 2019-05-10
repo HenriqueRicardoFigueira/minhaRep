@@ -6,6 +6,7 @@ import firebase from 'react-native-firebase'
 
 import { styles } from './styles'
 
+import { nameColor, bioColor, numberColor } from '../formValidation';
 
 class RepForm extends Component {
   constructor(props) {
@@ -19,8 +20,9 @@ class RepForm extends Component {
       localization: '',
       tags: '',
       isSubmited: false,
-      borderColor: '#e6e6e6',
-
+      borderColorBio: '#e6e6e6',
+      borderColorName: '#e6e6e6',
+      borderColorNumber: '#e6e6e6',
       userUID: ''
     }
   };
@@ -34,7 +36,23 @@ class RepForm extends Component {
 
   }
 
+  canRegister = (name, bio, members) => {
+    // se fizer as chamadas de função no retorno
+    // só vai alterar a cor do primeiro que estiver fora do padrão
+    boolBio = bioColor.call(this, bio)
+    boolName = nameColor.call(this, name)
+    boolNumber = numberColor.call(this, members)
+
+    return boolBio && boolName && boolNumber
+  }
+
   addRep = () => {
+    const { name, bio, members } = this.state;
+
+    if(!this.canRegister(name, bio, members)) {
+      return
+    }
+
     this.ref.doc(this.state.userUID).set({
       name: this.state.name,
       bio: this.state.bio,
@@ -63,28 +81,34 @@ class RepForm extends Component {
     return (
       <View style={styles.container}>
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorName }}>
           <Label>Nome da república:</Label>
           <Input
             value={this.state.name}
             onChangeText={(name) => this.setState({ name })}
+            onEndEditing={() => nameColor.call(this, this.state.name)}
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorBio }}>
           <Label>Descrição:</Label>
           <Input
             value={this.state.bio}
             onChangeText={(bio) => this.setState({ bio })}
+            onEndEditing={() => bioColor.call(this, this.state.bio)}
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorNumber }}>
           <Label>Quantidade de Membros:</Label>
           <Input
             value={this.state.members}
             keyboardType='number-pad'
             onChangeText={(members) => this.setState({ members })}
+            onEndEditing={() => numberColor.call(this, this.state.member)}
           ></Input>
         </Item>
 
