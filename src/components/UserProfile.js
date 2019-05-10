@@ -8,6 +8,8 @@ import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 
 
+import { nameColor, emailColor, ageColor, bioColor } from '../formValidation';
+
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
@@ -38,7 +40,13 @@ class UserProfile extends Component {
       imgUrl: '',
       uri: '',
 
-      isEditado: false
+      isEditado: false,
+
+      borderColorAge: '#e6e6e6',
+      borderColorBio: '#e6e6e6',
+      borderColorName: '#e6e6e6',
+      borderColorEmail: '#e6e6e6',
+      borderColorNumber: '#e6e6e6',
     };
   }
 
@@ -77,7 +85,7 @@ class UserProfile extends Component {
     return new Promise((resolve, reject) => {
       const imageName = this.state.uid
       const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-      
+
       let uploadBlob = null
       const imageRef = firebase.storage().ref('userImages').child(imageName);
       //console.log(typeof(imageName))
@@ -95,7 +103,7 @@ class UserProfile extends Component {
         })
         .then((url) => {
           resolve(url)
-})
+        })
         .catch((error) => {
           reject(error)
         })
@@ -134,22 +142,38 @@ class UserProfile extends Component {
         });
         console.log(typeof(source.uri))*/
         this.uploadImage(response.uri)
-        .then(url => { alert('uploaded'); this.setState({imgUrl: url}), console.log(this.url) })
-        .catch (error => console.log(error)) // UPA A FOTO PARA A STORAGE COM O NOME this.state.uid
+          .then(url => { alert('uploaded'); this.setState({ imgUrl: url }), console.log(this.url) })
+          .catch(error => console.log(error)) // UPA A FOTO PARA A STORAGE COM O NOME this.state.uid
         // A PARTIR DAQUI TA CAGADO
         /*const url = firebase.storage().ref('userImages').child(this.state.uid).getDownloadURL(); // ESSA DROGA DE FUNÇÃO RETORNA UM OBJETO NAO UMA STRING
         console.log('url '+ url)
         this.setState({
           imgUrl: url // ESTÁ ADCIONANDO ESSE OBJETO NO STATE
         });*/
-        
+
         this.editUser(); // ATUALIZA O DATABASE MAS ATUALIZA ERRADO
       }
     });
   }
 
+  canRegister = (name, email, age, bio) => {
+    // se fizer as chamadas de função no retorno
+    // só vai alterar a cor do primeiro que estiver fora do padrão
+    boolBio = bioColor.call(this, bio)
+    boolAge = ageColor.call(this, age)
+    boolName = nameColor.call(this, name)
+    boolEmail = emailColor.call(this, email)
+
+    return boolBio && boolAge&& boolName && boolEmail
+  }
+
   editUser = () => {
     const { age, name, bio, email, imgUrl } = this.state;
+
+    if(!this.canRegister(name, email, age, bio)) {
+      return
+    }
+
     var user = firebase.auth().currentUser;
     this.ref.doc(user.uid)
       .set({
@@ -169,42 +193,50 @@ class UserProfile extends Component {
 
         {this.state.avatarSource ? <Thumbnail source={{ uri: this.state.imgUrl }} /> : <Text />}
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorName }}>
           <Label>Nome:</Label>
           <Input
             value={this.state.name}
             onChangeText={(name) => this.setState({ name })}
+            onEndEditing={() => nameColor.call(this, this.state.name)}
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorEmail }}>
           <Label>Email:</Label>
           <Input
             value={this.state.email}
             disabled
             onChangeText={(email) => this.setState({ email })}
+            onEndEditing={() => emailColor.call(this, this.state.email)}
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorAge }}>
           <Label>Idade:</Label>
           <Input
             value={this.state.age}
             keyboardType='number-pad'
             onChangeText={(age) => this.setState({ age })}
+            onEndEditing={() => ageColor.call(this, this.state.age)}
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorBio }}>
           <Label>Biografia:</Label>
           <Input
             value={this.state.bio}
             onChangeText={(bio) => this.setState({ bio })}
+            onEndEditing={() => bioColor.call(this, this.state.bio)}
           ></Input>
         </Item>
-        <Image            
-          style={{width: 100, height: 100}}
-          source={{uri: this.state.imgUrl}}/>
+        <Image
+          style={{ width: 100, height: 100 }}
+          source={{ uri: this.state.imgUrl }} />
         <Button style={styles.button} onPress={this.imageSelect}>
           <Text style={styles.buttonText}> Enviar Foto </Text>
         </Button>

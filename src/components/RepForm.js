@@ -108,7 +108,7 @@ class RepForm extends Component {
             value={this.state.members}
             keyboardType='number-pad'
             onChangeText={(members) => this.setState({ members })}
-            onEndEditing={() => numberColor.call(this, this.state.member)}
+            onEndEditing={() => numberColor.call(this, this.state.members)}
           ></Input>
         </Item>
 
