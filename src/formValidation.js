@@ -75,7 +75,7 @@ function bioColor(bio) {
 }
 
 function numberColor(number) {
-  newColor = color(number, /^[0-9][0-9]$/)
+  newColor = color(number, /^[0-9][0-9]?$/)
 
   this.setState({
     borderColorNumber: newColor
