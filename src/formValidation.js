@@ -19,6 +19,7 @@ function nameColor(name) {
   return newColor == '#e6e6e6'
 }
 
+
 // utilizando um regex, verifica o email
 function emailColor(email) {
 
