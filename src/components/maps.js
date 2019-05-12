@@ -51,7 +51,7 @@ class Maps extends Component {
       {
         timeout: 2000,
         enableHighAccuracy: true,
-        maximumAge: 0,
+        maximumAge: 1000,
       }
     )
   }
@@ -64,7 +64,6 @@ class Maps extends Component {
         initialRegion={region}
         showsUserLocation
         loadingEnabled
-        cacheEnabled={false}
       />
     );
   }
