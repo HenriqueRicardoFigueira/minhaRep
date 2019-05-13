@@ -60,7 +60,7 @@ class RepForm extends Component {
       tags: this.state.tags,
       admUID: this.state.userUID,
     });
-    this.props.navigation.navigate("RepCRUD");
+    this.props.navigation.navigate("Home");
   }
 
   /*register() {

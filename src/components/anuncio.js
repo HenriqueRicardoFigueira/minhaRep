@@ -9,19 +9,20 @@ import { withNavigation } from 'react-navigation';
 import { nameColor, numberColor, bioColor } from '../formValidation';
 
 
+
 class Anuncio extends Component {
 
     constructor(props) {
         super(props);
-        
-        this.ref = firebase.firestore().collection('republics');
 
         this.state = {
+            repUID: '',
             name: '',
             bio: '',
             number: '',
             valor: '',
             local: '',
+            tags:'',
             borderColorBio: '#e6e6e6',
             borderColorName: '#e6e6e6',
             borderColorNumber: '#e6e6e6',
@@ -30,6 +31,7 @@ class Anuncio extends Component {
     }
 
     componentDidMount() {
+        this.ref = firebase.firestore().collection('republics');
         var user = firebase.auth().currentUser; 
         this.ref.doc(user.uid) 
           .get()
@@ -39,7 +41,9 @@ class Anuncio extends Component {
               this.setState({ 
                 bio: repDatas.bio,
                 name: repDatas.name,
+                repUID: repDatas.admUID
               })
+             
             } else {
               alert("Não existe republica cadastrada neste usuário");
             }
@@ -54,13 +58,24 @@ class Anuncio extends Component {
     }
 
     // CHAMAR ESTA FUNÇÃO AO CLICAR NO BOTÃO DE CADASTRAR ANÚNCIO
-    registerRep() {
-
+    registerRep = () =>  {
+        //bloco comentado por questão que não vai haver mudanças no nome e no bio, pois vão ser informações que iremos pegar do banco
+        /*
         const { name, bio } = this.state;
         if (!canRegister(name, bio)) {
             return
-        }
-
+        }*/
+        const { name, bio, repUID, valor, local, tags } = this.state;
+        ref = firebase.firestore().collection('anuncio');
+        ref.doc(repUID).set({
+          name: name,
+          bio: bio,
+          valor: valor,
+          local: local,
+          tags: tags,
+          repUID: repUID,
+        })
+        this.props.navigation.navigate("Home");
     }
 
     render() {
@@ -110,7 +125,7 @@ class Anuncio extends Component {
                         onEndEditing={() => bioColor.call(this, this.state.local)}
                     ></Input>
                 </Item>
-                <Button style={styles.button} onPress={this.editUser}>
+                <Button style={styles.button} onPress={() => this.registerRep()}>
                     <Text style={styles.buttonText}> Anunciar </Text>
                 </Button>
 
