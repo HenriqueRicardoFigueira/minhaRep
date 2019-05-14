@@ -41,7 +41,7 @@ const Routes = createAppContainer(
         RepCard: RepCard,
 
     }, {
-        initialRouteName: 'UserProfile'
+        initialRouteName: 'Login'
     })
     /*
     Codigo antigo

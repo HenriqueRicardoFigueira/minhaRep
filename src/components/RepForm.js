@@ -2,11 +2,14 @@ import React, { Component } from 'react'
 import { View, ScrollView, Text, TextInput, Image, TouchableOpacity } from 'react-native'
 import { Button, Input, Label, Item, } from 'native-base'
 import { withNavigation } from 'react-navigation'
-import {firebase} from '../../Firebase'
+import firebase from 'react-native-firebase'
+import axios from 'axios';
 
 import { styles } from './styles'
 
 import { nameColor, bioColor, numberColor } from '../formValidation';
+
+
 
 class RepForm extends Component {
   constructor(props) {
@@ -17,8 +20,15 @@ class RepForm extends Component {
       bio: '',
       members: '',
       img: '',
-      localization: '',
+      latitude: '' ,
+      longitude: '',
       tags: '',
+      cep: '',
+      numberHome: '',
+      street: '',
+      complement: '',
+      uf: '',
+      city: '',
       isSubmited: false,
       borderColorBio: '#e6e6e6',
       borderColorName: '#e6e6e6',
@@ -46,6 +56,35 @@ class RepForm extends Component {
     return boolBio && boolName && boolNumber
   }
 
+  searchAdress = (cep) => {
+    axios.get('https://viacep.com.br/ws/'+cep+'/json/').then( (response) => {
+      if(response){
+        this.setState({
+          street: response.data.logradouro,
+          uf: response.data.uf,
+          city: response.data.localidade  
+        })
+      }
+      console.log(this.state);
+      
+    })
+  }
+  
+  getLocalization = () => {
+    axios.get('https://maps.google.com/maps/api/geocode/json?address='+this.state.logradouro+','+this.state.numberHome+','
+    +this.state.city+','+this.state.uf+'&components=country:BR&key=AIzaSyDTwm8jKEXByLoOxH3PgIF4SaU2RbLhJrg').then((response) =>{
+      if(response){
+        console.log(response);
+        this.setState({
+          latitude: response.data.results["0"].geometry.location.lat,
+          longitude: response.data.results["0"].geometry.location.lng,
+        })
+        
+      }
+      console.log(this.state);
+    })
+  }
+
   addRep = () => {
     const { name, bio, members } = this.state;
 
@@ -57,6 +96,13 @@ class RepForm extends Component {
       name: this.state.name,
       bio: this.state.bio,
       members: this.state.members,
+      numberHome: this.state.numberHome,
+      street: this.state.street,
+      cep: this.state.cep,
+      city: this.state.city,
+      uf: this.state.uf,
+      latitude: this.state.latitude,
+      longitude: this.state.longitude,
       tags: this.state.tags,
       admUID: this.state.userUID,
     });
@@ -75,6 +121,10 @@ class RepForm extends Component {
       tagsError: tagsError,
       membersError: membersError
     })
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    return (nextProps != this.props) ||   
+      (nextState = this.state) 
   }*/
 
   render() {
@@ -109,6 +159,36 @@ class RepForm extends Component {
             keyboardType='number-pad'
             onChangeText={(members) => this.setState({ members })}
             onEndEditing={() => numberColor.call(this, this.state.members)}
+          ></Input>
+        </Item>
+        
+        <Item floatingLabel style={styles.floatInput}
+          /*style={{ borderColor: this.state.borderColorNumber }}*/>
+          <Label>Cep:</Label>
+          <Input
+            value={this.state.cep}
+            onChangeText={(cep) => this.setState({ cep })}
+            //onEndEditing={() => numberColor.call(this, this.state.members)}
+            onEndEditing={() => this.searchAdress(this.state.cep) }
+          ></Input>
+        </Item>
+
+
+        <Item floatingLabel style={styles.floatInput}
+          /*style={{ borderColor: this.state.borderColorNumber }}*/>
+          <Label>Rua:</Label>
+          <Input
+            value={this.state.logradouro}
+            //onEndEditing={() => numberColor.call(this, this.state.members)}
+            
+          ></Input>
+        </Item>
+        <Item floatingLabel style={styles.floatInput}>
+          <Label>Número:</Label>
+          <Input
+            value={this.state.numberHome}
+            onChangeText={(numberHome) => this.setState({ numberHome })}
+            onEndEditing={() => this.getLocalization() }
           ></Input>
         </Item>
 
