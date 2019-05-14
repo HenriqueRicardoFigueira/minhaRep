@@ -25,8 +25,8 @@ const Rep = createSwitchNavigator({
 */
 
 const Teste = createBottomTabNavigator({
+    User : HomeUser,
     Rep : HomeRep,
-    User : HomeUser
 });
 
 const Routes = createAppContainer(

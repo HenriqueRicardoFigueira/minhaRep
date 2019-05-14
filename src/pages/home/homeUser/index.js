@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import { View, Text, TouchableOpacity } from 'react-native';
 import firebase from 'react-native-firebase';
 import { withNavigation } from 'react-navigation';
@@ -27,18 +26,10 @@ class HomeUser extends Component {
     this.props.navigation.navigate("Login");
   }
 
-
   render() {
     return (
-
-
       <View style={styles.container}>
-
-
         <Text> hello  !</Text>
-        <TouchableOpacity onPress={this.logout} style={styles.button}>
-          <Text>Logout</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={() => this.props.navigation.navigate('UserProfile')} style={styles.button}>
           <Text>Gerenciar Perfil</Text>
         </TouchableOpacity>
@@ -48,7 +39,9 @@ class HomeUser extends Component {
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps')} style={styles.button}>
           <Text>Mapa</Text>
         </TouchableOpacity>
-     
+        <TouchableOpacity onPress={this.logout} style={styles.button}>
+          <Text>Logout</Text>
+        </TouchableOpacity>
       </View>
     );
   }

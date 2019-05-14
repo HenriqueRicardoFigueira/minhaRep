@@ -25,6 +25,19 @@ class Login extends Component {
     borderColorPassword: '#e6e6e6'
   };
 
+  errorMessage = (error) => {
+
+    switch(error.code) {
+      case 'auth/unknown':
+        return 'Verifique a conexão e tente novamente.'
+      case 'auth/user-not-found':
+      case 'auth/wrong-password':
+        return 'Email ou senha incorretos.'
+      default:
+        return 'Erro inesperado. Tente novamente mais tarde.'
+    }
+  }
+
   login = (email, password) => {
 
     // verifica se os campos email e password estão certos
@@ -42,7 +55,7 @@ class Login extends Component {
           this.props.navigation.navigate("Home");
         }).catch((error) => {   // erro no login
           /* PRECISA VERIFICAR O TIPO DE ERRO */
-          Alert.alert('Email ou senha incorretos', '',[{ text: 'OK' }])
+          Alert.alert(this.errorMessage(error), '', [{ text: 'OK' }])
           // insere a borda vermelha nos campos do login
           this.setState({
             borderColorPassword: '#ff0000',

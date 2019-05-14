@@ -6,7 +6,7 @@ import { Button, Item, Input, Label, Thumbnail } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
-import {firebase} from '../../Firebase'
+import { firebase } from '../../Firebase'
 
 import { nameColor, emailColor, ageColor, bioColor } from '../formValidation';
 
@@ -16,15 +16,15 @@ window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
 
 const options = {
-  title: 'Select Profile Pic',
-  takePhotoButtonTitle: 'Use Your Camera',
-  chooseFromLibraryButtonTitle: 'Open From Library'
+  title: 'Foto de Perfil',
+  takePhotoButtonTitle: 'Enviar da Câmera',
+  chooseFromLibraryButtonTitle: 'Enviar da Biblioteca'
 }
 
 class UserProfile extends Component {
   constructor(props) {
     super(props);
-    
+
     this.ref = firebase.firestore().collection('users');
     //this.imgRef = firebase.storage().ref().child('userImages');
 
@@ -61,9 +61,9 @@ class UserProfile extends Component {
   */
 
 
-  componentDidMount = async() => {
+  componentDidMount = async () => {
     var user = firebase.auth().currentUser;
-    
+
     await this.ref.doc(user.uid)
       .get()
       .then((userData) => {
@@ -81,10 +81,11 @@ class UserProfile extends Component {
           console.log("Não existe usuário");
         }
       })
-      console.log(this.state.uid)
-      this.getUrl();
+    console.log(this.state.uid)
+    this.getUrl();
   }
-  getUrl = async() => {
+
+  getUrl = async () => {
     const imageName = this.state.uid;
     const imageRef = firebase.storage().ref('userImages');
     await imageRef.child(imageName).getDownloadURL().then((url) => {
@@ -157,10 +158,11 @@ class UserProfile extends Component {
         });
         console.log(typeof(source.uri))*/
         this.uploadImage(response.uri)
-          .then( (url) => { 
-            alert('uploaded'); 
-            this.setState({ imgUrl: url, gotUrl: true});
-            console.log(this.state.imgUrl) })
+          .then((url) => {
+            alert('uploaded');
+            this.setState({ imgUrl: url, gotUrl: true });
+            console.log(this.state.imgUrl)
+          })
           .catch(error => console.log(error)) // UPA A FOTO PARA A STORAGE COM O NOME this.state.uid
         // A PARTIR DAQUI TA CAGADO
         /*const url = firebase.storage().ref('userImages').child(this.state.uid).getDownloadURL(); // ESSA DROGA DE FUNÇÃO RETORNA UM OBJETO NAO UMA STRING
@@ -169,7 +171,7 @@ class UserProfile extends Component {
           imgUrl: url // ESTÁ ADCIONANDO ESSE OBJETO NO STATE
         });*/
         this.getUrl();
-         // ATUALIZA O DATABASE MAS ATUALIZA ERRADO
+        // ATUALIZA O DATABASE MAS ATUALIZA ERRADO
       }
     });
   }
@@ -255,7 +257,7 @@ class UserProfile extends Component {
         </Item>
         <Image
           style={{ width: 100, height: 100 }}
-          disabled = {!this.state.gotUrl}
+          disabled={!this.state.gotUrl}
           source={{ uri: this.state.imgUrl }} />
         <Button style={styles.button} onPress={this.imageSelect}>
           <Text style={styles.buttonText}> Enviar Foto </Text>
