@@ -4,7 +4,7 @@ import { ScrollView, Button, TextInput, Text } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { Item, Input, Label } from 'native-base';
 
-import firebase from 'react-native-firebase'
+import {firebase} from '../../Firebase'
 // import { Container } from './styles';
 
 class RepEdit extends Component {

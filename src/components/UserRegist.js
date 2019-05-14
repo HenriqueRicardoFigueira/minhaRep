@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Item, Input, Label } from 'native-base';
 import { View, Text } from 'react-native';
-import firebase from 'react-native-firebase';
+import {firebase} from '../../Firebase'
 import { styles } from './styles';
 
 import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
