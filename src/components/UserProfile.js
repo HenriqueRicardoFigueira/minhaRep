@@ -14,6 +14,14 @@ const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
+const config = {
+  apiKey: " AIzaSyA_zdS-vlFbRsYiXFBGjBvTmJ-EMjPp_uQ",
+  authDomain: "minharep-6c7ba.firebaseapp.com",
+  databaseURL: "https://minharep-6c7ba.firebaseio.com",
+  storageBucket: "minharep-6c7ba.appspot.com",
+  messagingSenderId: "299714124161"
+}
+firebase.initializeApp(config);
 
 const options = {
   title: 'Select Profile Pic',
@@ -24,7 +32,7 @@ const options = {
 class UserProfile extends Component {
   constructor(props) {
     super(props);
-
+    
     this.ref = firebase.firestore().collection('users');
     //this.imgRef = firebase.storage().ref().child('userImages');
 
@@ -48,6 +56,8 @@ class UserProfile extends Component {
       borderColorEmail: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
     };
+    //this.componentDidMount();
+    
   }
 
   /* CAMPOS DA DATABASE 
@@ -59,10 +69,10 @@ class UserProfile extends Component {
   */
 
 
-  componentDidMount() {
+  componentDidMount = async() => {
     var user = firebase.auth().currentUser;
-
-    this.ref.doc(user.uid)
+    
+    await this.ref.doc(user.uid)
       .get()
       .then((userData) => {
         if (userData.exists) {
@@ -79,6 +89,19 @@ class UserProfile extends Component {
           console.log("Não existe usuário");
         }
       })
+      console.log(this.state.uid)
+      this.getUrl();
+  }
+  getUrl = async() => {
+    const imageName = this.state.uid;
+    const imageRef = firebase.storage().ref('userImages');
+    await imageRef.child(imageName).getDownloadURL().then((url) => {
+      this.setState({ imgUrl: url })
+    }).catch((error) => {
+      reject(error)
+    });
+    this.editUser();
+    console.log(this.state.imgUrl)
   }
 
   uploadImage = (uri, mime = 'image/jpg') => {
@@ -142,7 +165,10 @@ class UserProfile extends Component {
         });
         console.log(typeof(source.uri))*/
         this.uploadImage(response.uri)
-          .then(url => { alert('uploaded'); this.setState({ imgUrl: url }), console.log(this.url) })
+          .then( (url) => { 
+            alert('uploaded'); 
+            this.setState({ imgUrl: url });
+            console.log(this.state.imgUrl) })
           .catch(error => console.log(error)) // UPA A FOTO PARA A STORAGE COM O NOME this.state.uid
         // A PARTIR DAQUI TA CAGADO
         /*const url = firebase.storage().ref('userImages').child(this.state.uid).getDownloadURL(); // ESSA DROGA DE FUNÇÃO RETORNA UM OBJETO NAO UMA STRING
@@ -150,8 +176,8 @@ class UserProfile extends Component {
         this.setState({
           imgUrl: url // ESTÁ ADCIONANDO ESSE OBJETO NO STATE
         });*/
-
-        this.editUser(); // ATUALIZA O DATABASE MAS ATUALIZA ERRADO
+        this.getUrl();
+         // ATUALIZA O DATABASE MAS ATUALIZA ERRADO
       }
     });
   }
@@ -164,13 +190,13 @@ class UserProfile extends Component {
     boolName = nameColor.call(this, name)
     boolEmail = emailColor.call(this, email)
 
-    return boolBio && boolAge&& boolName && boolEmail
+    return boolBio && boolAge && boolName && boolEmail
   }
 
   editUser = () => {
     const { age, name, bio, email, imgUrl } = this.state;
 
-    if(!this.canRegister(name, email, age, bio)) {
+    if (!this.canRegister(name, email, age, bio)) {
       return
     }
 
