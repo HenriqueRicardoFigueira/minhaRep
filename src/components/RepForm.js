@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, ScrollView, Text, TextInput, Image, TouchableOpacity } from 'react-native'
 import { Button, Input, Label, Item, } from 'native-base'
 import { withNavigation } from 'react-navigation'
-import firebase from 'react-native-firebase'
+import {firebase} from '../../Firebase'
 
 import { styles } from './styles'
 

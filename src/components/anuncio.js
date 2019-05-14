@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Platform } from 'react-native';
-import firebase from 'react-native-firebase';
+import {firebase} from '../../Firebase'
 import { styles } from './styles';
 import { Button, Item, Input, Label, Thumbnail, Container } from 'native-base';
 import { withNavigation } from 'react-navigation';
