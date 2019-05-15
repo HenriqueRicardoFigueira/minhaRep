@@ -166,7 +166,33 @@ const styles = StyleSheet.create({
   },
   iconText: {
     fontSize: 15
-  }
+  },
+  header: {
+    backgroundColor: '#F0803C',
+  },
+  body: {
+    marginRight: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  content: {
+    backgroundColor: '#eff7f9',
+    padding: SCREEN_HEIGHT*0.005,
+  },
+  containerList: {
+    height: 55,
+    backgroundColor: '#eff7f9',
+    //padding: SCREEN_HEIGHT*0.005,
+  },
+  listText: {
+    fontSize: 20,
+    padding: 3,
+    fontWeight: 'bold',
+  },
+  listSubText: {
+    fontSize: 20,
+    padding: 3,
+  },
 });
 
 module.exports = { input, styles };

@@ -11,6 +11,8 @@ import RepCard from './pages/repCard';
 import UserRegist from './pages/userRegist';
 import UserProfile from './pages/userProfile';
 import Anuncio from './pages/anuncio';
+import MembersList from './pages/membersList';
+import MembersAdd from './pages/membersAdd';
 
 /*
 const User = createSwitchNavigator({
@@ -39,9 +41,11 @@ const Routes = createAppContainer(
         UserProfile: UserProfile,
         Anuncio: Anuncio,
         RepCard: RepCard,
+        MembersList: MembersList,
+        MembersAdd: MembersAdd
 
     }, {
-        initialRouteName: 'Login'
+        initialRouteName: 'MembersList'
     })
     /*
     Codigo antigo
