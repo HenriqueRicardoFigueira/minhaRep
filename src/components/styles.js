@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#eff7f9',
-    padding: SCREEN_HEIGHT*0.025,
+    padding: SCREEN_WIDTH*0.025,
   },
   registerButton:{
     alignSelf: 'center',
@@ -64,8 +64,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   floatInput:{
-    marginTop: SCREEN_HEIGHT*1,
-    marginBottom: SCREEN_HEIGHT*1,
+    marginTop: SCREEN_HEIGHT*0.005,
+    //marginBottom: SCREEN_HEIGHT*0.025,
+    borderColor: '#e6e6e6'
   },
   button: {
     alignSelf: 'center',

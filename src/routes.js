@@ -45,7 +45,7 @@ const Routes = createAppContainer(
         MembersAdd: MembersAdd
 
     }, {
-        initialRouteName: 'MembersList'
+        initialRouteName: 'Login'
     })
     /*
     Codigo antigo
