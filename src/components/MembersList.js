@@ -80,7 +80,7 @@ class MembersList extends Component {
       )
     }
     return (
-      <ScrollView>
+      <ScrollView> 
         <Container>
           <Header style={styles.header}>
             <Body style={styles.body}>

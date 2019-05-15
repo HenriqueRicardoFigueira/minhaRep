@@ -15,6 +15,7 @@ class MembersList extends Component {
 
     this.state = {
       users: [],
+      isLoading: true
     };
   }
   _isMounted = false;
@@ -37,11 +38,14 @@ class MembersList extends Component {
           key: usr.id,
           name,
           uid
-        });
-        this.setState({
-          users,
         })
       });
+      if (this._isMounted) {
+        this.setState({
+          users,
+          isLoading: false
+        })
+      }
     }
   }
 
@@ -82,7 +86,7 @@ class MembersList extends Component {
     if (this.state.isLoading) {
       return (
         <View>
-          <ActivityIndicator />
+          <Text />
         </View>
       )
     }
