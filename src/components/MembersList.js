@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, Platform, Image, FlatList, ScrollView, Button } from 'react-native';
+import { View, Platform, Image, FlatList, ScrollView } from 'react-native';
 //import firebase from 'react-native-firebase';
 import { styles } from './styles';
-import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, Container, Accordion } from 'native-base';
+import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, Container, Accordion, Button, Body, Title } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { firebase } from '../../Firebase'
 
@@ -28,11 +28,10 @@ class MembersList extends Component {
   onCollectionUpdate = (querySnapshot) => {
     const users = [];
     querySnapshot.forEach((usr) => {
-      const { name, uid, email } = usr.data();
+      const { name, uid} = usr.data();
       users.push({
         key: usr.id,
         name,
-        email,
         uid
       });
       this.setState({
@@ -42,62 +41,71 @@ class MembersList extends Component {
     });
   }
 
-  removeMember(item){
+  removeMember(item) {
     var user = firebase.auth().currentUser;
 
     this.refRep.doc(user.uid).collection('members').doc(item.uid).delete().catch((error) => {
       console.error("Error deleting user: ", error);
     });
-    this.props.navigation.navigate("MembersList")
   }
 
   renderContent = (item) => {
     return (
-        <View>
-            <Text>{item.email}</Text>
-            <Container>
-                <Button title="Remover" onPress={() => this.removeMember(item)} />
-            </Container>
-        </View>
-    );
-}
-
-renderHeader = (item) => {
-  return (
-      <View>
-          <Text >
-              {item.name}
-          </Text>
+      <View style={styles.containerList}>
+        <Container style={styles.content}>
+          <Button style={styles.button} onPress={() => this.removeMember(item)}>
+            <Text style={styles.buttonText}> Remover </Text>
+          </Button>
+        </Container>
       </View>
-  );
-}
+    );
+  }
 
-render() {
+  renderHeader = (item) => {
+    return (
+      <View style={styles.content}>
+        <Text style={styles.listText}>
+          {item.name}
+        </Text>
+      </View>
+    );
+  }
+
+  render() {
     if (this.state.isLoading) {
-        return (
-            <View>
-                <ActivityIndicator />
-            </View>
-        )
+      return (
+        <View>
+          <ActivityIndicator />
+        </View>
+      )
     }
     return (
-        <ScrollView>
-            <Container>
-                <Header />
-                <Content padder>
-                    <Accordion
-                        dataArray={this.state.users}
-                        animation={true}
-                        expanded={true}
-                        renderHeader={this.renderHeader}
-                        renderContent={this.renderContent}
-                    ></Accordion>
-                </Content>
-                <Button title="Adicionar Novo Membro" onPress={() => this.props.navigation.navigate("MembersAdd")} />
-            </Container>
-        </ScrollView>
+      <ScrollView>
+        <Container>
+          <Header style={styles.header}>
+            <Body style={styles.body}>
+              <Title style={styles.buttonText}>Membros</Title>
+            </Body>
+          </Header>
+
+          <Content padder style={styles.content}>
+            <Accordion
+              dataArray={this.state.users}
+              animation={true}
+              expanded={true}
+              renderHeader={this.renderHeader}
+              renderContent={this.renderContent}
+            ></Accordion>
+
+            <Button style={styles.button} onPress={() => this.props.navigation.navigate("MembersAdd")}>
+              <Text style={styles.buttonText}> Adicionar Novo </Text>
+            </Button>
+
+          </Content>
+        </Container>
+      </ScrollView>
     );
-}
+  }
 }
 
 export default withNavigation(MembersList);
