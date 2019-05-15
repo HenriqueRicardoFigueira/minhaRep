@@ -91,7 +91,7 @@ class UserRegist extends Component {
 
         <Item floatingLabel style={styles.floatInput}
           style={{ borderColor: this.state.borderColorName }}>
-          <Label>Digite seu nome:</Label>
+          <Label style={{marginBottom: 20}}>Digite seu nome:</Label>
           <Input
             value={this.state.name}
             onChangeText={(name) => this.setState({ name })}

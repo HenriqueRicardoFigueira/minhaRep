@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, ScrollView, Text, TextInput, Image, TouchableOpacity } from 'react-native'
 import { Button, Input, Label, Item, } from 'native-base'
 import { withNavigation } from 'react-navigation'
-import firebase from 'react-native-firebase'
+import {firebase} from '../../Firebase'
 import axios from 'axios';
 
 import { styles } from './styles'
@@ -178,7 +178,7 @@ class RepForm extends Component {
           /*style={{ borderColor: this.state.borderColorNumber }}*/>
           <Label>Rua:</Label>
           <Input
-            value={this.state.logradouro}
+            value={this.state.street}
             //onEndEditing={() => numberColor.call(this, this.state.members)}
             
           ></Input>

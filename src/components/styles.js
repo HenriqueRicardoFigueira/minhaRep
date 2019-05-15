@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: SCREEN_WIDTH*0.8, 
     height:SCREEN_HEIGHT*0.07,
-    marginBottom: SCREEN_WIDTH*0.01,
+    marginBottom: SCREEN_HEIGHT*0.01,
     //paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH*0.715, 
     height: SCREEN_HEIGHT*0.055,
     backgroundColor: '#fff',
-    marginBottom: SCREEN_WIDTH*0.002,
+    marginBottom: SCREEN_HEIGHT*0.002,
     //paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -64,15 +64,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   floatInput:{
-    marginBottom: 20,
+    marginTop: SCREEN_HEIGHT*1,
+    marginBottom: SCREEN_HEIGHT*1,
   },
   button: {
     alignSelf: 'center',
     width: SCREEN_WIDTH *0.8, 
     height: SCREEN_HEIGHT*0.050,
     backgroundColor: '#F0803C',
-    marginTop: SCREEN_WIDTH*0.015,
-    marginBottom: SCREEN_WIDTH*0.005,
+    marginTop: SCREEN_HEIGHT*0.015,
+    marginBottom: SCREEN_HEIGHT*0.005,
     //paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -92,11 +93,11 @@ const styles = StyleSheet.create({
     width: 180,
     height: 180,
     justifyContent: 'center',
-    marginBottom:SCREEN_WIDTH * 0.05
+    marginBottom:SCREEN_HEIGHT * 0.05
   },
 
   loginView: {
-    paddingTop: SCREEN_WIDTH * 0.010,
+    paddingTop: SCREEN_HEIGHT * 0.010,
     alignItems: 'center',
   },
   scroll: {
