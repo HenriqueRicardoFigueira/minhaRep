@@ -14,15 +14,6 @@ import Anuncio from './pages/anuncio';
 import MembersList from './pages/membersList';
 import MembersAdd from './pages/membersAdd';
 
-/*
-const User = createSwitchNavigator({
- 
-});
-
-const Rep = createSwitchNavigator({
-   
-});
-*/
 
 const Teste = createBottomTabNavigator({
     User : HomeUser,
@@ -47,23 +38,7 @@ const Routes = createAppContainer(
     }, {
         initialRouteName: 'Login'
     })
-    /*
-    Codigo antigo
-    const Routes = createAppContainer(
-        createSwitchNavigator({
-            Login: Login,
-            Home: Home,
-            RepCRUD: RepCRUD,
-            RepEdit: RepEdit,
-            RepForm: RepForm,
-            Maps: Maps,
-            RepCard: RepCard,
-            UserRegist: UserRegist,
-            UserProfile: UserProfile,
-            Anuncio: Anuncio
-        }, {
-            initialRouteName: 'Login'
-        })*/
+ 
 );
 
 export default Routes;

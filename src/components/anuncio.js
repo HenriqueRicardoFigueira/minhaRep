@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Platform } from 'react-native';
-import {firebase} from '../../Firebase'
+import { firebase } from '../../Firebase'
 import { styles } from './styles';
 import { Button, Item, Input, Label, Thumbnail, Container } from 'native-base';
 import { withNavigation } from 'react-navigation';
@@ -21,8 +21,16 @@ class Anuncio extends Component {
             bio: '',
             number: '',
             valor: '',
-            local: '',
-            tags:'',
+            img: '',
+            latitude: '',
+            longitude: '',
+            tags: '',
+            numberHome: '',
+            street: '',
+            complement: '',
+            uf: '',
+            city: '',
+            tags: '',
             borderColorBio: '#e6e6e6',
             borderColorName: '#e6e6e6',
             borderColorNumber: '#e6e6e6',
@@ -32,23 +40,28 @@ class Anuncio extends Component {
 
     componentDidMount() {
         this.ref = firebase.firestore().collection('republics');
-        var user = firebase.auth().currentUser; 
-        this.ref.doc(user.uid) 
-          .get()
-          .then((repData) => {
-            if (repData.exists) {
-              const repDatas = repData.data();
-              this.setState({ 
-                bio: repDatas.bio,
-                name: repDatas.name,
-                repUID: repDatas.admUID
-              })
-             
-            } else {
-              alert("Não existe republica cadastrada neste usuário");
-            }
-          })
-      }
+        var user = firebase.auth().currentUser;
+        this.ref.doc(user.uid)
+            .get()
+            .then((repData) => {
+                if (repData.exists) {
+                    const repDatas = repData.data();
+                    this.setState({
+                        bio: repDatas.bio,
+                        name: repDatas.name,
+                        repUID: repDatas.admUID,
+                        street: repData.street,
+                        numberHome: repData.numberHome,
+                        city: repData.city,
+                        latitude: repData.latitude,
+                        longitude: repData.longitude
+                    })
+
+                } else {
+                    alert("Não existe republica cadastrada neste usuário");
+                }
+            })
+    }
 
     canRegister = (name, bio, number) => {
         boolBio = bioColor.call(this, bio)
@@ -58,7 +71,7 @@ class Anuncio extends Component {
     }
 
     // CHAMAR ESTA FUNÇÃO AO CLICAR NO BOTÃO DE CADASTRAR ANÚNCIO
-    registerRep = () =>  {
+    registerRep = () => {
         //bloco comentado por questão que não vai haver mudanças no nome e no bio, pois vão ser informações que iremos pegar do banco
         /*
         const { name, bio } = this.state;
@@ -68,12 +81,17 @@ class Anuncio extends Component {
         const { name, bio, repUID, valor, local, tags } = this.state;
         ref = firebase.firestore().collection('anuncio');
         ref.doc(repUID).set({
-          name: name,
-          bio: bio,
-          valor: valor,
-          local: local,
-          tags: tags,
-          repUID: repUID,
+            name: name,
+            bio: bio,
+            valor: valor,
+            local: local,
+            tags: tags,
+            repUID: repUID,
+            street: street,
+            city: city,
+            numberHome: numberHome,
+            latitude: latitude,
+            longitude: longitude
         })
         this.props.navigation.navigate("Home");
     }
@@ -87,8 +105,8 @@ class Anuncio extends Component {
                     <Label>Nome da república:</Label>
                     <Input
                         value={this.state.name}
-                        //onChangeText={(name) => this.setState({ name })}
-                        //onEndEditing={() => nameColor.call(this, this.state.name)}
+                    //onChangeText={(name) => this.setState({ name })}
+                    //onEndEditing={() => nameColor.call(this, this.state.name)}
                     ></Input>
                 </Item>
 
@@ -97,8 +115,8 @@ class Anuncio extends Component {
                     <Label>Descrição:</Label>
                     <Input
                         value={this.state.bio}
-                        //onChangeText={(bio) => this.setState({ bio })}
-                        //onEndEditing={() => bioColor.call(this, this.state.bio)}
+                    //onChangeText={(bio) => this.setState({ bio })}
+                    //onEndEditing={() => bioColor.call(this, this.state.bio)}
                     ></Input>
                 </Item>
                 <Item floatingLabel style={styles.floatInput}
@@ -121,8 +139,9 @@ class Anuncio extends Component {
                     /*style={{ borderColor: this.state.borderColorValor }}*/>
                     <Label>Local:</Label>
                     <Input
-                        onChangeText={(local) => this.setState({ local })}
-                        onEndEditing={() => bioColor.call(this, this.state.local)}
+                        value={this.state.street}
+                       /* onChangeText={(local) => this.setState({ local })}
+                        onEndEditing={() => bioColor.call(this, this.state.local)}*/
                     ></Input>
                 </Item>
                 <Button style={styles.button} onPress={() => this.registerRep()}>
