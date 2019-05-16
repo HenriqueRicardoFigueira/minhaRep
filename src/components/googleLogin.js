@@ -17,6 +17,17 @@ GoogleSignin.configure({
 });
 
 class GoogleLogin extends Component {
+  constructor(props) {
+    super(props);
+    this.ref = firebase.firestore().collection('users');
+
+    this.state = {
+      name: '',
+      email: '',
+      photoURL: '',
+    }
+
+  }
   signIn = async () => {
     try {
       // Add any configuration settings here:
@@ -29,8 +40,12 @@ class GoogleLogin extends Component {
       //console.log(credential)
       // login with credential
       const currentUser = await firebase.auth().signInWithCredential(credential);
-      const email = currentUser.user.email;
-      console.log(email);
+      console.log(currentUser)
+      this.ref.doc(currentUser.user.uid).set({
+        name: currentUser.additionalUserInfo.profile.given_name,
+        email: currentUser.user.email,
+        photoURL: currentUser.user.photoURL
+      });
       this.props.navigation.navigate("Home");
     } catch (e) {
       console.error(e);
