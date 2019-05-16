@@ -13,6 +13,14 @@ class FacebookLogin extends Component {
     super(props);
     this.face = this.face.bind(this);
     this.navega = this.navega.bind(this);
+    this.ref = firebase.firestore().collection('users');
+    
+    this.state = {
+      name:'',
+      email:'',
+      photoURL: '',
+    }
+
   }
   
   navega = () => {
@@ -24,35 +32,40 @@ class FacebookLogin extends Component {
  
   face = async () => {
     const {navigation } = this.props;
-    FBSDK.LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
-      function (result) {
-        try {
-          if (result.isCancelled) {
-            alert('Login was cancelled');
-          } else {
-            alert('Login was successful with permissions: '
-              + result.grantedPermissions.toString());
-              
-          }
-          
-          FBSDK.AccessToken.getCurrentAccessToken()
-          .then(
-            (data) => {
-                const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
-                firebase.auth().signInWithCredential(credential);
-                navigation.navigate('Home');
-    
+    this.setState(async(currentUser) =>{
+      await FBSDK.LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
+        async function (result) {
+          try {
+            if (result.isCancelled) {
+              alert('Login was cancelled');
+            } else {
+              alert('Login was successful with permissions: '
+                + result.grantedPermissions.toString());
                 
-               
-          });
-        
-        } catch (error) {
-          console.log('Login failed with error: ' + error);
+            }
+            
+            await FBSDK.AccessToken.getCurrentAccessToken()
+            .then(
+              async(data) => {
+                  const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
+                  currentUser= await firebase.auth().signInWithCredential(credential);
+                  //console.log(currentUser);
+                  navigation.navigate('Home');
+            });
+          
+          } catch (error) {
+            console.log('Login failed with error: ' + error);
+          }
+         
         }
-       
-       
-      }
-    )
+      )
+      console.log(currentUser)
+      this.ref.doc(user.uid).set({
+        name: currentUser.additionalUserInfo.profile.first_name,
+        email: currentUser.user.email,
+        photoURL: currentUser.user.photoURL
+      });
+    });  
     this.navega();
   };
 

@@ -26,10 +26,11 @@ class GoogleLogin extends Component {
 
       // create a new firebase credential with the token
       const credential = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken)
+      //console.log(credential)
       // login with credential
       const currentUser = await firebase.auth().signInWithCredential(credential);
-
-      console.log(currentUser);
+      const email = currentUser.user.email;
+      console.log(email);
       this.props.navigation.navigate("Home");
     } catch (e) {
       console.error(e);
