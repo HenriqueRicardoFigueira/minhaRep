@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Platform } from 'react-native';
+import { View, Text } from 'react-native';
 import { firebase } from '../../Firebase'
 import { styles } from './styles';
-import { Button, Item, Input, Label, Thumbnail, Container } from 'native-base';
+import { Button, Item, Input, Label } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 
-import { nameColor, numberColor, bioColor, valueColor } from '../formValidation';
+import { nameColor, numberColor, bioColor, valueColor, localColor } from '../formValidation';
 
 
 
@@ -33,8 +33,9 @@ class Anuncio extends Component {
             tags: '',
             borderColorBio: '#e6e6e6',
             borderColorName: '#e6e6e6',
-            borderColorNumber: '#e6e6e6',
             borderColorValue: '#e6e6e6',
+            borderColorLocal: '#e6e6e6',
+            borderColorNumber: '#e6e6e6',
         }
     }
 
@@ -63,22 +64,25 @@ class Anuncio extends Component {
             })
     }
 
-    canRegister = (name, bio, number) => {
+    canRegister = (name, bio, number, value, local) => {
         boolBio = bioColor.call(this, bio)
         boolName = nameColor.call(this, name)
+        boolValue = valueColor.call(this, value)
+        boolLocal = localColor.call(this, local)
+        boolNumber = numberColor.call(this, number)
 
-        return boolBio && boolName && boolEmail
+        return boolBio && boolName && boolValue && boolLocal && boolNumber
     }
 
     // CHAMAR ESTA FUNÇÃO AO CLICAR NO BOTÃO DE CADASTRAR ANÚNCIO
     registerRep = () => {
         //bloco comentado por questão que não vai haver mudanças no nome e no bio, pois vão ser informações que iremos pegar do banco
-        /*
-        const { name, bio } = this.state;
-        if (!canRegister(name, bio)) {
+        const { repUID, name, bio, number, value, local, tags } = this.state;
+        if (!this.canRegister(name, bio, number, value, local)) {
             return
-        }*/
-        const { name, bio, repUID, valor, local, tags } = this.state;
+        }
+
+        return
         ref = firebase.firestore().collection('anuncio');
         ref.doc(repUID).set({
             name: name,
@@ -105,8 +109,8 @@ class Anuncio extends Component {
                     <Label>Nome da república:</Label>
                     <Input
                         value={this.state.name}
-                    onChangeText={(name) => this.setState({ name })}
-                    onEndEditing={() => nameColor.call(this, this.state.name)}
+                        onChangeText={(name) => this.setState({ name })}
+                        onEndEditing={() => nameColor.call(this, this.state.name)}
                     ></Input>
                 </Item>
 
@@ -115,8 +119,8 @@ class Anuncio extends Component {
                     <Label>Descrição:</Label>
                     <Input
                         value={this.state.bio}
-                    onChangeText={(bio) => this.setState({ bio })}
-                    onEndEditing={() => bioColor.call(this, this.state.bio)}
+                        onChangeText={(bio) => this.setState({ bio })}
+                        onEndEditing={() => bioColor.call(this, this.state.bio)}
                     ></Input>
                 </Item>
                 <Item floatingLabel style={styles.floatInput}
@@ -138,12 +142,12 @@ class Anuncio extends Component {
                     ></Input>
                 </Item>
                 <Item floatingLabel style={styles.floatInput}
-                    /*style={{ borderColor: this.state.borderColorValor }}*/>
+                    style={{ borderColor: this.state.borderColorLocal }}>
                     <Label>Local:</Label>
                     <Input
                         value={this.state.street}
-                       /* onChangeText={(local) => this.setState({ local })}
-                        onEndEditing={() => bioColor.call(this, this.state.local)}*/
+                        onChangeText={(local) => this.setState({ local })}
+                        onEndEditing={() => localColor.call(this, this.state.local)}
                     ></Input>
                 </Item>
                 <Button style={styles.button} onPress={() => this.registerRep()}>

@@ -95,4 +95,15 @@ function valueColor(value) {
   return newColor == '#e6e6e6'
 }
 
-module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor, valueColor };
+function localColor(local) {
+  // este regex é o mesmo da bio apenas para teste
+  newColor = color(local, /^(.|\s)*[a-zA-Z]+(.|\s)*$/)
+
+  this.setState({
+    borderColorLocal: newColor
+  })
+
+  return newColor == '#e6e6e6'
+}
+
+module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor, valueColor, localColor };
