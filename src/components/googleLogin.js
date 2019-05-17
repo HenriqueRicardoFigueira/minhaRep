@@ -46,7 +46,7 @@ class GoogleLogin extends Component {
         email: currentUser.user.email,
         photoURL: currentUser.user.photoURL
       });
-      this.props.navigation.navigate("Home");
+      this.props.navigation.navigate("UserRegistAlt");
     } catch (e) {
       console.error(e);
     }

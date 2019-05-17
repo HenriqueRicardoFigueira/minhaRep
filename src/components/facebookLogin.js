@@ -50,7 +50,7 @@ class FacebookLogin extends Component {
                   const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
                   currentUser= await firebase.auth().signInWithCredential(credential);
                   //console.log(currentUser);
-                  navigation.navigate('Home');
+                  navigation.navigate('UserRegistAlt');
             });
           
           } catch (error) {
