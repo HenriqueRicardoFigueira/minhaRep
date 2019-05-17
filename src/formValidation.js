@@ -10,7 +10,7 @@ color = (field, regex) => {
 }
 
 function nameColor(name) {
-  newColor = name.length > 32 ? '#ff0000' : color(name, /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/)
+  newColor = name.length > 32 ? '#ff0000' : color(name, /^[a-zA-ZéúíóáÉÚÍÓÁèùìòàçÇÈÙÌÒÀõãñÕÃÑêûîôâÊÛÎÔÂëÿüïöäËYÜÏÖÄ]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/)
 
   this.setState({
     borderColorName: newColor,
