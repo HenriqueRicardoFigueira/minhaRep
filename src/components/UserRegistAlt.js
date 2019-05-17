@@ -3,18 +3,8 @@ import { Button, Item, Input, Label, Image } from 'native-base';
 import { View, Text } from 'react-native';
 import { firebase } from '../../Firebase'
 import { styles } from './styles';
-
 import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
-
 import { withNavigation } from 'react-navigation';
-
-/*
-    Fields from User Register :
-    name
-    email
-    password
-    age
-*/
 
 class UserRegistAlt extends Component {
   constructor(props) {
@@ -60,12 +50,11 @@ class UserRegistAlt extends Component {
   }
 
   registerUser = async () => {
-    const { email, age, name, password, bio, photoURL } = this.state;
+    const { email, age, name, bio, photoURL } = this.state;
     if (!this.canRegister(email, age, name, password)) {
       return
     }
 
-    //try {
     // REGISTRA O USUARIO NO AUTHENTICATION
     // RETORNA UM OBJETO DO TIPO user
     const usr = await firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -87,25 +76,13 @@ class UserRegistAlt extends Component {
     this.setState({
       name: '',
       email: '',
-      password: '',
       age: '',
       bio: '',
       photoURL: '',
-      isSubmited: true,
     });
 
     this.props.navigation.navigate("Home");
   }
-
-  /*
-  Fields from User Register :
-  name
-  email
-  password
-  age
-  bio
-  tag: null
-  */
 
   render() {
     return (
@@ -113,7 +90,8 @@ class UserRegistAlt extends Component {
 
         <Image
           style={{ width: 100, height: 100 }}
-          source={{ uri: this.state.photoURL }} />
+          source={{ uri: this.state.photoURL }} 
+        />
 
         <Text h1>Estamos quase lá {this.state.name}!</Text>
         <Text h1>Só precisamos de mais algumas informações:</Text>
