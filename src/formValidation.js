@@ -85,4 +85,14 @@ function numberColor(number) {
   return newColor == '#e6e6e6'
 }
 
-module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor };
+function valueColor(value) {
+  newColor = color(value, /^[0-9]+(\.[0-9]{1,2})?$/)
+
+  this.setState({
+    borderColorValue: newColor
+  })
+
+  return newColor == '#e6e6e6'
+}
+
+module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor, valueColor };

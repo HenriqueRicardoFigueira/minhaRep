@@ -6,7 +6,7 @@ import { Button, Item, Input, Label, Thumbnail, Container } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 
-import { nameColor, numberColor, bioColor } from '../formValidation';
+import { nameColor, numberColor, bioColor, valueColor } from '../formValidation';
 
 
 
@@ -20,7 +20,7 @@ class Anuncio extends Component {
             name: '',
             bio: '',
             number: '',
-            valor: '',
+            value: '',
             img: '',
             latitude: '',
             longitude: '',
@@ -34,7 +34,7 @@ class Anuncio extends Component {
             borderColorBio: '#e6e6e6',
             borderColorName: '#e6e6e6',
             borderColorNumber: '#e6e6e6',
-            borderColorValor: '#e6e6e6',
+            borderColorValue: '#e6e6e6',
         }
     }
 
@@ -83,7 +83,7 @@ class Anuncio extends Component {
         ref.doc(repUID).set({
             name: name,
             bio: bio,
-            valor: valor,
+            value: value,
             local: local,
             tags: tags,
             repUID: repUID,
@@ -105,8 +105,8 @@ class Anuncio extends Component {
                     <Label>Nome da república:</Label>
                     <Input
                         value={this.state.name}
-                    //onChangeText={(name) => this.setState({ name })}
-                    //onEndEditing={() => nameColor.call(this, this.state.name)}
+                    onChangeText={(name) => this.setState({ name })}
+                    onEndEditing={() => nameColor.call(this, this.state.name)}
                     ></Input>
                 </Item>
 
@@ -115,24 +115,26 @@ class Anuncio extends Component {
                     <Label>Descrição:</Label>
                     <Input
                         value={this.state.bio}
-                    //onChangeText={(bio) => this.setState({ bio })}
-                    //onEndEditing={() => bioColor.call(this, this.state.bio)}
+                    onChangeText={(bio) => this.setState({ bio })}
+                    onEndEditing={() => bioColor.call(this, this.state.bio)}
                     ></Input>
                 </Item>
                 <Item floatingLabel style={styles.floatInput}
                     style={{ borderColor: this.state.borderColorNumber }}>
                     <Label>Numero de vagas:</Label>
                     <Input
+                        keyboardType='number-pad'
                         onChangeText={(number) => this.setState({ number })}
-                        onEndEditing={() => bioColor.call(this, this.state.number)}
+                        onEndEditing={() => numberColor.call(this, this.state.number)}
                     ></Input>
                 </Item>
                 <Item floatingLabel style={styles.floatInput}
-                    /*style={{ borderColor: this.state.borderColorValor }}*/>
+                    style={{ borderColor: this.state.borderColorValue }}>
                     <Label>Valor:</Label>
                     <Input
-                        onChangeText={(valor) => this.setState({ valor })}
-                        onEndEditing={() => bioColor.call(this, this.state.valor)}
+                        keyboardType='number-pad'
+                        onChangeText={(value) => this.setState({ value })}
+                        onEndEditing={() => valueColor.call(this, this.state.value)}
                     ></Input>
                 </Item>
                 <Item floatingLabel style={styles.floatInput}
