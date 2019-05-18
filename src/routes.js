@@ -38,7 +38,7 @@ const Routes = createAppContainer(
         UserRegistAlt: UserRegistAlt
 
     }, {
-        initialRouteName: 'Anuncio'
+        initialRouteName: 'Login'
     })
  
 );
