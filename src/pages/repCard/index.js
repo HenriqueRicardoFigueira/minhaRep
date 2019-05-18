@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { View, Animated, Image, PanResponder, Text } from 'react-native';
 import RepCard from '../../components/RepCard';
+import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 
 // apenas para teste
-const Reps = [
+/*const Reps = [
   { id: '1', title: 'Camargo Correia', localization: 'Rua das Tipuanas Amarelas, 70', imageLink: 'https://i.pinimg.com/originals/fd/e9/a4/fde9a48af9b22286c716df53e99d0b26.jpg', bathroom: 2, bed: 5, users: 4, price: 400, vacancies: 1, latitude: -24.04766912, longitude: -52.3788321 },
   { id: '2', title: 'República em Preto e Branco', localization: 'Rua São Paulo, 902', imageLink: 'https://i.pinimg.com/originals/58/5e/ba/585ebab40b803e11f92a6b9fb657b809.jpg', bathroom: 1, bed: 3, users: 2, price: 430, vacancies: 1, latitude: -24.04400474, longitude: -52.38975406 },
   { id: '3', title: 'República Diamente Jortão Castro', localization: 'Rua Gerondinos, 839', imageLink: 'https://i.pinimg.com/originals/d5/ee/b7/d5eeb71aaeaa6d8fb801e7981e033ae7.jpg', bathroom: 2, bed: 5, users: 3, price: 350, vacancies: 2, latitude: -24.03970338, longitude: -52.38467932 },
   { id: '4', title: 'Trovão', localization: 'Rua Rafael Brasilio Gerônimo Antes, 73', imageLink: 'http://customerscares.co/wp-content/uploads/2019/03/tiny-house-pinterest-style-tiny-house-awesome-best-old-houses-images-on-small-house-interior-design-pinterest.jpg', bathroom: 2, bed: 5, users: 3, price: 350, vacancies: 2, latitude: -24.0437598, longitude: -52.37944365 },
-]
+]*/
+
+const Reps = [];
 
 export default class App extends React.Component {
 
@@ -128,6 +131,8 @@ export default class App extends React.Component {
         }
       }
     })
+
+    this.getDados()
   }
 
   renderReps = () => {
@@ -195,6 +200,31 @@ export default class App extends React.Component {
     );
   }
 
+  getDados() {
+    this.ref = firebase.firestore().collection('anuncio');
+    //var user = firebase.auth().currentUser;
+    //this.ref.doc(user.uid)
+    this.ref.get()
+      .then((repData) => {
+        console.log(repData)
+        return
+        if (repData.exists) {
+          const repDatas = repData.data();
+          this.setState({
+            bio: repDatas.bio,
+            name: repDatas.name,
+            repUID: repDatas.admUID,
+            street: repData.street,
+            numberHome: repData.numberHome,
+            city: repData.city,
+            latitude: repData.latitude,
+            longitude: repData.longitude
+          })
+        } else {
+          alert("Não existe republica cadastrada neste usuário");
+        }
+      })
+  }
   componentWillUnmount() {
     removeAndroidBackButtonHandler();
   }
