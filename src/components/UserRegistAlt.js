@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Item, Input, Label, Image } from 'native-base';
-import { View, Text } from 'react-native';
+import { Button, Item, Input, Label } from 'native-base';
+import { View, Text, Image } from 'react-native';
 import { firebase } from '../../Firebase'
 import { styles } from './styles';
 import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
@@ -19,7 +19,7 @@ class UserRegistAlt extends Component {
       age: '',
       bio: '',
       uid: '',
-      photoURL: '',
+      photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381',
 
       borderColorAge: '#e6e6e6',
       borderColorName: '#e6e6e6',
@@ -51,20 +51,20 @@ class UserRegistAlt extends Component {
 
   registerUser = async () => {
     const { email, age, name, bio, photoURL } = this.state;
-    if (!this.canRegister(email, age, name, password)) {
+    if (!this.canRegister(email, age, name)) {
       return
     }
 
     // REGISTRA O USUARIO NO AUTHENTICATION
     // RETORNA UM OBJETO DO TIPO user
-    const usr = await firebase.auth().createUserWithEmailAndPassword(email, password);
+    const user = await firebase.auth().currentUser;
     this.setState({ isRegistrado: true });
 
     // REGISTRA OS DADOS DO USUARIO NA DATABASE()
-    this.ref.doc(usr.user.uid).set({
+    this.ref.doc(user.uid).set({
       bio: bio,
       email: email,
-      uid: usr.user.uid,
+      uid: user.uid,
       age: age,
       name: name,
       photoURL: photoURL,
@@ -78,7 +78,7 @@ class UserRegistAlt extends Component {
       email: '',
       age: '',
       bio: '',
-      photoURL: '',
+      photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381'
     });
 
     this.props.navigation.navigate("Home");
@@ -90,8 +90,7 @@ class UserRegistAlt extends Component {
 
         <Image
           style={{ width: 100, height: 100 }}
-          source={{ uri: this.state.photoURL }} 
-        />
+          source={{ uri: this.state.photoURL }} />
 
         <Text h1>Estamos quase lá {this.state.name}!</Text>
         <Text h1>Só precisamos de mais algumas informações:</Text>
@@ -126,15 +125,14 @@ class UserRegistAlt extends Component {
     );
   }
 
-  canRegister = (email, age, name, password) => {
+  canRegister = (email, age, name) => {
     // se fizer as chamadas de função no retorno
     // só vai alterar a cor do primeiro que estiver fora do padrão
     boolAge = ageColor.call(this, age)
     boolName = nameColor.call(this, name)
     boolEmail = emailColor.call(this, email)
-    boolPassword = passwordColor.call(this, password)
 
-    return boolAge && boolName && boolEmail && boolPassword
+    return boolAge && boolName && boolEmail
   }
 }
 

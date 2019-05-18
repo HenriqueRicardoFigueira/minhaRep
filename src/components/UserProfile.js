@@ -37,7 +37,8 @@ class UserProfile extends Component {
       uid: '', //PK
 
       avatarSource: null,
-      imgUrl: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381',
+      photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381',
+      gotUrl: false,
       uri: '',
 
       isEditado: false,
@@ -75,7 +76,7 @@ class UserProfile extends Component {
             bio: userP.bio,
             age: userP.age,
             uid: user.uid,
-            //imgUrl: userP.imgUrl
+            //photoURL: userP.photoURL
           })
         } else {
           console.log("Não existe usuário");
@@ -89,12 +90,12 @@ class UserProfile extends Component {
     const imageName = this.state.uid;
     const imageRef = firebase.storage().ref('userImages');
     await imageRef.child(imageName).getDownloadURL().then((url) => {
-      this.setState({ imgUrl: url, gotUrl: true })
+      this.setState({ photoURL: url, gotUrl: true })
     }).catch((error) => {
       reject(error)
     });
     this.editUser();
-    console.log(this.state.imgUrl)
+    console.log(this.state.photoURL)
   }
 
   uploadImage = (uri, mime = 'image/jpg') => {
@@ -160,15 +161,15 @@ class UserProfile extends Component {
         this.uploadImage(response.uri)
           .then((url) => {
             alert('uploaded');
-            this.setState({ imgUrl: url, gotUrl: true });
-            console.log(this.state.imgUrl)
+            this.setState({ photoURL: url, gotUrl: true });
+            console.log(this.state.photoURL)
           })
           .catch(error => console.log(error)) // UPA A FOTO PARA A STORAGE COM O NOME this.state.uid
         // A PARTIR DAQUI TA CAGADO
         /*const url = firebase.storage().ref('userImages').child(this.state.uid).getDownloadURL(); // ESSA DROGA DE FUNÇÃO RETORNA UM OBJETO NAO UMA STRING
         console.log('url '+ url)
         this.setState({
-          imgUrl: url // ESTÁ ADCIONANDO ESSE OBJETO NO STATE
+          photoURL: url // ESTÁ ADCIONANDO ESSE OBJETO NO STATE
         });*/
         this.getUrl();
         // ATUALIZA O DATABASE MAS ATUALIZA ERRADO
@@ -188,7 +189,7 @@ class UserProfile extends Component {
   }
 
   editUser = () => {
-    const { age, name, bio, email, imgUrl } = this.state;
+    const { age, name, bio, email, photoURL } = this.state;
 
     if (!this.canRegister(name, email, age, bio)) {
       return
@@ -202,7 +203,7 @@ class UserProfile extends Component {
         uid: user.uid,
         age: age,
         name: name,
-        imgUrl: imgUrl,
+        photoURL: photoURL,
         gotUrl: true
       });
     this.setState({ isEditado: true });
@@ -212,7 +213,7 @@ class UserProfile extends Component {
     return (
       <View style={styles.container}>
 
-        {this.state.avatarSource ? <Thumbnail source={{ uri: this.state.imgUrl }} /> : <Text />}
+        {this.state.avatarSource ? <Thumbnail source={{ uri: this.state.photoURL }} /> : <Text />}
 
         <Item floatingLabel style={styles.floatInput}
           style={{ borderColor: this.state.borderColorName }}>
@@ -258,7 +259,7 @@ class UserProfile extends Component {
         <Image
           style={{ width: 100, height: 100 }}
           disabled={!this.state.gotUrl}
-          source={{ uri: this.state.imgUrl }} />
+          source={{ uri: this.state.photoURL }} />
         <Button style={styles.button} onPress={this.imageSelect}>
           <Text style={styles.buttonText}> Enviar Foto </Text>
         </Button>

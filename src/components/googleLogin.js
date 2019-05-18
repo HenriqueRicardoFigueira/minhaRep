@@ -40,13 +40,31 @@ class GoogleLogin extends Component {
       //console.log(credential)
       // login with credential
       const currentUser = await firebase.auth().signInWithCredential(credential);
-      console.log(currentUser)
-      this.ref.doc(currentUser.user.uid).set({
-        name: currentUser.additionalUserInfo.profile.given_name,
-        email: currentUser.user.email,
-        photoURL: currentUser.user.photoURL
+      //console.log(currentUser)
+      //console.log(this.ref.doc(this.ref.doc(currentUser.user.uid).get().empty()))
+      /*if (this.ref.doc(currentUser.user.uid).get().empty){
+        console.log('1')
+      }else{
+        console.log('2')
+      }*/
+      await this.ref.doc(currentUser.user.uid).get().then((user) => {
+        console.log(user.exists)
+        if (user.exists == true) {
+          this.props.navigation.navigate("Home");
+        } else {
+          this.ref.doc(currentUser.user.uid).set({
+            name: currentUser.additionalUserInfo.profile.given_name,
+            email: currentUser.user.email,
+            photoURL: currentUser.user.photoURL
+          });
+          this.props.navigation.navigate("UserRegistAlt");
+        }
+      }).catch(function(error){
+        console.error(error);
+        throw error
       });
-      this.props.navigation.navigate("UserRegistAlt");
+
+
     } catch (e) {
       console.error(e);
     }
