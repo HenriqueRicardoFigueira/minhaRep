@@ -64,11 +64,11 @@ class Anuncio extends Component {
             })
     }
 
-    canRegister = (name, bio, number, value, local) => {
+    canRegister = (name, bio, number, value, street) => {
         boolBio = bioColor.call(this, bio)
         boolName = nameColor.call(this, name)
         boolValue = valueColor.call(this, value)
-        boolLocal = localColor.call(this, local)
+        boolLocal = localColor.call(this, street)
         boolNumber = numberColor.call(this, number)
 
         return boolBio && boolName && boolValue && boolLocal && boolNumber
@@ -77,22 +77,21 @@ class Anuncio extends Component {
     // CHAMAR ESTA FUNÇÃO AO CLICAR NO BOTÃO DE CADASTRAR ANÚNCIO
     registerRep = () => {
         //bloco comentado por questão que não vai haver mudanças no nome e no bio, pois vão ser informações que iremos pegar do banco
-        const { repUID, name, bio, number, value, local, tags } = this.state;
-        if (!this.canRegister(name, bio, number, value, local)) {
+        const { repUID, name, bio, number, value, street, tags, city, numberHome, latitude, longitude } = this.state;
+        if (!this.canRegister(name, bio, number, value, street)) {
             return
         }
 
-        return
         ref = firebase.firestore().collection('anuncio');
         ref.doc(repUID).set({
             name: name,
             bio: bio,
             value: value,
-            local: local,
             tags: tags,
             repUID: repUID,
             street: street,
             city: city,
+            number: number, 
             numberHome: numberHome,
             latitude: latitude,
             longitude: longitude
@@ -146,8 +145,8 @@ class Anuncio extends Component {
                     <Label>Local:</Label>
                     <Input
                         value={this.state.street}
-                        onChangeText={(local) => this.setState({ local })}
-                        onEndEditing={() => localColor.call(this, this.state.local)}
+                        onChangeText={(street) => this.setState({ street })}
+                        onEndEditing={() => localColor.call(this, this.state.street)}
                     ></Input>
                 </Item>
                 <Button style={styles.button} onPress={() => this.registerRep()}>

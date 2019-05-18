@@ -5,6 +5,7 @@ import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 
+
 // apenas para teste
 /*const Reps = [
   { id: '1', title: 'Camargo Correia', localization: 'Rua das Tipuanas Amarelas, 70', imageLink: 'https://i.pinimg.com/originals/fd/e9/a4/fde9a48af9b22286c716df53e99d0b26.jpg', bathroom: 2, bed: 5, users: 4, price: 400, vacancies: 1, latitude: -24.04766912, longitude: -52.3788321 },
@@ -91,8 +92,9 @@ export default class App extends React.Component {
     }).start()
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     handleAndroidBackButton(this.props.navigation.navigate, 'Home');
+    
 
     this.PanResponder = PanResponder.create({
 
@@ -132,15 +134,16 @@ export default class App extends React.Component {
       }
     })
 
-    this.getDados()
+    
+    
   }
 
   renderReps = () => {
-
     return Reps.map((item, i) => {
 
       if (i == this.state.currentIndex) {
         return (
+          
           <Animated.View
             {...this.PanResponder.panHandlers}
             key={item.id} style={[this.rotateAndTranslate, { height: styles.screen.height - 120, width: styles.screen.width, padding: 10, position: 'absolute' }]}>
@@ -206,25 +209,41 @@ export default class App extends React.Component {
     //this.ref.doc(user.uid)
     this.ref.get()
       .then((repData) => {
-        console.log(repData)
-        return
-        if (repData.exists) {
-          const repDatas = repData.data();
-          this.setState({
-            bio: repDatas.bio,
-            name: repDatas.name,
-            repUID: repDatas.admUID,
-            street: repData.street,
-            numberHome: repData.numberHome,
-            city: repData.city,
-            latitude: repData.latitude,
-            longitude: repData.longitude
-          })
-        } else {
-          alert("Não existe republica cadastrada neste usuário");
+        if(!repData._docs){
+          return
         }
+        for (var i = 0; i < repData._docs.length; i++) {
+          
+          var ref = repData._docs[i]._data  ;
+          var rep = {
+            id: i,
+            title: ref.name,
+            localization: ref.street,
+            imagelink: '',
+            bathroom: 3,
+            bed: 4,
+            users: ref.members,
+            price: ref.value,
+            vacancies: ref.number,
+            latitude: ref.latitude,
+            longitude: ref.longitude
+          }
+
+          Reps.push(rep);
+          console.log(rep);
+          //console.log(ref);
+          // id: '1', title: 'Camargo Correia', localization: 'Rua das Tipuanas Amarelas, 70', imagelink: , bathroom: 2, bed: 5, users: 4, price: 400, vacancies: 1, latitude: -24.04766912, longitude: -52.3788321
+
+        }
+        this.forceUpdate();
       })
+
   }
+
+  componentDidMount(){
+    this.getDados();
+  }
+
   componentWillUnmount() {
     removeAndroidBackButtonHandler();
   }
