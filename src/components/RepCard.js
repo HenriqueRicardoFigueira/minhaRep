@@ -103,5 +103,4 @@ export default class RepCard extends Component {
 // propriedades padrão do componente
 RepCard.defaultProps = {
   title: 'Título da República',
-  imageLink: '../image/houseIcon.png'
 }

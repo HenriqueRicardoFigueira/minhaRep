@@ -15,6 +15,7 @@ import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../a
 ]*/
 
 const Reps = [];
+const photoURL = 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381'
 
 export default class App extends React.Component {
 
@@ -204,7 +205,7 @@ export default class App extends React.Component {
   }
 
   getDados() {
-    this.ref = firebase.firestore().collection('anuncio');
+    this.ref = firebase.firestore().collection('republics');
     //var user = firebase.auth().currentUser;
     //this.ref.doc(user.uid)
     this.ref.get()
@@ -219,7 +220,7 @@ export default class App extends React.Component {
             id: i,
             title: ref.name,
             localization: ref.street,
-            imagelink: '',
+            imageLink: ref.imageLink ? ref.imageLink : photoURL,
             bathroom: 3,
             bed: 4,
             users: ref.members,
