@@ -20,21 +20,20 @@ class MembersList extends Component {
   }
   _isMounted = false;
 
-  componentDidMount() {
+  componentDidMount = () => {
     this._isMounted = true;
     this.unsubscribe = this.refUsers.onSnapshot(this.onCollectionUpdate);
   };
-
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     this._isMounted = false;
   }
 
   onCollectionUpdate = (querySnapshot) => {
     if (this._isMounted) {
       const users = [];
-      querySnapshot.forEach((usr) => {
+      querySnapshot.forEach(async (usr) => {
         const { name, uid } = usr.data();
-        users.push({
+        await users.push({
           key: usr.id,
           name,
           uid
@@ -49,7 +48,7 @@ class MembersList extends Component {
     }
   }
 
-  addMember(item) {
+  addMember = async (item) => {
     var user = firebase.auth().currentUser;
 
     this.refRep.doc(user.uid).collection('members').doc(item.uid).set({
