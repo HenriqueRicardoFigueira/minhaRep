@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, ScrollView, Text, TextInput, Image, TouchableOpacity } from 'react-native'
 import { Button, Input, Label, Item, } from 'native-base'
 import { withNavigation } from 'react-navigation'
-import {firebase} from '../../Firebase'
+import { firebase } from '../../Firebase'
 import axios from 'axios';
 
 import { styles } from './styles'
@@ -20,7 +20,7 @@ class RepForm extends Component {
       bio: '',
       members: '',
       img: '',
-      latitude: '' ,
+      latitude: '',
       longitude: '',
       tags: '',
       cep: '',
@@ -39,11 +39,17 @@ class RepForm extends Component {
 
   componentDidMount() {
     var user = firebase.auth().currentUser;
-
+    this.ref.doc(user.uid) // ACCESS THE REPUBLIC'S INFO
+      .get()
+      .then((repData) => {
+        if (repData.exists) {
+          alert("Já existe republica cadastrada neste usuário");
+          this.props.navigation.navigate("Home");
+        }
+      });
     this.setState({
       userUID: user.uid,
     })
-
   }
 
   canRegister = (name, bio, members) => {
@@ -57,38 +63,38 @@ class RepForm extends Component {
   }
 
   searchAdress = (cep) => {
-    axios.get('https://viacep.com.br/ws/'+cep+'/json/').then( (response) => {
-      if(response){
+    axios.get('https://viacep.com.br/ws/' + cep + '/json/').then((response) => {
+      if (response) {
         this.setState({
           street: response.data.logradouro,
           uf: response.data.uf,
-          city: response.data.localidade  
+          city: response.data.localidade
         })
       }
       console.log(this.state);
-      
+
     })
   }
-  
+
   getLocalization = () => {
-    axios.get('https://maps.google.com/maps/api/geocode/json?address='+this.state.logradouro+','+this.state.numberHome+','
-    +this.state.city+','+this.state.uf+'&components=country:BR&key=AIzaSyDTwm8jKEXByLoOxH3PgIF4SaU2RbLhJrg').then((response) =>{
-      if(response){
-        console.log(response);
-        this.setState({
-          latitude: response.data.results["0"].geometry.location.lat,
-          longitude: response.data.results["0"].geometry.location.lng,
-        })
-        
-      }
-      console.log(this.state);
-    })
+    axios.get('https://maps.google.com/maps/api/geocode/json?address=' + this.state.logradouro + ',' + this.state.numberHome + ','
+      + this.state.city + ',' + this.state.uf + '&components=country:BR&key=AIzaSyDTwm8jKEXByLoOxH3PgIF4SaU2RbLhJrg').then((response) => {
+        if (response) {
+          console.log(response);
+          this.setState({
+            latitude: response.data.results["0"].geometry.location.lat,
+            longitude: response.data.results["0"].geometry.location.lng,
+          })
+
+        }
+        console.log(this.state);
+      })
   }
 
   addRep = () => {
     const { name, bio, members } = this.state;
 
-    if(!this.canRegister(name, bio, members)) {
+    if (!this.canRegister(name, bio, members)) {
       return
     }
 
@@ -129,7 +135,7 @@ class RepForm extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.container} >
 
         <Item floatingLabel style={styles.floatInput}
           style={{ borderColor: this.state.borderColorName }}>
@@ -142,7 +148,7 @@ class RepForm extends Component {
         </Item>
 
         <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorBio }}>
+          style={{ borderColor: this.state.borderColorBio,  marginTop: styles.floatInput.marginTop}}>
           <Label>Descrição:</Label>
           <Input
             value={this.state.bio}
@@ -161,7 +167,7 @@ class RepForm extends Component {
             onEndEditing={() => numberColor.call(this, this.state.members)}
           ></Input>
         </Item>
-        
+
         <Item floatingLabel style={styles.floatInput}
           /*style={{ borderColor: this.state.borderColorNumber }}*/>
           <Label>Cep:</Label>
@@ -169,7 +175,7 @@ class RepForm extends Component {
             value={this.state.cep}
             onChangeText={(cep) => this.setState({ cep })}
             //onEndEditing={() => numberColor.call(this, this.state.members)}
-            onEndEditing={() => this.searchAdress(this.state.cep) }
+            onEndEditing={() => this.searchAdress(this.state.cep)}
           ></Input>
         </Item>
 
@@ -179,8 +185,8 @@ class RepForm extends Component {
           <Label>Rua:</Label>
           <Input
             value={this.state.street}
-            //onEndEditing={() => numberColor.call(this, this.state.members)}
-            
+          //onEndEditing={() => numberColor.call(this, this.state.members)}
+
           ></Input>
         </Item>
         <Item floatingLabel style={styles.floatInput}>
@@ -188,7 +194,7 @@ class RepForm extends Component {
           <Input
             value={this.state.numberHome}
             onChangeText={(numberHome) => this.setState({ numberHome })}
-            onEndEditing={() => this.getLocalization() }
+            onEndEditing={() => this.getLocalization()}
           ></Input>
         </Item>
 

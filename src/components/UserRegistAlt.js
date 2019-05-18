@@ -16,8 +16,8 @@ class UserRegistAlt extends Component {
 
       name: '',
       email: '',
-      age: '',
-      bio: '',
+      age: null,
+      bio: null,
       uid: '',
       photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381',
 
@@ -37,6 +37,8 @@ class UserRegistAlt extends Component {
         if (userData.exists) {
           const userP = userData.data();
           this.setState({
+            age: userP.age,
+            bio: userP.bio,
             name: userP.name,
             email: userP.email,
             uid: user.uid,
@@ -76,8 +78,8 @@ class UserRegistAlt extends Component {
     this.setState({
       name: '',
       email: '',
-      age: '',
-      bio: '',
+      age: null,
+      bio: null,
       photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381'
     });
 
