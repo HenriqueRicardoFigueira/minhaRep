@@ -5,7 +5,7 @@ import { withNavigation } from 'react-navigation'
 import { firebase } from '../../Firebase'
 import axios from 'axios';
 import { styles } from './styles'
-import { nameColor, bioColor, numberColor, memberColor, cepColor } from '../formValidation';
+import { nameColor, bioColor, genericColor, memberColor, cepColor } from '../formValidation';
 
 
 class RepForm extends Component {
@@ -88,6 +88,10 @@ class RepForm extends Component {
   }
 
   getLocalization = () => {
+    if(!genericColor.call(this, this.state.numberHome, /^[0-9][0-9]*/, 'borderColorNumberHome')) {
+      return
+    }
+
     axios.get('https://maps.google.com/maps/api/geocode/json?address=' + this.state.logradouro + ',' + this.state.numberHome + ','
       + this.state.city + ',' + this.state.uf + '&components=country:BR&key=AIzaSyDTwm8jKEXByLoOxH3PgIF4SaU2RbLhJrg')
       .then((response) => {

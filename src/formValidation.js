@@ -126,4 +126,20 @@ function cepColor(cep) {
   return newColor == '#e6e6e6'
 }
 
-module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor, valueColor, memberColor, localColor, cepColor };
+function getState(valueInState, newColor) {
+  var temp = {}
+  temp[valueInState] = newColor
+
+  return temp
+}
+
+// works by all field, but needs some more information
+function genericColor(value, regex, valueInState) {
+  newColor = color(value, regex)
+
+  this.setState(getState(valueInState, newColor))
+
+  return newColor == '#e6e6e6'
+}
+
+module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor, valueColor, memberColor, localColor, cepColor, genericColor };
