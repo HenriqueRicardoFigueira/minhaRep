@@ -138,8 +138,7 @@ class RepForm extends Component {
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.container}>
 
-          <Item floatingLabel style={styles.floatInput}
-            style={{ borderColor: this.state.borderColorName }}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)} >
             <Label>Nome da república:</Label>
             <Input
               value={this.state.name}
@@ -148,8 +147,7 @@ class RepForm extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}
-            style={{ borderColor: this.state.borderColorBio, marginTop: styles.floatInput.marginTop }}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBio, marginTop: styles.floatInput.marginTop }, styles.floatInput)} >
             <Label>Descrição:</Label>
             <Input
               value={this.state.bio}
@@ -158,8 +156,7 @@ class RepForm extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}
-            style={{ borderColor: this.state.borderColorNumber }}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumber }, styles.floatInput)} >
             <Label>Quantidade de Membros:</Label>
             <Input
               value={this.state.members}
@@ -179,7 +176,6 @@ class RepForm extends Component {
               onEndEditing={() => this.searchAdress(this.state.cep)}
             ></Input>
           </Item>
-
 
           <Item floatingLabel style={styles.floatInput}
           /*style={{ borderColor: this.state.borderColorNumber }}*/>

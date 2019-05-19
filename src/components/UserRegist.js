@@ -3,18 +3,8 @@ import { Container, Button, Item, Input, Label } from 'native-base';
 import { View, Text, ScrollView } from 'react-native';
 import { firebase } from '../../Firebase'
 import { styles } from './styles';
-
 import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
-
 import { withNavigation } from 'react-navigation';
-
-/*
-    Fields from User Register :
-    name
-    email
-    password
-    age
-*/
 
 class UserRegist extends Component {
   constructor(props) {
@@ -73,16 +63,6 @@ class UserRegist extends Component {
     this.props.navigation.navigate("Home");
   }
 
-  /*
-  Fields from User Register :
-  name
-  email
-  password
-  age
-  bio
-  tag: null
-  */
-
   render() {
     return (
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -90,8 +70,7 @@ class UserRegist extends Component {
 
           <Text h1>Tela de registro </Text>
 
-          <Item floatingLabel style={styles.floatInput}
-            style={{ borderColor: this.state.borderColorName }}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)} >
             <Label style={{ marginBottom: 20 }}>Digite seu nome:</Label>
             <Input
               value={this.state.name}
@@ -100,8 +79,7 @@ class UserRegist extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}
-            style={{ borderColor: this.state.borderColorEmail }}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorEmail }, styles.floatInput)} >
             <Label>Digite seu email:</Label>
             <Input
               value={this.state.email}
@@ -111,8 +89,7 @@ class UserRegist extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}
-            style={{ borderColor: this.state.borderColorPassword }}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorPassword }, styles.floatInput)} >
             <Label>Digite sua senha:</Label>
             <Input
               value={this.state.password}
@@ -123,8 +100,7 @@ class UserRegist extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}
-            style={{ borderColor: this.state.borderColorAge }}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorAge }, styles.floatInput)} >
             <Label>Digite sua idade:</Label>
             <Input
               value={this.state.age}
@@ -137,8 +113,8 @@ class UserRegist extends Component {
           <Button style={styles.button} onPress={this.registerUser}>
             <Text style={styles.buttonText}> Registrar </Text>
           </Button>
-          
-          </View>
+
+        </View>
       </ScrollView>
     );
   }

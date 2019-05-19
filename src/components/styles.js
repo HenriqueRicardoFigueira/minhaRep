@@ -72,8 +72,6 @@ const styles = StyleSheet.create({
   },
   floatInput:{
     marginTop: SCREEN_HEIGHT*0.005,
-    //marginBottom: SCREEN_HEIGHT*0.025,
-    borderColor: '#e6e6e6'
   },
   button: {
     alignSelf: 'center',

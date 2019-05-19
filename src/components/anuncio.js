@@ -1,14 +1,10 @@
-import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { styles } from './styles'
+import React, { Component } from 'react'
 import { firebase } from '../../Firebase'
-import { styles } from './styles';
-import { Button, Item, Input, Label } from 'native-base';
-import { withNavigation } from 'react-navigation';
-
-
-import { nameColor, numberColor, bioColor, valueColor, localColor } from '../formValidation';
-
-
+import { View, Text } from 'react-native'
+import { withNavigation } from 'react-navigation'
+import { Button, Item, Input, Label } from 'native-base'
+import { nameColor, numberColor, bioColor, valueColor, localColor } from '../formValidation'
 
 class Anuncio extends Component {
 
@@ -103,8 +99,7 @@ class Anuncio extends Component {
         return (
             <View style={styles.container}>
 
-                <Item floatingLabel style={styles.floatInput}
-                    style={{ borderColor: this.state.borderColorName }}>
+                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)} >
                     <Label>Nome da república:</Label>
                     <Input
                         value={this.state.name}
@@ -113,8 +108,7 @@ class Anuncio extends Component {
                     ></Input>
                 </Item>
 
-                <Item floatingLabel style={styles.floatInput}
-                    style={{ borderColor: this.state.borderColorBio }}>
+                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBio }, styles.floatInput)} >
                     <Label>Descrição:</Label>
                     <Input
                         value={this.state.bio}
@@ -122,8 +116,7 @@ class Anuncio extends Component {
                         onEndEditing={() => bioColor.call(this, this.state.bio)}
                     ></Input>
                 </Item>
-                <Item floatingLabel style={styles.floatInput}
-                    style={{ borderColor: this.state.borderColorNumber }}>
+                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumber }, styles.floatInput)} >
                     <Label>Numero de vagas:</Label>
                     <Input
                         keyboardType='number-pad'
@@ -131,8 +124,7 @@ class Anuncio extends Component {
                         onEndEditing={() => numberColor.call(this, this.state.number)}
                     ></Input>
                 </Item>
-                <Item floatingLabel style={styles.floatInput}
-                    style={{ borderColor: this.state.borderColorValue }}>
+                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorValue }, styles.floatInput)} >
                     <Label>Valor:</Label>
                     <Input
                         keyboardType='number-pad'
@@ -140,8 +132,7 @@ class Anuncio extends Component {
                         onEndEditing={() => valueColor.call(this, this.state.value)}
                     ></Input>
                 </Item>
-                <Item floatingLabel style={styles.floatInput}
-                    style={{ borderColor: this.state.borderColorLocal }}>
+                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorLocal }, styles.floatInput)} >
                     <Label>Local:</Label>
                     <Input
                         value={this.state.street}
