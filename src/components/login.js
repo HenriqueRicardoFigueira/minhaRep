@@ -27,7 +27,7 @@ class Login extends Component {
 
   errorMessage = (error) => {
 
-    switch (error.code) {
+    switch(error.code) {
       case 'auth/unknown':
         return 'Verifique a conexão e tente novamente.'
       case 'auth/user-not-found':
@@ -76,7 +76,8 @@ class Login extends Component {
       <View style={styles.container}>
         <Image style={styles.image} source={require('../image/logo2.png')} />
 
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorEmail }, styles.floatInput)} >
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorEmail }}>
           <Label>Digite seu email:</Label>
           <Input
             value={this.state.email}
@@ -86,7 +87,8 @@ class Login extends Component {
           ></Input>
         </Item>
 
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorPassword }, styles.floatInput)} >
+        <Item floatingLabel style={styles.floatInput}
+          style={{ borderColor: this.state.borderColorPassword }}>
           <Label>Digite sua senha:</Label>
           <Input
             value={this.state.password}

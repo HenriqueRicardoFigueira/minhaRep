@@ -1,10 +1,12 @@
-import { styles } from './styles'
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { View, Text } from 'react-native';
 import { firebase } from '../../Firebase'
-import { View, Text } from 'react-native'
-import { withNavigation } from 'react-navigation'
-import { Button, Item, Input, Label } from 'native-base'
-import { nameColor, numberColor, bioColor, valueColor, localColor } from '../formValidation'
+import { styles } from './styles';
+import { Button, Item, Input, Label } from 'native-base';
+import { withNavigation } from 'react-navigation';
+
+
+import { nameColor, numberColor, bioColor, valueColor, localColor } from '../formValidation';
 
 class Anuncio extends Component {
 
@@ -12,11 +14,11 @@ class Anuncio extends Component {
         super(props);
 
         this.state = {
-            repUID: '',
+            value: '',
+            vacancies: '',
+            repUID: firebase.auth().currentUser.uid,
             name: '',
             bio: '',
-            number: '',
-            value: '',
             img: '',
             latitude: '',
             longitude: '',
@@ -26,80 +28,91 @@ class Anuncio extends Component {
             complement: '',
             uf: '',
             city: '',
+            cep: '',
             tags: '',
-            borderColorBio: '#e6e6e6',
-            borderColorName: '#e6e6e6',
+            isAnnounced: true,
+            //borderColorBio: '#e6e6e6',
+            //borderColorName: '#e6e6e6',
             borderColorValue: '#e6e6e6',
-            borderColorLocal: '#e6e6e6',
+            //borderColorLocal: '#e6e6e6',
             borderColorNumber: '#e6e6e6',
+
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.ref = firebase.firestore().collection('republics');
         var user = firebase.auth().currentUser;
         this.ref.doc(user.uid)
             .get()
             .then((repData) => {
-                if (repData.exists) {
+                console.log(repData);
+                if (repData) {
                     const repDatas = repData.data();
                     this.setState({
-                        bio: repDatas.bio,
-                        name: repDatas.name,
                         repUID: repDatas.admUID,
-                        street: repData.street,
-                        numberHome: repData.numberHome,
-                        city: repData.city,
-                        latitude: repData.latitude,
-                        longitude: repData.longitude
+                        name: repDatas.name,
+                        bio: repDatas.bio,
+                        street: repDatas.street,
+                        numberHome: repDatas.numberHome,
+                        city: repDatas.city,
+                        latitude: repDatas.latitude,
+                        longitude: repDatas.longitude,
+                        cep: repDatas.cep,
+                        tags: repDatas.tags,
+                        uf: repDatas.uf
                     })
-
+                    
                 } else {
                     alert("Não existe republica cadastrada neste usuário");
                 }
-            })
+            });
     }
 
-    canRegister = (name, bio, number, value, street) => {
-        boolBio = bioColor.call(this, bio)
-        boolName = nameColor.call(this, name)
+    canRegister = (number, value) => {
+        //boolBio = bioColor.call(this, bio)
+        // boolName = nameColor.call(this, name)
         boolValue = valueColor.call(this, value)
-        boolLocal = localColor.call(this, street)
+        //boolLocal = localColor.call(this, street)
         boolNumber = numberColor.call(this, number)
 
-        return boolBio && boolName && boolValue && boolLocal && boolNumber
+        return boolValue && boolNumber
     }
 
     // CHAMAR ESTA FUNÇÃO AO CLICAR NO BOTÃO DE CADASTRAR ANÚNCIO
     registerRep = () => {
         //bloco comentado por questão que não vai haver mudanças no nome e no bio, pois vão ser informações que iremos pegar do banco
-        const { repUID, name, bio, number, value, street, tags, city, numberHome, latitude, longitude } = this.state;
-        if (!this.canRegister(name, bio, number, value, street)) {
+        const { repUID, name, bio, value, street, tags, vacancies, city, numberHome, latitude, longitude, cep, isAnnounced, uf } = this.state;
+        if (!this.canRegister(vacancies, value)) {
             return
         }
-
-        ref = firebase.firestore().collection('anuncio');
+        ref = firebase.firestore().collection('republics');
         ref.doc(repUID).set({
             name: name,
             bio: bio,
-            value: value,
-            tags: tags,
-            repUID: repUID,
             street: street,
-            city: city,
-            number: number, 
             numberHome: numberHome,
+            city: city,
             latitude: latitude,
-            longitude: longitude
+            longitude: longitude,
+            value: value,
+            vacancies: vacancies,
+            cep: cep,
+            tags: tags,
+            isAnnounced: isAnnounced,
+            uf: uf
         })
         this.props.navigation.navigate("Home");
     }
 
     render() {
         return (
-            <View style={styles.container}>
 
-                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)} >
+            /*
+            <View style={styles.container}>
+            
+                <Item floatingLabel style={styles.floatInput}
+                    style={{ borderColor: this.state.borderColorName }}>
                     <Label>Nome da república:</Label>
                     <Input
                         value={this.state.name}
@@ -108,7 +121,8 @@ class Anuncio extends Component {
                     ></Input>
                 </Item>
 
-                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBio }, styles.floatInput)} >
+                <Item floatingLabel style={styles.floatInput}
+                    style={{ borderColor: this.state.borderColorBio }}>
                     <Label>Descrição:</Label>
                     <Input
                         value={this.state.bio}
@@ -116,7 +130,8 @@ class Anuncio extends Component {
                         onEndEditing={() => bioColor.call(this, this.state.bio)}
                     ></Input>
                 </Item>
-                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumber }, styles.floatInput)} >
+                <Item floatingLabel style={styles.floatInput}
+                    style={{ borderColor: this.state.borderColorNumber }}>
                     <Label>Numero de vagas:</Label>
                     <Input
                         keyboardType='number-pad'
@@ -124,7 +139,8 @@ class Anuncio extends Component {
                         onEndEditing={() => numberColor.call(this, this.state.number)}
                     ></Input>
                 </Item>
-                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorValue }, styles.floatInput)} >
+                <Item floatingLabel style={styles.floatInput}
+                    style={{ borderColor: this.state.borderColorValue }}>
                     <Label>Valor:</Label>
                     <Input
                         keyboardType='number-pad'
@@ -132,7 +148,8 @@ class Anuncio extends Component {
                         onEndEditing={() => valueColor.call(this, this.state.value)}
                     ></Input>
                 </Item>
-                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorLocal }, styles.floatInput)} >
+                <Item floatingLabel style={styles.floatInput}
+                    style={{ borderColor: this.state.borderColorLocal }}>
                     <Label>Local:</Label>
                     <Input
                         value={this.state.street}
@@ -140,6 +157,34 @@ class Anuncio extends Component {
                         onEndEditing={() => localColor.call(this, this.state.street)}
                     ></Input>
                 </Item>
+                <Button style={styles.button} onPress={() => this.registerRep()}>
+                    <Text style={styles.buttonText}> Anunciar </Text>
+                </Button>
+
+            </View>
+            */
+            <View style={styles.container}>
+
+                <Item floatingLabel style={styles.floatInput}
+                    style={{ borderColor: this.state.borderColorName }}>
+                    <Label>Valor :</Label>
+                    <Input
+                        value={this.state.value}
+                        onChangeText={(value) => this.setState({ value })}
+                        onEndEditing={() => nameColor.call(this, this.state.value)}
+                    ></Input>
+                </Item>
+
+                <Item floatingLabel style={styles.floatInput}
+                    style={{ borderColor: this.state.borderColorNumber }}>
+                    <Label>Numero de vagas:</Label>
+                    <Input
+                        value={this.state.vacancies}
+                        onChangeText={(vacancies) => this.setState({ vacancies })}
+                        onEndEditing={() => numberColor.call(this, this.state.vacancies)}
+                    ></Input>
+                </Item>
+
                 <Button style={styles.button} onPress={() => this.registerRep()}>
                     <Text style={styles.buttonText}> Anunciar </Text>
                 </Button>
