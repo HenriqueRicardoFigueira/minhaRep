@@ -27,6 +27,7 @@ class RepForm extends Component {
       uf: '',
       city: '',
       isSubmited: false,
+      boolLocalization: false,
       borderColorBio: '#e6e6e6',
       borderColorCep: '#e6e6e6',
       borderColorName: '#e6e6e6',
@@ -56,12 +57,10 @@ class RepForm extends Component {
     // se fizer as chamadas de função no retorno
     // só vai alterar a cor do primeiro que estiver fora do padrão
     boolBio = bioColor.call(this, bio)
-    boolCep = this.searchAdress(cep)
     boolName = nameColor.call(this, name)
     boolMember = memberColor.call(this, members)
-    boolLocalization = this.getLocalization()
 
-    return boolBio && boolName && boolNumber && boolCep && boolLocalization
+    return boolBio && boolName && boolMember && this.state.boolLocalization
   }
 
   searchAdress = (cep) => {
@@ -75,19 +74,17 @@ class RepForm extends Component {
         this.setState({
           borderColorCep: '#ff0000',
           street: '',
+          boolLocalization: false,
         })
-
-        return false
       }
 
       this.setState({
         street: response.data.logradouro,
         uf: response.data.uf,
-        city: response.data.localidade
+        city: response.data.localidade,
+        boolLocalization: true,
       })
     })
-
-    return true
   }
 
   getLocalization = () => {
@@ -100,20 +97,17 @@ class RepForm extends Component {
             latitude: '',
             longitude: '',
           })
-
-          return false
         }
 
         this.setState({
           latitude: response.data.results["0"].geometry.location.lat,
           longitude: response.data.results["0"].geometry.location.lng,
         })
-
-        return true
       })
   }
 
   addRep = () => {
+    console.log("Vai braisl")
     const { name, bio, members, cep } = this.state;
 
     if (!this.canRegister(name, bio, members, cep)) {
@@ -187,10 +181,10 @@ class RepForm extends Component {
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          /*style={{ borderColor: this.state.borderColorNumber }}*/>
+        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorCep }, styles.floatInput)} >
           <Label>Cep:</Label>
           <Input
+            keyboardType='number-pad'
             value={this.state.cep}
             onChangeText={(cep) => this.setState({ cep })}
             onEndEditing={() => this.searchAdress(this.state.cep)}

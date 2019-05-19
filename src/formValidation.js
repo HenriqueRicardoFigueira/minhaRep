@@ -42,7 +42,7 @@ function emailColor(email) {
 // se estiver, altera a cor da borda do input
 function passwordColor(password) {
   var newColor = null
-  if (password.length > 4) {
+  if (password.length > 6) {
     newColor = '#e6e6e6'
   } else {
     newColor = '#ff0000'
