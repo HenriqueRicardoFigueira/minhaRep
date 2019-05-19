@@ -75,13 +75,11 @@ class UserProfile extends Component {
             bio: userP.bio,
             age: userP.age,
             uid: user.uid,
-            //photoURL: userP.photoURL
           })
         } else {
           console.log("Não existe usuário");
         }
       })
-    console.log(this.state.uid)
     this.getUrl();
   }
 
@@ -145,33 +143,21 @@ class UserProfile extends Component {
   }*/
 
   imageSelect = () => {
-    ImagePicker.showImagePicker(options, (response) => { // ABRE A TELA DE GALERIA OU CAMERA
+    ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
-        /*const source = { uri: response.uri };
-        this.setState({
-          avatarSource: source,
-        });
-        console.log(typeof(source.uri))*/
         this.uploadImage(response.uri)
           .then((url) => {
             alert('uploaded');
             this.setState({ photoURL: url, gotUrl: true });
             console.log(this.state.photoURL)
           })
-          .catch(error => console.log(error)) // UPA A FOTO PARA A STORAGE COM O NOME this.state.uid
-        // A PARTIR DAQUI TA CAGADO
-        /*const url = firebase.storage().ref('userImages').child(this.state.uid).getDownloadURL(); // ESSA DROGA DE FUNÇÃO RETORNA UM OBJETO NAO UMA STRING
-        console.log('url '+ url)
-        this.setState({
-          photoURL: url // ESTÁ ADCIONANDO ESSE OBJETO NO STATE
-        });*/
+          .catch(error => console.log(error))
         this.getUrl();
-        // ATUALIZA O DATABASE MAS ATUALIZA ERRADO
       }
     });
   }
