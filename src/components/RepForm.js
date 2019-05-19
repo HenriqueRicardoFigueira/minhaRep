@@ -4,10 +4,6 @@ import { Button, Input, Label, Item, } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import { firebase } from '../../Firebase'
 import axios from 'axios';
-<<<<<<< HEAD
-import { styles } from './styles'
-import { nameColor, bioColor, genericColor, memberColor, cepColor } from '../formValidation';
-=======
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { styles } from './styles'
@@ -17,7 +13,6 @@ const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
->>>>>>> parent of c770d7e... Fixed problems in card
 
 const options = {
   title: 'Foto de Perfil',
@@ -47,26 +42,16 @@ class RepForm extends Component {
       uid: '',
 
       isSubmited: false,
-<<<<<<< HEAD
-      boolLocalization: false,
-=======
 
       avatarSource: null,
       photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/repImages%2FDefaultRepPic.jpg?alt=media&token=60298d1d-c5f4-42d2-964b-58504da8bd0d',
       gotUrl: false,
       uri: '',
 
->>>>>>> parent of c770d7e... Fixed problems in card
       borderColorBio: '#e6e6e6',
       borderColorCep: '#e6e6e6',
       borderColorName: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
-<<<<<<< HEAD
-      borderColorMember: '#e6e6e6',
-      borderColorNumberHome: '#e6e6e6',
-      userUID: ''
-=======
->>>>>>> parent of c770d7e... Fixed problems in card
     }
   };
 
@@ -110,16 +95,6 @@ class RepForm extends Component {
           boolLocalization: false,
         })
       }
-<<<<<<< HEAD
-
-      this.setState({
-        street: response.data.logradouro,
-        uf: response.data.uf,
-        city: response.data.localidade,
-        boolLocalization: true,
-      })
-=======
->>>>>>> parent of c770d7e... Fixed problems in card
     })
   }
 
@@ -138,14 +113,6 @@ class RepForm extends Component {
             longitude: '',
           })
         }
-<<<<<<< HEAD
-
-        this.setState({
-          latitude: response.data.results["0"].geometry.location.lat,
-          longitude: response.data.results["0"].geometry.location.lng,
-        })
-=======
->>>>>>> parent of c770d7e... Fixed problems in card
       })
   }
 
@@ -238,81 +205,6 @@ class RepForm extends Component {
 
   render() {
     return (
-<<<<<<< HEAD
-      <View style={styles.container} >
-
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)}>
-          <Label>Nome da república:</Label>
-          <Input
-            value={this.state.name}
-            onChangeText={(name) => this.setState({ name })}
-            onEndEditing={() => nameColor.call(this, this.state.name)}
-          ></Input>
-        </Item>
-
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBio, marginTop: styles.floatInput.marginTop }, styles.floatInput)}>
-          <Label>Descrição:</Label>
-          <Input
-            value={this.state.bio}
-            onChangeText={(bio) => this.setState({ bio })}
-            onEndEditing={() => bioColor.call(this, this.state.bio)}
-          ></Input>
-        </Item>
-
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorMember }, styles.floatInput)} >
-          <Label>Quantidade de Membros:</Label>
-          <Input
-            value={this.state.members}
-            keyboardType='number-pad'
-            onChangeText={(members) => this.setState({ members })}
-            onEndEditing={() => memberColor.call(this, this.state.members)}
-          ></Input>
-        </Item>
-
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorCep }, styles.floatInput)} >
-          <Label>Cep:</Label>
-          <Input
-            keyboardType='number-pad'
-            value={this.state.cep}
-            onChangeText={(cep) => this.setState({ cep })}
-            onEndEditing={() => this.searchAdress(this.state.cep)}
-          ></Input>
-        </Item>
-
-        <Item floatingLabel style={styles.floatInput}
-          /*style={{ borderColor: this.state.borderColorNumber }}*/>
-          <Label>Rua:</Label>
-          <Input
-            value={this.state.street}
-          //onEndEditing={() => numberColor.call(this, this.state.members)}
-
-          ></Input>
-        </Item>
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumberHome }, styles.floatInput)} >
-          <Label>Número:</Label>
-          <Input
-            keyboardType='number-pad'
-            value={this.state.numberHome}
-            onChangeText={(numberHome) => this.setState({ numberHome })}
-            onEndEditing={() => this.getLocalization()}
-          ></Input>
-        </Item>
-
-        <Item floatingLabel style={styles.floatInput}>
-          <Label>Tags:</Label>
-          <Input
-            value={this.state.tags}
-            onChangeText={(tags) => this.setState({ tags })}
-          ></Input>
-        </Item>
-
-        <Button style={styles.button} onPress={() => this.addRep()}
-          disabled={!this.state.name.length || !this.state.bio.length}>
-          <Text style={styles.buttonText}>Submeter</Text>
-        </Button>
-
-      </View>
-=======
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.container}>
 
@@ -393,7 +285,6 @@ class RepForm extends Component {
 
         </View>
       </ScrollView>
->>>>>>> parent of c770d7e... Fixed problems in card
     );
   }
 }
