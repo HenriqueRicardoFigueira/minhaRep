@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, Platform } from 'react-native';
-import {firebase} from '../../Firebase'
+import { firebase } from '../../Firebase'
 import { styles } from './styles';
 import { Button, Item, Input, Label, Thumbnail } from 'native-base';
 import { withNavigation } from 'react-navigation';
+import { nameColor, memberColor, bioColor } from '../formValidation'
 
 class RepCRUD extends Component {
   constructor(props) {
@@ -21,7 +22,10 @@ class RepCRUD extends Component {
       name: '',
       tags: '',
       // CHECK FIELDS
-      isEditado: false
+      isEditado: false,
+      borderColorBio: '#e6e6e6',
+      borderColorName: '#e6e6e6',
+      borderColorMember: '#e6e6e6',
     };
   }
 
@@ -47,8 +51,23 @@ class RepCRUD extends Component {
       })
   }
 
+  canRegister = (name, bio, members) => {
+    // se fizer as chamadas de função no retorno
+    // só vai alterar a cor do primeiro que estiver fora do padrão
+    boolBio = bioColor.call(this, bio)
+    boolName = nameColor.call(this, name)
+    boolMember = memberColor.call(this, members)
+
+    return boolBio && boolName && boolMember
+  }
+
   editRep = () => {
     const { admUID, bio, members, name, tags } = this.state;
+
+    if (!this.canRegister(name, bio, members)) {
+      return
+    }
+
     var user = firebase.auth().currentUser;
     this.ref.doc(user.uid)
       .set({
@@ -69,28 +88,31 @@ class RepCRUD extends Component {
     return (
       <View style={styles.container}>
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)}>
           <Label>Nome da Republica:</Label>
           <Input
             value={this.state.name}
             onChangeText={(name) => this.setState({ name })}
+            onEndEditing={() => nameColor.call(this, this.state.name)}
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorMember }, styles.floatInput)}>
           <Label>Numero de Membros:</Label>
           <Input
             value={this.state.members}
             keyboardType='number-pad'
             onChangeText={(members) => this.setState({ members })}
+            onEndEditing={() => memberColor.call(this, this.state.members)}
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}>
+        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBio }, styles.floatInput)}>
           <Label>Biografia:</Label>
           <Input
             value={this.state.bio}
             onChangeText={(bio) => this.setState({ bio })}
+            onEndEditing={() => bioColor.call(this, this.state.bio)}
           ></Input>
         </Item>
 
