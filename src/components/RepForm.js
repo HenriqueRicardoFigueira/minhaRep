@@ -7,7 +7,7 @@ import axios from 'axios';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { styles } from './styles'
-import { nameColor, bioColor, numberColor } from '../formValidation';
+import { nameColor, bioColor, numberColor, memberColor, cepColor } from '../formValidation';
 
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
@@ -49,8 +49,11 @@ class RepForm extends Component {
       uri: '',
 
       borderColorBio: '#e6e6e6',
+      borderColorCep: '#e6e6e6',
       borderColorName: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
+      borderColorMember: '#e6e6e6',
+      borderColorNumberHome: '#e6e6e6',
     }
   };
 
@@ -70,45 +73,71 @@ class RepForm extends Component {
     this.getUrl();
   }
 
-  canRegister = (name, bio, members) => {
+  canRegister = (name, bio, members, cep) => {
     // se fizer as chamadas de função no retorno
     // só vai alterar a cor do primeiro que estiver fora do padrão
     boolBio = bioColor.call(this, bio)
+    boolCep = this.searchAdress(cep)
     boolName = nameColor.call(this, name)
-    boolNumber = numberColor.call(this, members)
+    boolMember = memberColor.call(this, members)
+    boolLocalization = this.getLocalization()
 
-    return boolBio && boolName && boolNumber
+    return boolBio && boolName && boolNumber && boolCep && boolLocalization
   }
 
   searchAdress = (cep) => {
+    if (!cepColor.call(this, cep)) {
+      return false
+    }
+
     axios.get('https://viacep.com.br/ws/' + cep + '/json/').then((response) => {
-      if (response) {
+
+      if (response.data.erro) {
         this.setState({
-          street: response.data.logradouro,
-          uf: response.data.uf,
-          city: response.data.localidade
+          borderColorCep: '#ff0000',
+          street: '',
         })
+
+        return false
       }
+
+      this.setState({
+        street: response.data.logradouro,
+        uf: response.data.uf,
+        city: response.data.localidade
+      })
     })
+
+    return true
   }
 
   getLocalization = () => {
     axios.get('https://maps.google.com/maps/api/geocode/json?address=' + this.state.logradouro + ',' + this.state.numberHome + ','
-      + this.state.city + ',' + this.state.uf + '&components=country:BR&key=AIzaSyDTwm8jKEXByLoOxH3PgIF4SaU2RbLhJrg').then((response) => {
-        if (response) {
+      + this.state.city + ',' + this.state.uf + '&components=country:BR&key=AIzaSyDTwm8jKEXByLoOxH3PgIF4SaU2RbLhJrg')
+      .then((response) => {
+        if (response.data.erro) {
           this.setState({
-            latitude: response.data.results["0"].geometry.location.lat,
-            longitude: response.data.results["0"].geometry.location.lng,
+            borderColorNumberHome: '#ff0000',
+            latitude: '',
+            longitude: '',
           })
 
+          return false
         }
+
+        this.setState({
+          latitude: response.data.results["0"].geometry.location.lat,
+          longitude: response.data.results["0"].geometry.location.lng,
+        })
+
+        return true
       })
   }
 
   addRep = () => {
-    const { name, bio, members } = this.state;
+    const { name, bio, members, cep } = this.state;
 
-    if (!this.canRegister(name, bio, members)) {
+    if (!this.canRegister(name, bio, members, cep)) {
       return
     }
 
@@ -128,7 +157,7 @@ class RepForm extends Component {
       admUID: this.state.uid,
       photoURL: this.state.photoURL,
       gotUrl: true,
-      
+
     });
     this.props.navigation.navigate("Home");
   }
@@ -214,23 +243,22 @@ class RepForm extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumber }, styles.floatInput)} >
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorMember }, styles.floatInput)} >
             <Label>Quantidade de Membros:</Label>
             <Input
               value={this.state.members}
               keyboardType='number-pad'
               onChangeText={(members) => this.setState({ members })}
-              onEndEditing={() => numberColor.call(this, this.state.members)}
+              onEndEditing={() => memberColor.call(this, this.state.members)}
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}
-          /*style={{ borderColor: this.state.borderColorNumber }}*/>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorCep }, styles.floatInput)} >
             <Label>Cep:</Label>
             <Input
               value={this.state.cep}
+              keyboardType='number-pad'
               onChangeText={(cep) => this.setState({ cep })}
-              //onEndEditing={() => numberColor.call(this, this.state.members)}
               onEndEditing={() => this.searchAdress(this.state.cep)}
             ></Input>
           </Item>
@@ -241,13 +269,13 @@ class RepForm extends Component {
             <Input
               value={this.state.street}
             //onEndEditing={() => numberColor.call(this, this.state.members)}
-
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumberHome }, styles.floatInput)} >
             <Label>Número:</Label>
             <Input
+              keyboardType='number-pad'
               value={this.state.numberHome}
               onChangeText={(numberHome) => this.setState({ numberHome })}
               onEndEditing={() => this.getLocalization()}
@@ -261,7 +289,7 @@ class RepForm extends Component {
               onChangeText={(tags) => this.setState({ tags })}
             ></Input>
           </Item>
-          
+
           <Button style={styles.button} onPress={this.imageSelect}>
             <Text style={styles.buttonText}> Enviar Foto </Text>
           </Button>

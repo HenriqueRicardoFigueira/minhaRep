@@ -85,6 +85,16 @@ function numberColor(number) {
   return newColor == '#e6e6e6'
 }
 
+function memberColor(member) {
+  newColor = color(member, /^[0-9][0-9]?$/)
+
+  this.setState({
+    borderColorMember: newColor
+  })
+
+  return newColor == '#e6e6e6'
+}
+
 function valueColor(value) {
   newColor = color(value, /^[0-9]+(\.[0-9]{1,2})?$/)
 
@@ -106,4 +116,14 @@ function localColor(local) {
   return newColor == '#e6e6e6'
 }
 
-module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor, valueColor, localColor };
+function cepColor(cep) {
+  newColor = color(cep.replace('-', ''), /[0-9]{5}[\d]{3}/)
+
+  this.setState({
+    borderColorCep: newColor
+  })
+
+  return newColor == '#e6e6e6'
+}
+
+module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor, valueColor, memberColor, localColor, cepColor };
