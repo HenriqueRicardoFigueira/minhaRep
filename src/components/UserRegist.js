@@ -1,20 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Item, Input, Label } from 'native-base';
-import { View, Text } from 'react-native';
-import {firebase} from '../../Firebase'
+import { Container, Button, Item, Input, Label } from 'native-base';
+import { View, Text, ScrollView } from 'react-native';
+import { firebase } from '../../Firebase'
 import { styles } from './styles';
-
 import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
-
 import { withNavigation } from 'react-navigation';
-
-/*
-    Fields from User Register :
-    name
-    email
-    password
-    age
-*/
 
 class UserRegist extends Component {
   constructor(props) {
@@ -38,7 +28,7 @@ class UserRegist extends Component {
 
   registerUser = async () => {
     const { email, age, name, password } = this.state;
-    if(!this.canRegister(email, age, name, password)) {
+    if (!this.canRegister(email, age, name, password)) {
       return
     }
 
@@ -73,67 +63,59 @@ class UserRegist extends Component {
     this.props.navigation.navigate("Home");
   }
 
-  /*
-  Fields from User Register :
-  name
-  email
-  password
-  age
-  bio
-  tag: null
-  */
-
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.container}>
 
-        <Text h1>Tela de registro </Text>
+          <Text h1>Tela de registro </Text>
 
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)} >
-          <Label style={{marginBottom: 20}}>Digite seu nome:</Label>
-          <Input
-            value={this.state.name}
-            onChangeText={(name) => this.setState({ name })}
-            onEndEditing={() => nameColor.call(this, this.state.name)}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)} >
+            <Label style={{ marginBottom: 20 }}>Digite seu nome:</Label>
+            <Input
+              value={this.state.name}
+              onChangeText={(name) => this.setState({ name })}
+              onEndEditing={() => nameColor.call(this, this.state.name)}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorEmail }, styles.floatInput)} >
-          <Label>Digite seu email:</Label>
-          <Input
-            value={this.state.email}
-            autoCapitalize={'none'}
-            onChangeText={(email) => this.setState({ email })}
-            onEndEditing={() => emailColor.call(this, this.state.email)}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorEmail }, styles.floatInput)} >
+            <Label>Digite seu email:</Label>
+            <Input
+              value={this.state.email}
+              autoCapitalize={'none'}
+              onChangeText={(email) => this.setState({ email })}
+              onEndEditing={() => emailColor.call(this, this.state.email)}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorPassword }, styles.floatInput)} >
-          <Label>Digite sua senha:</Label>
-          <Input
-            value={this.state.password}
-            secureTextEntry={true}
-            autoCapitalize={'none'}
-            onChangeText={(password) => this.setState({ password })}
-            onEndEditing={() => passwordColor.call(this, this.state.password)}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorPassword }, styles.floatInput)} >
+            <Label>Digite sua senha:</Label>
+            <Input
+              value={this.state.password}
+              secureTextEntry={true}
+              autoCapitalize={'none'}
+              onChangeText={(password) => this.setState({ password })}
+              onEndEditing={() => passwordColor.call(this, this.state.password)}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorAge }, styles.floatInput)} >
-          <Label>Digite sua idade:</Label>
-          <Input
-            value={this.state.age}
-            keyboardType='number-pad'
-            onChangeText={(age) => this.setState({ age })}
-            onEndEditing={() => ageColor.call(this, this.state.age)}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorAge }, styles.floatInput)} >
+            <Label>Digite sua idade:</Label>
+            <Input
+              value={this.state.age}
+              keyboardType='number-pad'
+              onChangeText={(age) => this.setState({ age })}
+              onEndEditing={() => ageColor.call(this, this.state.age)}
+            ></Input>
+          </Item>
 
-        <Button style={styles.button} onPress={this.registerUser}>
-          <Text style={styles.buttonText}> Registrar </Text>
-        </Button>
+          <Button style={styles.button} onPress={this.registerUser}>
+            <Text style={styles.buttonText}> Registrar </Text>
+          </Button>
 
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 

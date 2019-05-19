@@ -27,7 +27,7 @@ class Login extends Component {
 
   errorMessage = (error) => {
 
-    switch(error.code) {
+    switch (error.code) {
       case 'auth/unknown':
         return 'Verifique a conexão e tente novamente.'
       case 'auth/user-not-found':

@@ -27,18 +27,18 @@ const Routes = createAppContainer(
         Home: Teste,
         RepEdit: RepEdit,
         RepForm: RepForm,
-        Maps: Maps,
         RepCRUD: RepCRUD,
+        RepCard: RepCard,
+        Maps: Maps,
         UserRegist: UserRegist,
         UserProfile: UserProfile,
+        UserRegistAlt: UserRegistAlt,
         Anuncio: Anuncio,
-        RepCard: RepCard,
         MembersList: MembersList,
         MembersAdd: MembersAdd,
-        UserRegistAlt: UserRegistAlt
 
     }, {
-        initialRouteName: 'Anuncio'
+        initialRouteName: 'Login'
     })
  
 );

@@ -27,6 +27,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#eff7f9',
     padding: SCREEN_WIDTH*0.025,
   },
+  scrollView: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#eff7f9',
+    padding: SCREEN_WIDTH*0.025,
+  },
   registerButton:{
     alignSelf: 'center',
     width: SCREEN_WIDTH*0.8, 
