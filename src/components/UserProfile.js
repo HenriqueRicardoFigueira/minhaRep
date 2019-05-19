@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Platform, Image } from 'react-native';
+import { View, Text, Platform, Image, ScrollView } from 'react-native';
 //import firebase from 'react-native-firebase';
 import { styles } from './styles';
 import { Button, Item, Input, Label, Thumbnail } from 'native-base';
@@ -7,7 +7,6 @@ import { withNavigation } from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { firebase } from '../../Firebase'
-
 import { nameColor, emailColor, ageColor, bioColor } from '../formValidation';
 
 const Blob = RNFetchBlob.polyfill.Blob
@@ -211,66 +210,67 @@ class UserProfile extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.container}>
 
-        {this.state.avatarSource ? <Thumbnail source={{ uri: this.state.photoURL }} /> : <Text />}
+          {this.state.avatarSource ? <Thumbnail source={{ uri: this.state.photoURL }} /> : <Text />}
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorName }}>
-          <Label>Nome:</Label>
-          <Input
-            value={this.state.name}
-            onChangeText={(name) => this.setState({ name })}
-            onEndEditing={() => nameColor.call(this, this.state.name)}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={styles.floatInput}
+            style={{ borderColor: this.state.borderColorName }}>
+            <Label>Nome:</Label>
+            <Input
+              value={this.state.name}
+              onChangeText={(name) => this.setState({ name })}
+              onEndEditing={() => nameColor.call(this, this.state.name)}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorEmail }}>
-          <Label>Email:</Label>
-          <Input
-            value={this.state.email}
-            disabled
-            onChangeText={(email) => this.setState({ email })}
-            onEndEditing={() => emailColor.call(this, this.state.email)}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={styles.floatInput}
+            style={{ borderColor: this.state.borderColorEmail }}>
+            <Label>Email:</Label>
+            <Input
+              value={this.state.email}
+              disabled
+              onChangeText={(email) => this.setState({ email })}
+              onEndEditing={() => emailColor.call(this, this.state.email)}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorAge }}>
-          <Label>Idade:</Label>
-          <Input
-            value={this.state.age}
-            keyboardType='number-pad'
-            onChangeText={(age) => this.setState({ age })}
-            onEndEditing={() => ageColor.call(this, this.state.age)}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={styles.floatInput}
+            style={{ borderColor: this.state.borderColorAge }}>
+            <Label>Idade:</Label>
+            <Input
+              value={this.state.age}
+              keyboardType='number-pad'
+              onChangeText={(age) => this.setState({ age })}
+              onEndEditing={() => ageColor.call(this, this.state.age)}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorBio }}>
-          <Label>Biografia:</Label>
-          <Input
-            value={this.state.bio}
-            onChangeText={(bio) => this.setState({ bio })}
-            onEndEditing={() => bioColor.call(this, this.state.bio)}
-          ></Input>
-        </Item>
-        <Image
-          style={{ width: 100, height: 100 }}
-          disabled={!this.state.gotUrl}
-          source={{ uri: this.state.photoURL }} />
-        <Button style={styles.button} onPress={this.imageSelect}>
-          <Text style={styles.buttonText}> Enviar Foto </Text>
-        </Button>
+          <Item floatingLabel style={styles.floatInput}
+            style={{ borderColor: this.state.borderColorBio }}>
+            <Label>Biografia:</Label>
+            <Input
+              value={this.state.bio}
+              onChangeText={(bio) => this.setState({ bio })}
+              onEndEditing={() => bioColor.call(this, this.state.bio)}
+            ></Input>
+          </Item>
+          <Image
+            style={{ width: 100, height: 100 }}
+            disabled={!this.state.gotUrl}
+            source={{ uri: this.state.photoURL }} />
+          <Button style={styles.button} onPress={this.imageSelect}>
+            <Text style={styles.buttonText}> Enviar Foto </Text>
+          </Button>
 
-        {this.state.isEditado ? <Text> Editado com sucesso </Text> : <Text />}
+          {this.state.isEditado ? <Text> Editado com sucesso </Text> : <Text />}
 
-        <Button style={styles.button} onPress={this.editUser}>
-          <Text style={styles.buttonText}> Editar </Text>
-        </Button>
-
-      </View>
+          <Button style={styles.button} onPress={this.editUser}>
+            <Text style={styles.buttonText}> Editar </Text>
+          </Button>
+        </View>
+      </ScrollView>
     );
   }
 }

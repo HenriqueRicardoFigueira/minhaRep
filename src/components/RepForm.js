@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Text, TextInput, Image, TouchableOpacity } from 'react-native'
+import { ScrollView, View, Text } from 'react-native'
 import { Button, Input, Label, Item, } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import { firebase } from '../../Firebase'
@@ -135,83 +135,85 @@ class RepForm extends Component {
 
   render() {
     return (
-      <View style={styles.container} >
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.container}>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorName }}>
-          <Label>Nome da república:</Label>
-          <Input
-            value={this.state.name}
-            onChangeText={(name) => this.setState({ name })}
-            onEndEditing={() => nameColor.call(this, this.state.name)}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={styles.floatInput}
+            style={{ borderColor: this.state.borderColorName }}>
+            <Label>Nome da república:</Label>
+            <Input
+              value={this.state.name}
+              onChangeText={(name) => this.setState({ name })}
+              onEndEditing={() => nameColor.call(this, this.state.name)}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorBio,  marginTop: styles.floatInput.marginTop}}>
-          <Label>Descrição:</Label>
-          <Input
-            value={this.state.bio}
-            onChangeText={(bio) => this.setState({ bio })}
-            onEndEditing={() => bioColor.call(this, this.state.bio)}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={styles.floatInput}
+            style={{ borderColor: this.state.borderColorBio, marginTop: styles.floatInput.marginTop }}>
+            <Label>Descrição:</Label>
+            <Input
+              value={this.state.bio}
+              onChangeText={(bio) => this.setState({ bio })}
+              onEndEditing={() => bioColor.call(this, this.state.bio)}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorNumber }}>
-          <Label>Quantidade de Membros:</Label>
-          <Input
-            value={this.state.members}
-            keyboardType='number-pad'
-            onChangeText={(members) => this.setState({ members })}
-            onEndEditing={() => numberColor.call(this, this.state.members)}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={styles.floatInput}
+            style={{ borderColor: this.state.borderColorNumber }}>
+            <Label>Quantidade de Membros:</Label>
+            <Input
+              value={this.state.members}
+              keyboardType='number-pad'
+              onChangeText={(members) => this.setState({ members })}
+              onEndEditing={() => numberColor.call(this, this.state.members)}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={styles.floatInput}
+          <Item floatingLabel style={styles.floatInput}
           /*style={{ borderColor: this.state.borderColorNumber }}*/>
-          <Label>Cep:</Label>
-          <Input
-            value={this.state.cep}
-            onChangeText={(cep) => this.setState({ cep })}
+            <Label>Cep:</Label>
+            <Input
+              value={this.state.cep}
+              onChangeText={(cep) => this.setState({ cep })}
+              //onEndEditing={() => numberColor.call(this, this.state.members)}
+              onEndEditing={() => this.searchAdress(this.state.cep)}
+            ></Input>
+          </Item>
+
+
+          <Item floatingLabel style={styles.floatInput}
+          /*style={{ borderColor: this.state.borderColorNumber }}*/>
+            <Label>Rua:</Label>
+            <Input
+              value={this.state.street}
             //onEndEditing={() => numberColor.call(this, this.state.members)}
-            onEndEditing={() => this.searchAdress(this.state.cep)}
-          ></Input>
-        </Item>
 
+            ></Input>
+          </Item>
+          <Item floatingLabel style={styles.floatInput}>
+            <Label>Número:</Label>
+            <Input
+              value={this.state.numberHome}
+              onChangeText={(numberHome) => this.setState({ numberHome })}
+              onEndEditing={() => this.getLocalization()}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          /*style={{ borderColor: this.state.borderColorNumber }}*/>
-          <Label>Rua:</Label>
-          <Input
-            value={this.state.street}
-          //onEndEditing={() => numberColor.call(this, this.state.members)}
+          <Item floatingLabel style={styles.floatInput}>
+            <Label>Tags:</Label>
+            <Input
+              value={this.state.tags}
+              onChangeText={(tags) => this.setState({ tags })}
+            ></Input>
+          </Item>
 
-          ></Input>
-        </Item>
-        <Item floatingLabel style={styles.floatInput}>
-          <Label>Número:</Label>
-          <Input
-            value={this.state.numberHome}
-            onChangeText={(numberHome) => this.setState({ numberHome })}
-            onEndEditing={() => this.getLocalization()}
-          ></Input>
-        </Item>
+          <Button style={styles.button} onPress={() => this.addRep()}
+            disabled={!this.state.name.length || !this.state.bio.length}>
+            <Text style={styles.buttonText}>Submeter</Text>
+          </Button>
 
-        <Item floatingLabel style={styles.floatInput}>
-          <Label>Tags:</Label>
-          <Input
-            value={this.state.tags}
-            onChangeText={(tags) => this.setState({ tags })}
-          ></Input>
-        </Item>
-
-        <Button style={styles.button} onPress={() => this.addRep()}
-          disabled={!this.state.name.length || !this.state.bio.length}>
-          <Text style={styles.buttonText}>Submeter</Text>
-        </Button>
-
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 }

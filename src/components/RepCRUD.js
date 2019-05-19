@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, Platform } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import {firebase} from '../../Firebase'
 import { styles } from './styles';
-import { Button, Item, Input, Label, Thumbnail } from 'native-base';
+import { Button, Item, Input, Label } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 class RepCRUD extends Component {
@@ -67,7 +67,8 @@ class RepCRUD extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.container}>
 
         <Item floatingLabel style={styles.floatInput}>
           <Label>Nome da Republica:</Label>
@@ -112,8 +113,9 @@ class RepCRUD extends Component {
         <Button style={styles.button} onPress={this.editRep}>
           <Text style={styles.buttonText}> Editar </Text>
         </Button>
-
-      </View>
+        
+        </View>
+      </ScrollView>
     );
   }
 }

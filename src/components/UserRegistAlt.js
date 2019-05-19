@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Item, Input, Label } from 'native-base';
-import { View, Text, Image } from 'react-native';
+import { Text, Image, ScrollView, View } from 'react-native';
 import { firebase } from '../../Firebase'
 import { styles } from './styles';
 import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
@@ -88,8 +88,8 @@ class UserRegistAlt extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.container}>
         <Image
           style={{ width: 100, height: 100 }}
           source={{ uri: this.state.photoURL }} />
@@ -123,7 +123,8 @@ class UserRegistAlt extends Component {
           <Text style={styles.buttonText}> Registrar </Text>
         </Button>
 
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 
