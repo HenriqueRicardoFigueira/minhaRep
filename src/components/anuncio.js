@@ -6,7 +6,7 @@ import { Button, Item, Input, Label } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 
-import { nameColor, numberColor, bioColor, valueColor, localColor } from '../formValidation';
+import { numberColor, valueColor } from '../formValidation';
 
 class Anuncio extends Component {
 
@@ -31,12 +31,8 @@ class Anuncio extends Component {
             cep: '',
             tags: '',
             isAnnounced: true,
-            //borderColorBio: '#e6e6e6',
-            //borderColorName: '#e6e6e6',
             borderColorValue: '#e6e6e6',
-            //borderColorLocal: '#e6e6e6',
             borderColorNumber: '#e6e6e6',
-
         }
     }
 
@@ -70,10 +66,7 @@ class Anuncio extends Component {
     }
 
     canRegister = (number, value) => {
-        //boolBio = bioColor.call(this, bio)
-        // boolName = nameColor.call(this, name)
         boolValue = valueColor.call(this, value)
-        //boolLocal = localColor.call(this, street)
         boolNumber = numberColor.call(this, number)
 
         return boolValue && boolNumber
@@ -86,6 +79,7 @@ class Anuncio extends Component {
         if (!this.canRegister(vacancies, value)) {
             return
         }
+
         ref = firebase.firestore().collection('republics');
         ref.doc(repUID).set({
             name: name,
@@ -165,21 +159,19 @@ class Anuncio extends Component {
             */
             <View style={styles.container}>
 
-                <Item floatingLabel style={styles.floatInput}
-                    style={{ borderColor: this.state.borderColorName }}>
+                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)} >
                     <Label>Valor :</Label>
                     <Input
-                        value={this.state.value}
+                        //value={this.state.value}
                         onChangeText={(value) => this.setState({ value })}
-                        onEndEditing={() => nameColor.call(this, this.state.value)}
+                        onEndEditing={() => valueColor.call(this, this.state.value)}
                     ></Input>
                 </Item>
 
-                <Item floatingLabel style={styles.floatInput}
-                    style={{ borderColor: this.state.borderColorNumber }}>
+                <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumber }, styles.floatInput)} >
                     <Label>Numero de vagas:</Label>
                     <Input
-                        value={this.state.vacancies}
+                        //value={this.state.vacancies}
                         onChangeText={(vacancies) => this.setState({ vacancies })}
                         onEndEditing={() => numberColor.call(this, this.state.vacancies)}
                     ></Input>
