@@ -76,8 +76,7 @@ class Login extends Component {
       <View style={styles.container}>
         <Image style={styles.image} source={require('../image/logo2.png')} />
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorEmail }}>
+        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorEmail }, styles.floatInput)} >
           <Label>Digite seu email:</Label>
           <Input
             value={this.state.email}
@@ -87,8 +86,7 @@ class Login extends Component {
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorPassword }}>
+        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorPassword }, styles.floatInput)} >
           <Label>Digite sua senha:</Label>
           <Input
             value={this.state.password}

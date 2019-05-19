@@ -215,8 +215,7 @@ class UserProfile extends Component {
 
         {this.state.avatarSource ? <Thumbnail source={{ uri: this.state.photoURL }} /> : <Text />}
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorName }}>
+        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)} >
           <Label>Nome:</Label>
           <Input
             value={this.state.name}
@@ -225,8 +224,7 @@ class UserProfile extends Component {
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorEmail }}>
+        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorEmail }, styles.floatInput)} >
           <Label>Email:</Label>
           <Input
             value={this.state.email}
@@ -236,8 +234,7 @@ class UserProfile extends Component {
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorAge }}>
+        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorAge }, styles.floatInput)} >
           <Label>Idade:</Label>
           <Input
             value={this.state.age}
@@ -247,8 +244,7 @@ class UserProfile extends Component {
           ></Input>
         </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorBio }}>
+        <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBio }, styles.floatInput)} >
           <Label>Biografia:</Label>
           <Input
             value={this.state.bio}
