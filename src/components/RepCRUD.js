@@ -7,6 +7,9 @@ import { withNavigation } from 'react-navigation';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 
+import axios from 'axios';
+import { nameColor, memberColor, bioColor, cepColor, genericColor } from '../formValidation'
+
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
@@ -38,7 +41,13 @@ class RepCRUD extends Component {
       uri: '',
 
 
-      isEditado: false
+      isEditado: false,
+      boolLocalization: false,
+      borderColorBio: '#e6e6e6',
+      borderColorCep: '#e6e6e6',
+      borderColorName: '#e6e6e6',
+      borderColorNumber: '#e6e6e6',
+      borderColorMember: '#e6e6e6',
     };
   }
 
@@ -81,11 +90,19 @@ class RepCRUD extends Component {
     boolBio = bioColor.call(this, bio)
     boolName = nameColor.call(this, name)
     boolMember = memberColor.call(this, members)
+    boolNumberHome = genericColor()
 
-    return boolBio && boolName && boolMember
+    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization()
   }
 
   editRep = () => {
+
+    const { name, members, bio, cep, numberHome } = this.state;
+
+    if (!this.canRegister(name, bio, members, cep, numberHome)) {
+      return
+    }
+
     var user = firebase.auth().currentUser;
     this.ref.doc(user.uid)
       .set({
@@ -109,6 +126,59 @@ class RepCRUD extends Component {
 
   membersList = () => {
     this.props.navigation.navigate("MembersList");
+  }
+
+  searchAdress = (cep) => {
+    if (!cepColor.call(this, cep)) {
+      this.setState({
+        borderColorCep: '#ff0000',
+        street: '',
+        boolLocalization: false,
+      })
+
+      return false
+    }
+
+    axios.get('https://viacep.com.br/ws/' + cep + '/json/').then((response) => {
+
+      if (response.data.erro) {
+        this.setState({
+          borderColorCep: '#ff0000',
+          street: '',
+          boolLocalization: false,
+        })
+      } else {
+        this.setState({
+          street: response.data.logradouro,
+          uf: response.data.uf,
+          city: response.data.localidade,
+          boolLocalization: true,
+        })
+      }
+    })
+  }
+
+  getLocalization = () => {
+    if(!genericColor.call(this, this.state.numberHome, /^[0-9][0-9]*/, 'borderColorNumberHome')) {
+      return
+    }
+
+    axios.get('https://maps.google.com/maps/api/geocode/json?address=' + this.state.logradouro + ',' + this.state.numberHome + ','
+      + this.state.city + ',' + this.state.uf + '&components=country:BR&key=AIzaSyDTwm8jKEXByLoOxH3PgIF4SaU2RbLhJrg')
+      .then((response) => {
+        if (response.data.erro) {
+          this.setState({
+            borderColorNumberHome: '#ff0000',
+            latitude: '',
+            longitude: '',
+          })
+        } else {
+          this.setState({
+            latitude: response.data.results["0"].geometry.location.lat,
+            longitude: response.data.results["0"].geometry.location.lng,
+          })
+        }
+      })
   }
 
   imageSelect = () => {
@@ -177,47 +247,54 @@ class RepCRUD extends Component {
           <Image
             style={{ width: 100, height: 100 }}
             disabled={!this.state.gotUrl}
-            source={{ uri: this.state.photoURL }} 
+            source={{ uri: this.state.photoURL }}
           />
 
-          <Item floatingLabel style={styles.floatInput}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)}>
             <Label>Nome da Republica:</Label>
             <Input
               value={this.state.name}
               onChangeText={(name) => this.setState({ name })}
+              onEndEditing={() => nameColor.call(this, this.state.name)}
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorMember }, styles.floatInput)}>
             <Label>Numero de Membros:</Label>
             <Input
               value={this.state.members}
               keyboardType='number-pad'
               onChangeText={(members) => this.setState({ members })}
+              onEndEditing={() => memberColor.call(this, this.state.members)}
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBio }, styles.floatInput)}>
             <Label>Biografia:</Label>
             <Input
               value={this.state.bio}
               onChangeText={(bio) => this.setState({ bio })}
+              onEndEditing={() => bioColor.call(this, this.state.bio)}
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorCep }, styles.floatInput)}>
             <Label>Cep:</Label>
             <Input
+              keyboardType='number-pad'
               value={this.state.cep}
               onChangeText={(cep) => this.setState({ cep })}
+              onEndEditing={() => this.searchAdress(this.state.cep)}
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumberHome }, styles.floatInput)}>
             <Label>Numero da Casa:</Label>
             <Input
+              keyboardType='number-pad'
               value={this.state.numberHome}
               onChangeText={(numberHome) => this.setState({ numberHome })}
+              onEndEditing={() => {this.getLocalization()}}
             ></Input>
           </Item>
 
