@@ -207,7 +207,7 @@ class RepCRUD extends Component {
     await imageRef.child(imageName).getDownloadURL().then((url) => {
       this.setState({ photoURL: url, gotUrl: true })
     }).catch((error) => {
-      reject(error)
+      //reject(error)
     });
   }
 

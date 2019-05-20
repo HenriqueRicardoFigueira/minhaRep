@@ -71,17 +71,17 @@ class RepForm extends Component {
     this.setState({
       uid: user.uid,
     })
-    this.getUrl();
+    //this.getUrl();
   }
 
-  canRegister = (name, bio, members, cep) => {
+  canRegister = (name, bio, members) => {
     // se fizer as chamadas de função no retorno
     // só vai alterar a cor do primeiro que estiver fora do padrão
     boolBio = bioColor.call(this, bio)
     boolName = nameColor.call(this, name)
     boolMember = memberColor.call(this, members)
 
-    return boolBio && boolName && boolMember && this.state.boolLocalization
+    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization()
   }
 
   searchAdress = (cep) => {
@@ -116,7 +116,7 @@ class RepForm extends Component {
 
   getLocalization = () => {
     if(!genericColor.call(this, this.state.numberHome, /^[0-9][0-9]*/, 'borderColorNumberHome')) {
-      return
+      return false
     }
 
     axios.get('https://maps.google.com/maps/api/geocode/json?address=' + this.state.logradouro + ',' + this.state.numberHome + ','
@@ -135,6 +135,8 @@ class RepForm extends Component {
           })
         }
       })
+
+      return true;
   }
 
   addRep = () => {
@@ -256,8 +258,7 @@ class RepForm extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorCep }, styles.floatInput)}
-          /*style={{ borderColor: this.state.borderColorNumber }}*/>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorCep }, styles.floatInput)} >
             <Label>Cep:</Label>
             <Input
               value={this.state.cep}
@@ -267,13 +268,10 @@ class RepForm extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}
-          /*style={{ borderColor: this.state.borderColorNumber }}*/>
+          <Item floatingLabel style={styles.floatInput} >
             <Label>Rua:</Label>
             <Input
               value={this.state.street}
-            //onEndEditing={() => numberColor.call(this, this.state.members)}
-
             ></Input>
           </Item>
 
@@ -299,8 +297,7 @@ class RepForm extends Component {
             <Text style={styles.buttonText}> Enviar Foto </Text>
           </Button>
 
-          <Button style={styles.button} onPress={() => this.addRep()}
-            disabled={!this.state.name.length || !this.state.bio.length}>
+          <Button style={styles.button} onPress={() => this.addRep()}>
             <Text style={styles.buttonText}>Submeter</Text>
           </Button>
 
