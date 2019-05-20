@@ -117,7 +117,7 @@ function localColor(local) {
 }
 
 function cepColor(cep) {
-  newColor = color(cep.replace('-', ''), /[0-9]{5}[\d]{3}/)
+  newColor = cep.length != 8 ? '#ff0000' : color(cep.replace('-', ''), /[0-9]{5}[\d]{3}/)
 
   this.setState({
     borderColorCep: newColor

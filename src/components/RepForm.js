@@ -7,7 +7,7 @@ import axios from 'axios';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { styles } from './styles'
-import { nameColor, bioColor, numberColor } from '../formValidation';
+import { nameColor, bioColor, genericColor, memberColor, cepColor, numberColor } from '../formValidation';
 
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
@@ -48,10 +48,13 @@ class RepForm extends Component {
       gotUrl: false,
       uri: '',
 
+      boolLocalization: false,
       borderColorBio: '#e6e6e6',
       borderColorCep: '#e6e6e6',
       borderColorName: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
+      borderColorMember: '#e6e6e6',
+      borderColorNumberHome: '#e6e6e6',
     }
   };
 
@@ -83,6 +86,12 @@ class RepForm extends Component {
 
   searchAdress = (cep) => {
     if (!cepColor.call(this, cep)) {
+      this.setState({
+        borderColorCep: '#ff0000',
+        street: '',
+        boolLocalization: false,
+      })
+
       return false
     }
 
@@ -93,6 +102,13 @@ class RepForm extends Component {
           borderColorCep: '#ff0000',
           street: '',
           boolLocalization: false,
+        })
+      } else {
+        this.setState({
+          street: response.data.logradouro,
+          uf: response.data.uf,
+          city: response.data.localidade,
+          boolLocalization: true,
         })
       }
     })
@@ -112,12 +128,16 @@ class RepForm extends Component {
             latitude: '',
             longitude: '',
           })
+        } else {
+          this.setState({
+            latitude: response.data.results["0"].geometry.location.lat,
+            longitude: response.data.results["0"].geometry.location.lng,
+          })
         }
       })
   }
 
   addRep = () => {
-    console.log("Vai braisl")
     const { name, bio, members, cep } = this.state;
 
     if (!this.canRegister(name, bio, members, cep)) {
@@ -217,7 +237,7 @@ class RepForm extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBio, marginTop: styles.floatInput.marginTop }, styles.floatInput)} >
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBio }, styles.floatInput)} >
             <Label>Descrição:</Label>
             <Input
               value={this.state.bio}
@@ -236,13 +256,13 @@ class RepForm extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorCep }, styles.floatInput)}
           /*style={{ borderColor: this.state.borderColorNumber }}*/>
             <Label>Cep:</Label>
             <Input
               value={this.state.cep}
+              keyboardType='number-pad'
               onChangeText={(cep) => this.setState({ cep })}
-              //onEndEditing={() => numberColor.call(this, this.state.members)}
               onEndEditing={() => this.searchAdress(this.state.cep)}
             ></Input>
           </Item>
@@ -257,9 +277,10 @@ class RepForm extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={styles.floatInput}>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumberHome }, styles.floatInput)}>
             <Label>Número:</Label>
             <Input
+              keyboardType='number-pad'
               value={this.state.numberHome}
               onChangeText={(numberHome) => this.setState({ numberHome })}
               onEndEditing={() => this.getLocalization()}
