@@ -204,39 +204,60 @@ export default class App extends React.Component {
     );
   }
 
-  getDados() {
+  async getMembers(id, rep) {
+    var membersSnapshot = await firebase.firestore().collection('republics/' + id + '/members').get()
+    try {
+      rep.members = membersSnapshot._docs
+    } catch (err) {
+      rep.members = []
+    } finally {
+      Reps.push(rep)
+    }
+  }
+
+  async getDados() {
     this.ref = firebase.firestore().collection('republics');
     this.refAnuncio = firebase.firestore().collection('anuncio');
     this.refUser = firebase.auth().currentUser.uid;
 
-    this.ref.get()
-      .then((repData) => {
-        if (!repData._docs) {
-          return
-        }
-        for (var i = 0; i < repData._docs.length; i++) {
-          
-          var ref = repData._docs[i]._data;
-          if (ref.isAnnounced) {
-            var rep = {
-              id: i,
-              title: ref.name,
-              localization: ref.street,
-              imageLink: ref.imageLink ? ref.imageLink : photoURL,
-              bathroom: 3,
-              bed: 4,
-              users: ref.members,
-              price: ref.value,
-              vacancies: ref.vacancies,
-              latitude: ref.latitude,
-              longitude: ref.longitude
-            }
-            Reps.push(rep);
-          }
-        }
-        this.forceUpdate();
-      })
+    const repData = await this.ref.get()
+    try {
 
+      if (!repData._docs) {
+        return
+      }
+
+      for (var i = 0; i < repData._docs.length; i++) {
+
+        var ref = repData._docs[i]._data
+        // se a república não estiver anunciada, continua para a próxima iteração
+        if (!ref.isAnnounced) {
+          continue
+        }
+
+        var rep = {
+          id: i,
+          title: ref.name,
+          localization: ref.street,
+          imageLink: ref.imageLink ? ref.imageLink : photoURL,
+          bathroom: ref.bathroom ? ref.bathroom : 0,
+          bed: ref.bed ? ref.bed : 0,
+          members: null,  // este valor será preenchido abaixo
+          value: ref.value,
+          vacancies: ref.vacancies,
+          latitude: ref.latitude,
+          longitude: ref.longitude
+        }
+
+        // recupera os membros da república
+        var id = repData._docs[i]._ref.id
+        await this.getMembers(id, rep)
+      }
+
+      this.forceUpdate();
+    } catch (err) {
+      console.log("Err first try: ", err)
+    }
   }
 
   componentDidMount() {

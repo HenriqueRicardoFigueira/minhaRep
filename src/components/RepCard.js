@@ -11,8 +11,8 @@ export default class RepCard extends Component {
     this.state = {
       bed: props.rep.bed,
       title: props.rep.title,
-      price: props.rep.price,
-      users: props.rep.users,
+      value: props.rep.value,
+      members: props.rep.members,
       latitude: props.rep.latitude,
       bathroom: props.rep.bathroom,
       repImage: props.rep.imageLink,
@@ -69,14 +69,14 @@ export default class RepCard extends Component {
                 <View style={styles.icon} >
                   <Icon name='users' size={this.iconSize} color='#000' onPress={() => Alert.alert('', 'Quantidade de Membros', [{ text: 'OK' }])} />
                 </View>
-                <Text style={styles.iconText}>{this.state.users}</Text>
+                <Text style={styles.iconText}>{this.state.members.length}</Text>
               </View>
               {/*icone preco*/}
               <View style={styles.iconViewText}>
                 <View style={styles.icon} >
                   <Icon name='money' size={this.iconSize} color='#000' onPress={() => Alert.alert('', 'Preço do Aluguel', [{ text: 'OK' }])} />
                 </View>
-                <Text style={styles.iconText}>{this.state.price}</Text>
+                <Text style={styles.iconText}>{this.state.value}</Text>
               </View>
               {/*BOTÃO SIM*/}
               <View style={styles.iconViewText}>
