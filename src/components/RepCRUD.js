@@ -90,7 +90,7 @@ class RepCRUD extends Component {
     boolBio = bioColor.call(this, bio)
     boolName = nameColor.call(this, name)
     boolMember = memberColor.call(this, members)
-    boolNumberHome = genericColor()
+    boolNumberHome = genericColor.call(this, this.state.numberHome, /^[0-9][0-9]*/, 'borderColorNumberHome')
 
     return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization()
   }
