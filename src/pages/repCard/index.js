@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Animated, Image, PanResponder, Text } from 'react-native';
+import { View, Animated, PanResponder, Text } from 'react-native';
 import RepCard from '../../components/RepCard';
 import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
@@ -57,9 +57,10 @@ export default class App extends React.Component {
     })
   }
 
-  removeSim = (gestureState) => {
+  removeSim = (gestureState, speed) => {
     Animated.spring(this.position, {
-      toValue: { x: styles.screen.width + 100, y: gestureState.dy }
+      tension: speed,
+      toValue: { x: styles.screen.width + 100, y: gestureState.dy },
     }).start(() => {
       this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
         this.position.setValue({ x: 0, y: 0 });
@@ -67,8 +68,9 @@ export default class App extends React.Component {
     })
   }
 
-  removeNao = (gestureState) => {
+  removeNao = (gestureState, speed) => {
     Animated.spring(this.position, {
+      tension: speed,
       toValue: { x: -styles.screen.width - 100, y: gestureState.dy }
     }).start(() => {
       this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
@@ -109,25 +111,22 @@ export default class App extends React.Component {
             regionXminS = Math.floor(styles.screen.width * 0.84375)
             regionXmaxS = Math.floor(styles.screen.width * 0.98438)
             if (gestureState.x0 > regionXminN && gestureState.x0 < regionXmaxN) { // clicou no botão do NÃO
-              this.removeNao(gestureState)
+              this.removeNao(gestureState, 10)
             } else if (gestureState.x0 > regionXminS && gestureState.x0 < regionXmaxS) {  // clicou no botão do SIM
-              this.removeSim(gestureState)
+              this.removeSim(gestureState, 10)
             }
           }
         } else {    // não foi clicado, foi movido
           if (gestureState.dx > 120) {
-            this.removeSim(gestureState)
+            this.removeSim(gestureState, 12)
           } else if (gestureState.dx < -120) {
-            this.removeNao(gestureState)
+            this.removeNao(gestureState, 12)
           } else {
             this.voltaAnimacao()
           }
         }
       }
-    })
-
-    
-    
+    })    
   }
 
   renderReps = () => {
