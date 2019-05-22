@@ -5,17 +5,8 @@ import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 
-
-// apenas para teste
-/*const Reps = [
-  { id: '1', title: 'Camargo Correia', localization: 'Rua das Tipuanas Amarelas, 70', imageLink: 'https://i.pinimg.com/originals/fd/e9/a4/fde9a48af9b22286c716df53e99d0b26.jpg', bathroom: 2, bed: 5, users: 4, price: 400, vacancies: 1, latitude: -24.04766912, longitude: -52.3788321 },
-  { id: '2', title: 'República em Preto e Branco', localization: 'Rua São Paulo, 902', imageLink: 'https://i.pinimg.com/originals/58/5e/ba/585ebab40b803e11f92a6b9fb657b809.jpg', bathroom: 1, bed: 3, users: 2, price: 430, vacancies: 1, latitude: -24.04400474, longitude: -52.38975406 },
-  { id: '3', title: 'República Diamente Jortão Castro', localization: 'Rua Gerondinos, 839', imageLink: 'https://i.pinimg.com/originals/d5/ee/b7/d5eeb71aaeaa6d8fb801e7981e033ae7.jpg', bathroom: 2, bed: 5, users: 3, price: 350, vacancies: 2, latitude: -24.03970338, longitude: -52.38467932 },
-  { id: '4', title: 'Trovão', localization: 'Rua Rafael Brasilio Gerônimo Antes, 73', imageLink: 'http://customerscares.co/wp-content/uploads/2019/03/tiny-house-pinterest-style-tiny-house-awesome-best-old-houses-images-on-small-house-interior-design-pinterest.jpg', bathroom: 2, bed: 5, users: 3, price: 350, vacancies: 2, latitude: -24.0437598, longitude: -52.37944365 },
-]*/
-
 const Reps = [];
-const photoURL = 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381'
+const photoURL = '../../image/houseIcon.png'
 
 export default class App extends React.Component {
 
@@ -239,7 +230,7 @@ export default class App extends React.Component {
           id: i,
           title: ref.name,
           localization: ref.street,
-          imageLink: ref.imageLink ? ref.imageLink : photoURL,
+          photoURL: ref.photoURL ? ref.photoURL : photoURL,
           bathroom: ref.bathroom ? ref.bathroom : 0,
           bed: ref.bed ? ref.bed : 0,
           members: null,  // este valor será preenchido abaixo

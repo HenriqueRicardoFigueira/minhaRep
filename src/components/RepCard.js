@@ -15,7 +15,7 @@ export default class RepCard extends Component {
       members: props.rep.members,
       latitude: props.rep.latitude,
       bathroom: props.rep.bathroom,
-      repImage: props.rep.imageLink,
+      repImage: props.rep.photoURL,
       longitude: props.rep.longitude,
       vacancies: props.rep.vacancies,
       localization: props.rep.localization,
@@ -92,7 +92,7 @@ export default class RepCard extends Component {
   // se for passado uma imagem para o componente, então recupera pelo link
   // se não, recupera localmente a imagem
   getImage = () => {
-    if (this.state.repImage == '../image/houseIcon.png') {
+    if (this.state.repImage == '../../image/houseIcon.png') {
       return require('../image/houseIcon.png');
     } else {
       return { uri: this.state.repImage }
