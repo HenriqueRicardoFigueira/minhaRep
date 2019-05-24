@@ -7,7 +7,7 @@ import axios from 'axios';
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { styles } from './styles'
-import { nameColor, bioColor, genericColor, memberColor, cepColor, numberColor } from '../formValidation';
+import { nameColor, bioColor, genericColor, memberColor, cepColor } from '../formValidation';
 
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
@@ -25,11 +25,14 @@ class RepForm extends Component {
     super();
     this.ref = firebase.firestore().collection('republics');
     this.state = {
+      regex: /^[0-9][0-9]*$/,
 
       name: '',
       bio: '',
       members: '',
       img: '',
+      bed: '',
+      bathroom: '',
       latitude: '',
       longitude: '',
       tags: '',
@@ -51,9 +54,11 @@ class RepForm extends Component {
       boolLocalization: false,
       borderColorBio: '#e6e6e6',
       borderColorCep: '#e6e6e6',
+      borderColorBed: '#e6e6e6',
       borderColorName: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
       borderColorMember: '#e6e6e6',
+      borderColorBathroom: '#e6e6e6',
       borderColorNumberHome: '#e6e6e6',
     }
   };
@@ -74,14 +79,16 @@ class RepForm extends Component {
     //this.getUrl();
   }
 
-  canRegister = (name, bio, members) => {
+  canRegister = (name, bio, members, bathroom, bed) => {
     // se fizer as chamadas de função no retorno
     // só vai alterar a cor do primeiro que estiver fora do padrão
     boolBio = bioColor.call(this, bio)
     boolName = nameColor.call(this, name)
-    boolMember = memberColor.call(this, members)
+    boolName = nameColor.call(this, members)
+    boolBed = genericColor.call(this, bed, this.state.regex, 'borderColorBed')
+    boolBathroom = genericColor.call(this, bathroom, this.state.regex, 'borderColorBathroom')
 
-    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization()
+    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBed && boolBathroom
   }
 
   searchAdress = (cep) => {
@@ -115,7 +122,11 @@ class RepForm extends Component {
   }
 
   getLocalization = () => {
-    if(!genericColor.call(this, this.state.numberHome, /^[0-9][0-9]*/, 'borderColorNumberHome')) {
+    if(!this.state.boolLocalization) {
+      this.setState({borderColorCep: '#ff0000'});
+      return false
+    } else if(!genericColor.call(this, this.state.numberHome, this.state.regex, 'borderColorNumberHome')) {
+      this.setState({borderColorNumber: '#ff0000'})
       return false
     }
 
@@ -140,20 +151,22 @@ class RepForm extends Component {
   }
 
   addRep = () => {
-    const { name, bio, members, cep } = this.state;
+    const { name, bio, members, cep, numberHome, bathroom, bed } = this.state;
 
-    if (!this.canRegister(name, bio, members, cep)) {
+    if (!this.canRegister(name, bio, members, bathroom, bed)) {
       return
     }
 
     this.ref.doc(this.state.uid).set({
 
-      name: this.state.name,
-      bio: this.state.bio,
-      members: this.state.members,
-      numberHome: this.state.numberHome,
+      name:  name,
+      bio: bio,
+      members: members,
+      numberHome: numberHome,
       street: this.state.street,
-      cep: this.state.cep,
+      cep: cep,
+      bathroom: bathroom,
+      bed: bed,
       city: this.state.city,
       uf: this.state.uf,
       latitude: this.state.latitude,
@@ -193,7 +206,7 @@ class RepForm extends Component {
     await imageRef.child(imageName).getDownloadURL().then((url) => {
       this.setState({ photoURL: url, gotUrl: true })
     }).catch((error) => {
-      reject(error)
+      //reject(error)
     });
   }
 
@@ -248,13 +261,13 @@ class RepForm extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumber }, styles.floatInput)} >
-            <Label>Quantidade de Membros:</Label>
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorMember }, styles.floatInput)} >
+            <Label>Membros:</Label>
             <Input
               value={this.state.members}
               keyboardType='number-pad'
               onChangeText={(members) => this.setState({ members })}
-              onEndEditing={() => numberColor.call(this, this.state.members)}
+              onEndEditing={() => memberColor.call(this, this.state.members)}
             ></Input>
           </Item>
 
@@ -282,6 +295,26 @@ class RepForm extends Component {
               value={this.state.numberHome}
               onChangeText={(numberHome) => this.setState({ numberHome })}
               onEndEditing={() => this.getLocalization()}
+            ></Input>
+          </Item>
+
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBathroom }, styles.floatInput)}>
+            <Label>Banheiros:</Label>
+            <Input
+              keyboardType='number-pad'
+              value={this.state.bathroom}
+              onChangeText={(bathroom) => this.setState({ bathroom })}
+              onEndEditing={() => genericColor.call(this, this.state.bathroom, this.state.regex, 'borderColorBathroom')}
+            ></Input>
+          </Item>
+
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBed }, styles.floatInput)}>
+            <Label>Quartos:</Label>
+            <Input
+              keyboardType='number-pad'
+              value={this.state.bed}
+              onChangeText={(bed) => this.setState({ bed })}
+              onEndEditing={() => genericColor.call(this, this.state.bed, this.state.regex, 'borderColorBed')}
             ></Input>
           </Item>
 
