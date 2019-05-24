@@ -57,7 +57,7 @@ class RepForm extends Component {
       borderColorBed: '#e6e6e6',
       borderColorName: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
-      borderColorMember: '#e6e6e6',
+      borderColorMembers: '#e6e6e6',
       borderColorBathroom: '#e6e6e6',
       borderColorNumberHome: '#e6e6e6',
     }
@@ -84,7 +84,7 @@ class RepForm extends Component {
     // só vai alterar a cor do primeiro que estiver fora do padrão
     boolBio = bioColor.call(this, bio)
     boolName = nameColor.call(this, name)
-    boolName = nameColor.call(this, members)
+    boolMember = memberColor.call(this, members)
     boolBed = genericColor.call(this, bed, this.state.regex, 'borderColorBed')
     boolBathroom = genericColor.call(this, bathroom, this.state.regex, 'borderColorBathroom')
 
@@ -159,7 +159,7 @@ class RepForm extends Component {
 
     this.ref.doc(this.state.uid).set({
 
-      name:  name,
+      name: name,
       bio: bio,
       members: members,
       numberHome: numberHome,
@@ -175,7 +175,7 @@ class RepForm extends Component {
       admUID: this.state.uid,
       photoURL: this.state.photoURL,
       gotUrl: true,
-      
+
     });
     this.props.navigation.navigate("Home");
   }
@@ -195,18 +195,7 @@ class RepForm extends Component {
             console.log(this.state.photoURL)
           })
           .catch(error => console.log(error))
-        this.getUrl();
       }
-    });
-  }
-
-  getUrl = async () => {
-    const imageName = this.state.uid;
-    const imageRef = firebase.storage().ref('repImages');
-    await imageRef.child(imageName).getDownloadURL().then((url) => {
-      this.setState({ photoURL: url, gotUrl: true })
-    }).catch((error) => {
-      //reject(error)
     });
   }
 
@@ -261,7 +250,7 @@ class RepForm extends Component {
             ></Input>
           </Item>
 
-          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorMember }, styles.floatInput)} >
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorMembers }, styles.floatInput)} >
             <Label>Membros:</Label>
             <Input
               value={this.state.members}

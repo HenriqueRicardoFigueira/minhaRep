@@ -89,7 +89,7 @@ function memberColor(member) {
   newColor = color(member, /^[0-9][0-9]?$/)
 
   this.setState({
-    borderColorMember: newColor
+    borderColorMembers: newColor
   })
 
   return newColor == '#e6e6e6'
