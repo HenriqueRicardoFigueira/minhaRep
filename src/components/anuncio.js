@@ -15,20 +15,7 @@ class Anuncio extends Component {
       value: '',
       vacancies: '',
       repUID: firebase.auth().currentUser.uid,
-      name: '',
-      bio: '',
-      img: '',
-      latitude: '',
-      longitude: '',
-      cep: '',
-      numberHome: '',
-      street: '',
-      complement: '',
-      uf: '',
-      city: '',
-      tags: '',
 
-      isAnnounced: true,
       borderColorValue: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
     }
@@ -44,18 +31,12 @@ class Anuncio extends Component {
           const repDatas = repData.data();
           this.setState({
             repUID: repDatas.admUID,
-            name: repDatas.name,
-            bio: repDatas.bio,
-            street: repDatas.street,
-            numberHome: repDatas.numberHome,
-            city: repDatas.city,
-            latitude: repDatas.latitude,
-            longitude: repDatas.longitude,
-            cep: repDatas.cep,
-            tags: repDatas.tags,
-            uf: repDatas.uf
+            repDatas: repDatas,
           })
 
+          if(repDatas.isAnnounced) { // verificar aqui se a república já foi anunciada
+            // não permitir continuar
+          }
         } else {
           alert("Não existe republica cadastrada neste usuário");
         }
@@ -70,27 +51,35 @@ class Anuncio extends Component {
 
   // CHAMAR ESTA FUNÇÃO AO CLICAR NO BOTÃO DE CADASTRAR ANÚNCIO
   registerRep = () => {
-    //bloco comentado por questão que não vai haver mudanças no nome e no bio, pois vão ser informações que iremos pegar do banco
-    const { repUID, name, bio, value, street, tags, vacancies, city, numberHome, latitude, longitude, cep, isAnnounced, uf } = this.state;
+
+    const { value, vacancies, repUID } = this.state;
     if (!this.canRegister(vacancies, value)) {
       return
     }
 
+    const { repDatas } = this.state
     ref = firebase.firestore().collection('republics');
     ref.doc(repUID).set({
-      name: name,
-      bio: bio,
-      street: street,
-      numberHome: numberHome,
-      city: city,
-      latitude: latitude,
-      longitude: longitude,
+      admUID: repUID,
+      bathroom: repDatas.bathroom,
+      bed: repDatas.bed,
+      bio: repDatas.bio,
+      cep: repDatas.cep,
+      city: repDatas.city,
+      complement: repDatas.complement,
+      gotUrl: repDatas.gotUrl,
+      isAnnounced: true,
+      latitude: repDatas.latitude,
+      longitude: repDatas.longitude,
+      members: repDatas.members,
+      name: repDatas.name,
+      numberHome: repDatas.numberHome,
+      photoURL: repDatas.photoURL,
+      street: repDatas.street,
+      tags: repDatas.tags,
+      uf: repDatas.uf,
       value: value,
       vacancies: vacancies,
-      cep: cep,
-      tags: tags,
-      isAnnounced: isAnnounced,
-      uf: uf
     })
     this.props.navigation.navigate("Home");
   }
@@ -102,7 +91,6 @@ class Anuncio extends Component {
         <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorValue }, styles.floatInput)}>
           <Label>Valor :</Label>
           <Input
-            //value={this.state.value}
             keyboardType='number-pad'
             onChangeText={(value) => this.setState({ value })}
             onEndEditing={() => valueColor.call(this, this.state.value)}
@@ -112,7 +100,6 @@ class Anuncio extends Component {
         <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumber }, styles.floatInput)}>
           <Label>Numero de vagas:</Label>
           <Input
-            //value={this.state.vacancies}
             keyboardType='number-pad'
             onChangeText={(vacancies) => this.setState({ vacancies })}
             onEndEditing={() => numberColor.call(this, this.state.vacancies)}

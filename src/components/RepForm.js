@@ -30,7 +30,6 @@ class RepForm extends Component {
       name: '',
       bio: '',
       members: '',
-      img: '',
       bed: '',
       bathroom: '',
       latitude: '',
@@ -175,6 +174,7 @@ class RepForm extends Component {
       admUID: this.state.uid,
       photoURL: this.state.photoURL,
       gotUrl: true,
+      isAnnounced: false,
 
     });
     this.props.navigation.navigate("Home");

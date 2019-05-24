@@ -60,7 +60,7 @@ export default class RepCard extends Component {
               {/*icone quartos*/}
               <View style={styles.iconViewText} >
                 <View style={styles.icon} >
-                  <Icon name='bed' size={this.iconSize} color='#000' onPress={() => Alert.alert('', 'Quantidade de Camas', [{ text: 'OK' }])} />
+                  <Icon name='bed' size={this.iconSize} color='#000' onPress={() => Alert.alert('', 'Quantidade de Quartos', [{ text: 'OK' }])} />
                 </View>
                 <Text style={styles.iconText}>{this.state.bed}</Text>
               </View>
