@@ -38,7 +38,7 @@ const Routes = createAppContainer(
         MembersAdd: MembersAdd,
 
     }, {
-        initialRouteName: 'Login'
+        initialRouteName: 'RepCard'
     })
  
 );

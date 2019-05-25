@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, Text, StyleSheet, Alert } from 'react-native';
 import { styles } from '../components/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import PhotoCard from '../components/photoCard'
 
 export default class RepCard extends Component {
 
@@ -34,14 +35,10 @@ export default class RepCard extends Component {
         {/* O cartão que será 'arrastado' */}
         <View style={styles.card}>
           {/* VIEW SUPERIOR */}
-          <View style={styles.viewImage}>
-            <Image style={styles.repImage} source={this.getImage()} />
-            <View style={styles.viewText}>
-              <Text style={styles.repTitle}>{this.state.vacancies}</Text>
-              <Text style={styles.repTitle}>{this.state.title}</Text>
-              <Text style={styles.repLocalization}>{this.state.localization}</Text>
-            </View>
-          </View>
+          <PhotoCard photoURL={this.state.repImage}
+            title={this.state.title}
+            vacancies={this.state.vacancies}
+            localization={this.state.localization}/>
 
           {/* VIEW ICONES */}
           <View>

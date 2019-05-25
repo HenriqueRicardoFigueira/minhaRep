@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { View, Animated, PanResponder, Text } from 'react-native';
+import Headers from '../../components/header';
 import RepCard from '../../components/RepCard';
 import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
+import Swiper from 'react-native-swiper';
+import PhotoCard from '../../components/photoCard'
+
 
 const Reps = [];
 const photoURL = '../../image/houseIcon.png'
@@ -15,7 +19,8 @@ export default class App extends React.Component {
 
     this.position = new Animated.ValueXY()
     this.state = {
-      currentIndex: 0
+      currentIndex: 0,
+      pageIndex: 1
     }
 
     this.rotate = this.position.x.interpolate({
@@ -57,6 +62,10 @@ export default class App extends React.Component {
     })
   }
 
+  async getReponse(pageIndex){
+    await this.setState({pageIndex: pageIndex});
+  }
+
   removeSim = (gestureState, speed) => {
     Animated.spring(this.position, {
       tension: speed,
@@ -88,7 +97,7 @@ export default class App extends React.Component {
 
   async componentWillMount() {
     handleAndroidBackButton(this.props.navigation.navigate, 'Home');
-    
+
 
     this.PanResponder = PanResponder.create({
 
@@ -126,7 +135,7 @@ export default class App extends React.Component {
           }
         }
       }
-    })    
+    })
   }
 
   renderReps = () => {
@@ -134,7 +143,7 @@ export default class App extends React.Component {
 
       if (i == this.state.currentIndex) {
         return (
-          
+
           <Animated.View
             {...this.PanResponder.panHandlers}
             key={item.id} style={[this.rotateAndTranslate, { height: styles.screen.height - 120, width: styles.screen.width, padding: 10, position: 'absolute' }]}>
@@ -181,15 +190,16 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ height: 60 }}>
-
-        </View>
-        <View style={{ flex: 1 }}>
-          {this.renderReps()}
-        </View>
-        <View style={{ height: 60 }}>
-
-        </View>
+        <Headers callback = {this.getReponse.bind(this)}/>
+        <Swiper index = {this.state.pageIndex} scrollBy = {this.state.pageIndex}>
+          <View></View>
+          <View style={{ flex: 1 }}>
+            {this.renderReps()}
+          </View>
+          <View>
+            <PhotoCard></PhotoCard>
+          </View>
+        </Swiper>
       </View>
     );
   }
