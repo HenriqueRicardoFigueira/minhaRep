@@ -53,8 +53,8 @@ class GoogleLogin extends Component {
           this.props.navigation.navigate("Home");
         } else {
           this.ref.doc(currentUser.user.uid).set({
-            bio: user.data().bio,
-            age: user.data().age,
+            bio: null,
+            age: null,
             uid: currentUser.user.uid,
             name: currentUser.additionalUserInfo.profile.given_name,
             email: currentUser.user.email,
