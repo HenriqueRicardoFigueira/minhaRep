@@ -55,10 +55,12 @@ class RepCRUD extends Component {
       isEditado: false,
       boolLocalization: true,
       borderColorBio: '#e6e6e6',
+      borderColorBed: '#e6e6e6',
       borderColorCep: '#e6e6e6',
       borderColorName: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
       borderColorMember: '#e6e6e6',
+      borderColorBathroom: '#e6e6e6',
     };
   }
 
@@ -107,9 +109,11 @@ class RepCRUD extends Component {
     boolBio = bioColor.call(this, bio)
     boolName = nameColor.call(this, name)
     boolMember = memberColor.call(this, members)
-    boolNumberHome = genericColor.call(this, this.state.numberHome, /^[0-9][0-9]*/, 'borderColorNumberHome')
+    boolBed = genericColor.call(this, this.state.bed, this.state.regex, 'borderColorBed')
+    boolBathroom = genericColor.call(this, this.state.bathroom, this.state.regex, 'borderColorBathroom')
+    boolNumberHome = genericColor.call(this, this.state.numberHome, this.state.regex, 'borderColorNumberHome')
 
-    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization()
+    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBathroom && boolBed
   }
 
   editRep = () => {
@@ -182,11 +186,11 @@ class RepCRUD extends Component {
   }
 
   getLocalization = () => {
-    if(!this.state.boolLocalization) {
-      this.setState({borderColorCep: '#ff0000'});
+    if (!this.state.boolLocalization) {
+      this.setState({ borderColorCep: '#ff0000' });
       return false
-    } else if(!genericColor.call(this, this.state.numberHome, this.state.regex, 'borderColorNumberHome')) {
-      this.setState({borderColorNumber: '#ff0000'})
+    } else if (!genericColor.call(this, this.state.numberHome, this.state.regex, 'borderColorNumberHome')) {
+      this.setState({ borderColorNumber: '#ff0000' })
       return false
     }
 
@@ -207,7 +211,7 @@ class RepCRUD extends Component {
         }
       })
 
-      return true
+    return true
   }
 
   imageSelect = () => {
@@ -318,13 +322,34 @@ class RepCRUD extends Component {
           </Item>
 
           <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumberHome }, styles.floatInput)}>
-            <Label>Numero da Casa:</Label>
+            <Label>Numero:</Label>
             <Input
               keyboardType='number-pad'
               value={this.state.numberHome}
               onChangeText={(numberHome) => this.setState({ numberHome })}
               onEndEditing={() => { this.getLocalization() }}
             ></Input>
+          </Item>
+
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBathroom }, styles.floatInput)}>
+            <Label>Banheiros:</Label>
+            <Input
+              keyboardType='number-pad'
+              value={this.state.bathroom}
+              onChangeText={(bathroom) => this.setState({ bathroom })}
+              onEndEditing={() => genericColor.call(this, this.state.bathroom, this.state.regex, 'borderColorBathroom')}
+            ></Input>
+          </Item>
+
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBed }, styles.floatInput)}>
+            <Label>Quartos:</Label>
+            <Input
+              keyboardType='number-pad'
+              value={this.state.bed}
+              onChangeText={(bed) => this.setState({ bed })}
+              onEndEditing={() => genericColor.call(this, this.state.bed, this.state.regex, 'borderColorBed')}
+            ></Input>
+
           </Item>
 
           <Item floatingLabel style={styles.floatInput}>
