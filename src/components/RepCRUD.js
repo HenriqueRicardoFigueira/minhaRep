@@ -29,20 +29,31 @@ class RepCRUD extends Component {
     //this.imgRef = firebase.storage().ref().child('republicsImages');
 
     this.state = {
+      regex: /^[0-9][0-9]*$/,
+
       admUID: '',
       bio: '',
       members: '',
       name: '',
       tags: '',
+      bed: '',
+      bathroom: '',
+      latitude: '',
+      longitude: '',
+      cep: '',
+      numberHome: '',
+      street: '',
+      complement: '',
+      uf: '',
+      city: '',
 
       avatarSource: null,
       photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/repImages%2FDefaultRepPic.jpg?alt=media&token=60298d1d-c5f4-42d2-964b-58504da8bd0d',
       gotUrl: false,
       uri: '',
 
-
       isEditado: false,
-      boolLocalization: false,
+      boolLocalization: true,
       borderColorBio: '#e6e6e6',
       borderColorCep: '#e6e6e6',
       borderColorName: '#e6e6e6',
@@ -61,6 +72,9 @@ class RepCRUD extends Component {
           const repDatas = repData.data();
           this.setState({ // INITIALIZE THE FIELDS WITH THE REPUBLIC'S INFO
 
+            bathroom: repDatas.bathroom,
+            bed: repDatas.bed,
+            isAnnounced: repDatas.isAnnounced,
             name: repDatas.name,
             bio: repDatas.bio,
             members: repDatas.members,
@@ -75,8 +89,11 @@ class RepCRUD extends Component {
             admUID: repDatas.admUID,
             photoURL: repDatas.photoURL,
             gotUrl: repDatas.gotUrl,
+            vacancies: repDatas.vacancies,
+            value: repDatas.value,
 
           })
+          console.log("this.state.numberHome: ", this.state.numberHome)
         } else {
           alert("Não existe republica cadastrada neste usuário");
           this.props.navigation.navigate("Home");
@@ -106,6 +123,12 @@ class RepCRUD extends Component {
     var user = firebase.auth().currentUser;
     this.ref.doc(user.uid)
       .set({
+
+        bathroom: this.state.bathroom,
+        bed: this.state.bed,
+        isAnnounced: this.state.isAnnounced,
+        vacancies: this.state.vacancies,
+        value: this.state.value,
         name: this.state.name,
         bio: this.state.bio,
         members: this.state.members,
@@ -117,7 +140,7 @@ class RepCRUD extends Component {
         latitude: this.state.latitude,
         longitude: this.state.longitude,
         tags: this.state.tags,
-        admUID: this.state.uid,
+        admUID: this.state.admUID,
         photoURL: this.state.photoURL,
         gotUrl: this.state.gotUrl,
       });
@@ -159,8 +182,12 @@ class RepCRUD extends Component {
   }
 
   getLocalization = () => {
-    if(!genericColor.call(this, this.state.numberHome, /^[0-9][0-9]*/, 'borderColorNumberHome')) {
-      return
+    if(!this.state.boolLocalization) {
+      this.setState({borderColorCep: '#ff0000'});
+      return false
+    } else if(!genericColor.call(this, this.state.numberHome, this.state.regex, 'borderColorNumberHome')) {
+      this.setState({borderColorNumber: '#ff0000'})
+      return false
     }
 
     axios.get('https://maps.google.com/maps/api/geocode/json?address=' + this.state.logradouro + ',' + this.state.numberHome + ','
@@ -179,6 +206,8 @@ class RepCRUD extends Component {
           })
         }
       })
+
+      return true
   }
 
   imageSelect = () => {
@@ -202,7 +231,7 @@ class RepCRUD extends Component {
   }
 
   getUrl = async () => {
-    const imageName = this.state.uid;
+    const imageName = this.state.admUID;
     const imageRef = firebase.storage().ref('repImages');
     await imageRef.child(imageName).getDownloadURL().then((url) => {
       this.setState({ photoURL: url, gotUrl: true })
@@ -213,7 +242,7 @@ class RepCRUD extends Component {
 
   uploadImage = (uri, mime = 'image/jpg') => {
     return new Promise((resolve, reject) => {
-      const imageName = this.state.uid
+      const imageName = this.state.admUID
       const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
 
       let uploadBlob = null
@@ -294,7 +323,7 @@ class RepCRUD extends Component {
               keyboardType='number-pad'
               value={this.state.numberHome}
               onChangeText={(numberHome) => this.setState({ numberHome })}
-              onEndEditing={() => {this.getLocalization()}}
+              onEndEditing={() => { this.getLocalization() }}
             ></Input>
           </Item>
 
