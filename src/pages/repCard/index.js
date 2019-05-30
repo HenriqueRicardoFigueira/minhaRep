@@ -229,9 +229,9 @@ export default class App extends React.Component {
           id: i,
           title: ref.name,
           localization: ref.street,
-          photoURL: ref.photoURL ? ref.photoURL : photoURL,
-          bathroom: ref.bathroom ? ref.bathroom : 0,
-          bed: ref.bed ? ref.bed : 0,
+          photoURL: ref.photoURL,
+          bathroom: ref.bathroom,
+          bed: ref.bed,
           members: null,  // este valor será preenchido abaixo
           value: ref.value,
           vacancies: ref.vacancies,

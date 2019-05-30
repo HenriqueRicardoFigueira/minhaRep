@@ -48,7 +48,7 @@ class RepCRUD extends Component {
       city: '',
 
       avatarSource: null,
-      photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/repImages%2FDefaultRepPic.jpg?alt=media&token=60298d1d-c5f4-42d2-964b-58504da8bd0d',
+      photoURL: [],
       gotUrl: false,
       uri: '',
 
@@ -95,7 +95,6 @@ class RepCRUD extends Component {
             value: repDatas.value,
 
           })
-          console.log("this.state.numberHome: ", this.state.numberHome)
         } else {
           alert("Não existe republica cadastrada neste usuário");
           this.props.navigation.navigate("Home");
@@ -113,7 +112,7 @@ class RepCRUD extends Component {
     boolBathroom = genericColor.call(this, this.state.bathroom, this.state.regex, 'borderColorBathroom')
     boolNumberHome = genericColor.call(this, this.state.numberHome, this.state.regex, 'borderColorNumberHome')
 
-    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBathroom && boolBed
+    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBathroom && boolBed && this.state.photoURL.length != 0
   }
 
   editRep = () => {
@@ -225,11 +224,12 @@ class RepCRUD extends Component {
         this.uploadImage(response.uri)
           .then((url) => {
             alert('uploaded');
-            this.setState({ photoURL: url, gotUrl: true });
+            this.state.photoURL.push(url)
+            this.setState({ gotUrl: true })
             console.log(this.state.photoURL)
           })
           .catch(error => console.log(error))
-        this.getUrl();
+        //this.getUrl();
       }
     });
   }
@@ -280,7 +280,7 @@ class RepCRUD extends Component {
           <Image
             style={{ width: 100, height: 100 }}
             disabled={!this.state.gotUrl}
-            source={{ uri: this.state.photoURL }}
+            source={{ uri: this.state.photoURL[0] }}  // apenas para não gerar erro.
           />
 
           <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)}>

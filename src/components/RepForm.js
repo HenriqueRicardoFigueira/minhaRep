@@ -46,7 +46,7 @@ class RepForm extends Component {
       isSubmited: false,
 
       avatarSource: null,
-      photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/repImages%2FDefaultRepPic.jpg?alt=media&token=60298d1d-c5f4-42d2-964b-58504da8bd0d',
+      photoURL: [],
       gotUrl: false,
       uri: '',
 
@@ -87,7 +87,7 @@ class RepForm extends Component {
     boolBed = genericColor.call(this, bed, this.state.regex, 'borderColorBed')
     boolBathroom = genericColor.call(this, bathroom, this.state.regex, 'borderColorBathroom')
 
-    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBed && boolBathroom
+    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBed && boolBathroom && this.state.photoURL.length != 0
   }
 
   searchAdress = (cep) => {
@@ -191,8 +191,8 @@ class RepForm extends Component {
         this.uploadImage(response.uri)
           .then((url) => {
             alert('uploaded');
-            this.setState({ photoURL: url, gotUrl: true });
-            console.log(this.state.photoURL)
+            this.state.photoURL.push(url)
+            this.setState({ gotUrl: true })
           })
           .catch(error => console.log(error))
       }

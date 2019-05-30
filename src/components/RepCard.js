@@ -9,6 +9,7 @@ export default class RepCard extends Component {
     super(props);
 
     this.state = {
+      iImage: 0,
       bed: props.rep.bed,
       title: props.rep.title,
       value: props.rep.value,
@@ -95,7 +96,8 @@ export default class RepCard extends Component {
     if (this.state.repImage == '../../image/houseIcon.png') {
       return require('../image/houseIcon.png');
     } else {
-      return { uri: this.state.repImage }
+      var len = this.state.repImage.length
+      return { uri: this.state.repImage[(this.state.iImage++) % len] }
     }
   }
 };
