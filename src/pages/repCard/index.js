@@ -87,14 +87,18 @@ export default class App extends React.Component {
     }).start()
   }
 
-  verificaCliqueFoto = (gestureState) => {
+  verificaCliqueFoto = (x0, y0) => {
     regionYmin = Math.floor(styles.screen.height * 0.785)
     regionYmax = Math.floor(styles.screen.height * 0.885)
     regionXmin = Math.floor(styles.screen.width * 0.03125)
     regionXmax = Math.floor(styles.screen.width * 0.98438)
 
-    if (gestureState.x0 > regionXmin && gestureState.x0 < regionXmax) {
-      if(gestureState.x0 >= Math.floor(styles.screen.width/2)) {
+    if (y0*0.922 > styles.repImage.height) {
+      return
+    }
+
+    if (x0 > regionXmin && x0 < regionXmax) {
+      if(x0 >= Math.floor(styles.screen.width/2)) {
         EventRegister.emit('changeImage', 1)  // avança a imagem
       } else {
         EventRegister.emit('changeImage', -1) // retrocede a imagem
@@ -132,7 +136,7 @@ export default class App extends React.Component {
             }
             // se não clicou no botão, pode ter clicado na foto
           } else {
-            this.verificaCliqueFoto(gestureState)
+            this.verificaCliqueFoto(gestureState.x0, gestureState.y0)
           }
         } else {    // não foi clicado, foi movido
           if (gestureState.dx > 120) {
