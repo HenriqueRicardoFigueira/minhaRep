@@ -1,26 +1,29 @@
 import React, { Component } from 'react';
 import { View, Animated, PanResponder, Text } from 'react-native';
-import Headers from '../../components/header';
 import RepCard from '../../components/RepCard';
 import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 import Swiper from 'react-native-swiper';
 import PhotoCard from '../../components/photoCard'
-
+import Options from '../options/index'
+import { Header, Button, Right, Left, Body } from 'native-base';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Reps = [];
 const photoURL = '../../image/houseIcon.png'
+
+let pageIndex = 1;
 
 export default class App extends React.Component {
 
   constructor(props) {
     super(props);
-
+    this.iconSize = styles.screen.width * 0.05
     this.position = new Animated.ValueXY()
     this.state = {
       currentIndex: 0,
-      pageIndex: 1
+      
     }
 
     this.rotate = this.position.x.interpolate({
@@ -62,9 +65,7 @@ export default class App extends React.Component {
     })
   }
 
-  async getReponse(pageIndex){
-    await this.setState({pageIndex: pageIndex});
-  }
+
 
   removeSim = (gestureState, speed) => {
     Animated.spring(this.position, {
@@ -187,19 +188,84 @@ export default class App extends React.Component {
     }).reverse()
   }
 
+  getReponse(index) {
+    pageIndex = index;
+  }
+  sectionOptions() {
+    return (
+      [<Options></Options>]
+    )
+  }
+
+  sectionReps() {
+    return (
+      [<View style={{ flex: 1 }}>
+        {this.renderReps()}
+      </View>]
+    )
+  }
+  sectionTeste() {
+    return (
+      [<View>
+        <PhotoCard></PhotoCard>
+      </View>]
+    )
+  }
+
+  selectSection(nextIndex, ref) {
+    if (nextIndex === 1) {
+      const finalIndex = nextIndex - pageIndex;
+
+      this.refs.swiper.scrollBy(finalIndex);
+      pageIndex = 1;
+    } else if (nextIndex === 2) {
+      const finalIndex = nextIndex - pageIndex;
+
+      this.refs.swiper.scrollBy(finalIndex);
+      pageIndex = 2;
+    } else if (nextIndex === 3) {
+      const finalIndex = nextIndex - pageIndex;
+
+      this.refs.swiper.scrollBy(finalIndex);
+      pageIndex = 3;
+    }
+  }
+
+  renderSection = () => {
+    const sectionOptionsArray = this.sectionOptions();
+    const sectionRepsArray = this.sectionReps();
+    const sectionTesteArray = this.sectionTeste();
+
+    const componentReturn = [...sectionOptionsArray, ...sectionRepsArray, ...sectionTesteArray]
+    const componentList = componentReturn.map((item, i) => item);
+    return (
+      <Swiper ref='swiper'>
+        {componentList}
+      </Swiper>
+    )
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Headers callback = {this.getReponse.bind(this)}/>
-        <Swiper index = {this.state.pageIndex} scrollBy = {this.state.pageIndex}>
-          <View></View>
-          <View style={{ flex: 1 }}>
-            {this.renderReps()}
-          </View>
-          <View>
-            <PhotoCard></PhotoCard>
-          </View>
-        </Swiper>
+        <Header style={{ backgroundColor: '#F0803C' }} androidStatusBarColor='#ef752a'>
+          <Left>
+            <Button transparent>
+              <Icon name='cog' size={this.iconSize} onPress={() => this.selectSection(1)} />
+            </Button>
+          </Left>
+          <Body>
+            <Button transparent>
+              <Icon name='home' size={this.iconSize} onPress={() => this.selectSection(2)}></Icon>
+            </Button>
+          </Body>
+          <Right>
+            <Button transparent>
+              <Icon name='wechat' size={this.iconSize} onPress={() => this.selectSection(3)}></Icon>
+            </Button>
+          </Right>
+        </Header>
+        {this.renderSection()}
       </View>
     );
   }
