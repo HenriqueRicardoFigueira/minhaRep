@@ -4,6 +4,7 @@ import RepCard from '../../components/RepCard';
 import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
+import { EventRegister } from 'react-native-event-listeners'
 
 const Reps = [];
 const photoURL = '../../image/houseIcon.png'
@@ -86,9 +87,23 @@ export default class App extends React.Component {
     }).start()
   }
 
+  verificaCliqueFoto = (gestureState) => {
+    regionYmin = Math.floor(styles.screen.height * 0.785)
+    regionYmax = Math.floor(styles.screen.height * 0.885)
+    regionXmin = Math.floor(styles.screen.width * 0.03125)
+    regionXmax = Math.floor(styles.screen.width * 0.98438)
+
+    if (gestureState.x0 > regionXmin && gestureState.x0 < regionXmax) {
+      if(gestureState.x0 >= Math.floor(styles.screen.width/2)) {
+        EventRegister.emit('changeImage', 1)  // avança a imagem
+      } else {
+        EventRegister.emit('changeImage', -1) // retrocede a imagem
+      }
+    }
+  }
+
   async componentWillMount() {
     handleAndroidBackButton(this.props.navigation.navigate, 'Home');
-    
 
     this.PanResponder = PanResponder.create({
 
@@ -115,6 +130,9 @@ export default class App extends React.Component {
             } else if (gestureState.x0 > regionXminS && gestureState.x0 < regionXmaxS) {  // clicou no botão do SIM
               this.removeSim(gestureState, 10)
             }
+            // se não clicou no botão, pode ter clicado na foto
+          } else {
+            this.verificaCliqueFoto(gestureState)
           }
         } else {    // não foi clicado, foi movido
           if (gestureState.dx > 120) {
@@ -126,7 +144,7 @@ export default class App extends React.Component {
           }
         }
       }
-    })    
+    })
   }
 
   renderReps = () => {
@@ -134,7 +152,7 @@ export default class App extends React.Component {
 
       if (i == this.state.currentIndex) {
         return (
-          
+
           <Animated.View
             {...this.PanResponder.panHandlers}
             key={item.id} style={[this.rotateAndTranslate, { height: styles.screen.height - 120, width: styles.screen.width, padding: 10, position: 'absolute' }]}>

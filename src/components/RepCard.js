@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, Text, StyleSheet, Alert } from 'react-native';
 import { styles } from '../components/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { EventRegister } from 'react-native-event-listeners'
 
 export default class RepCard extends Component {
 
@@ -27,6 +28,18 @@ export default class RepCard extends Component {
     var qtd = this.state.vacancies
     this.state.vacancies = qtd > 1 ? qtd + ' Vagas' : qtd + ' Vaga'
     this.iconSize = Math.floor(styles.screen.width * 0.11)
+
+    this.listener = EventRegister.addEventListener('changeImage', (pos) => {
+      this.setState((state) => {
+        if (pos == -1 && state.iImage == 0) {
+          // retorna a ultima posição da lista de imagens
+          return { iImage: state.repImage.length }
+        } else {
+          // avança ou retarda na lista de imagens
+          return { iImage: state.iImage + pos }
+        }
+      })
+    })
   }
 
   render() {
@@ -97,8 +110,12 @@ export default class RepCard extends Component {
       return require('../image/houseIcon.png');
     } else {
       var len = this.state.repImage.length
-      return { uri: this.state.repImage[(this.state.iImage++) % len] }
+      return { uri: this.state.repImage[this.state.iImage % len] }
     }
+  }
+
+  componentWillUnmount() {
+    EventRegister.removeEventListener(this.listener)
   }
 };
 
