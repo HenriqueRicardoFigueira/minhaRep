@@ -15,6 +15,7 @@ export default class RepCard extends Component {
       title: props.rep.title,
       value: props.rep.value,
       members: props.rep.members,
+      currentIndex: props.rep.id,
       latitude: props.rep.latitude,
       bathroom: props.rep.bathroom,
       repImage: props.rep.photoURL,
@@ -29,14 +30,20 @@ export default class RepCard extends Component {
     this.state.vacancies = qtd > 1 ? qtd + ' Vagas' : qtd + ' Vaga'
     this.iconSize = Math.floor(styles.screen.width * 0.11)
 
-    this.listener = EventRegister.addEventListener('changeImage', (pos) => {
+    this.listener = EventRegister.addEventListener('changeImage', (info) => {
       this.setState((state) => {
-        if (pos == -1 && state.iImage == 0) {
+        console.log("I'm the " + this.state.title + " and my index is", this.state.currentIndex, " and the current index is", info.currentIndex)
+        // isso evita que o card sobreposto atualize também
+        if(this.state.currentIndex != info.currentIndex) {
+          return
+        }
+
+        if (info.pos == -1 && state.iImage == 0) {
           // retorna a ultima posição da lista de imagens
           return { iImage: state.repImage.length }
         } else {
           // avança ou retarda na lista de imagens
-          return { iImage: state.iImage + pos }
+          return { iImage: state.iImage + info.pos }
         }
       })
     })

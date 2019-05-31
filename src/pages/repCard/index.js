@@ -99,9 +99,9 @@ export default class App extends React.Component {
 
     if (x0 > regionXmin && x0 < regionXmax) {
       if(x0 >= Math.floor(styles.screen.width/2)) {
-        EventRegister.emit('changeImage', 1)  // avança a imagem
+        EventRegister.emit('changeImage', {pos: 1, currentIndex: this.state.currentIndex})  // avança a imagem
       } else {
-        EventRegister.emit('changeImage', -1) // retrocede a imagem
+        EventRegister.emit('changeImage', {pos: -1, currentIndex: this.state.currentIndex}) // retrocede a imagem
       }
     }
   }
