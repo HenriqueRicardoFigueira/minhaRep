@@ -4,22 +4,10 @@ import { firebase } from '../../Firebase'
 import { styles } from './styles';
 import { Button, Item, Input, Label } from 'native-base';
 import { withNavigation } from 'react-navigation';
-import ImagePicker from 'react-native-image-picker';
-import RNFetchBlob from 'react-native-fetch-blob';
+import { imageSelect } from './commonPhoto'
 
 import axios from 'axios';
 import { nameColor, memberColor, bioColor, cepColor, genericColor } from '../formValidation'
-
-const Blob = RNFetchBlob.polyfill.Blob
-const fs = RNFetchBlob.fs
-window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-window.Blob = Blob
-
-const options = {
-  title: 'Foto de Perfil',
-  takePhotoButtonTitle: 'Enviar da Câmera',
-  chooseFromLibraryButtonTitle: 'Enviar da Biblioteca'
-}
 
 class RepCRUD extends Component {
   constructor(props) {
@@ -213,63 +201,9 @@ class RepCRUD extends Component {
     return true
   }
 
-  imageSelect = () => {
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        this.uploadImage(response.uri)
-          .then((url) => {
-            alert('uploaded');
-            this.state.photoURL.push(url)
-            this.setState({ gotUrl: true })
-            console.log(this.state.photoURL)
-          })
-          .catch(error => console.log(error))
-        //this.getUrl();
-      }
-    });
-  }
-
-  getUrl = async () => {
-    const imageName = this.state.admUID;
-    const imageRef = firebase.storage().ref('repImages');
-    await imageRef.child(imageName).getDownloadURL().then((url) => {
-      this.setState({ photoURL: url, gotUrl: true })
-    }).catch((error) => {
-      //reject(error)
-    });
-  }
-
-  uploadImage = (uri, mime = 'image/jpg') => {
-    return new Promise((resolve, reject) => {
-      const imageName = this.state.admUID
-      const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-
-      let uploadBlob = null
-      const imageRef = firebase.storage().ref('repImages').child(imageName);
-      fs.readFile(uploadUri, 'base64')
-        .then((data) => {
-          return Blob.build(data, { type: `${mime};BASE64` })
-        })
-        .then((blob) => {
-          uploadBlob = blob
-          return imageRef.put(blob._ref, { contentType: mime })
-        })
-        .then(() => {
-          uploadBlob.close()
-          return imageRef.getDownloadURL()
-        })
-        .then((url) => {
-          resolve(url)
-        })
-        .catch((error) => {
-          reject(error)
-        })
-    })
+  updateStateCallback = (url) => {
+    this.state.photoURL.push(url)
+    this.setState({ gotUrl: true })
   }
 
   render() {
@@ -359,7 +293,7 @@ class RepCRUD extends Component {
               disabled
               onChangeText={(tags) => this.setState({ tags })}
             ></Input>
-          </Item>
+          </Item>                                                                                                   
 
           {this.state.isEditado ? <Text> Editado com sucesso </Text> : <Text />}
 
@@ -367,7 +301,7 @@ class RepCRUD extends Component {
             <Text style={styles.buttonText}> Lista de Membros </Text>
           </Button>
 
-          <Button style={styles.button} onPress={this.imageSelect}>
+          <Button style={styles.button} onPress={() => {imageSelect(this.state.admUID, this.updateStateCallback)}}>
             <Text style={styles.buttonText}> Enviar Foto </Text>
           </Button>
 

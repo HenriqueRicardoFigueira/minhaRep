@@ -32,7 +32,6 @@ export default class RepCard extends Component {
 
     this.listener = EventRegister.addEventListener('changeImage', (info) => {
       this.setState((state) => {
-        console.log("I'm the " + this.state.title + " and my index is", this.state.currentIndex, " and the current index is", info.currentIndex)
         // isso evita que o card sobreposto atualize também
         if(this.state.currentIndex != info.currentIndex) {
           return
