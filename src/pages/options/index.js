@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Text } from 'native-base';
-import { View } from 'react-native';
+import { handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert } from '../../androidBackButton';
+import Options from '../../components/options';
 
-// import { Container } from './styles';
-
-export default class Options extends Component {
+export default class OptionsPage extends Component {
   render() {
-    return (
-        <View>
-            <Button><Text>Teste</Text></Button>
-        </View>
-    );
+    return <Options/>;
   }
 }
-module.exports = Options

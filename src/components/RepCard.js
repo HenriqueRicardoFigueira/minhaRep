@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, Text, StyleSheet, Alert } from 'react-native';
 import { styles } from '../components/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import PhotoCard from '../components/photoCard'
+import { EventRegister } from 'react-native-event-listeners'
 
 export default class RepCard extends Component {
 
@@ -10,10 +10,12 @@ export default class RepCard extends Component {
     super(props);
 
     this.state = {
+      iImage: 0,
       bed: props.rep.bed,
       title: props.rep.title,
       value: props.rep.value,
       members: props.rep.members,
+      currentIndex: props.rep.id,
       latitude: props.rep.latitude,
       bathroom: props.rep.bathroom,
       repImage: props.rep.photoURL,
@@ -27,6 +29,22 @@ export default class RepCard extends Component {
     var qtd = this.state.vacancies
     this.state.vacancies = qtd > 1 ? qtd + ' Vagas' : qtd + ' Vaga'
     this.iconSize = Math.floor(styles.screen.width * 0.11)
+
+    this.listener = EventRegister.addEventListener('changeImage', (info) => {
+      this.setState((state) => {
+        console.log("I'm the " + this.state.title + " and my index is", this.state.currentIndex, " and the current index is", info.currentIndex)
+        // isso evita que o card sobreposto atualize também
+        if(this.state.currentIndex != info.currentIndex) {
+          return
+        }
+        if (info.pos == -1 && state.iImage == 0) {
+          return { iImage: state.repImage.length }
+        } else {
+          // avança ou retarda na lista de imagens
+          return { iImage: state.iImage + info.pos }
+        }
+      })
+    })
   }
 
   render() {
@@ -35,10 +53,14 @@ export default class RepCard extends Component {
         {/* O cartão que será 'arrastado' */}
         <View style={styles.card}>
           {/* VIEW SUPERIOR */}
-          <PhotoCard photoURL={this.state.repImage}
-            title={this.state.title}
-            vacancies={this.state.vacancies}
-            localization={this.state.localization}/>
+          <View style={styles.viewImage}>
+            <Image style={styles.repImage} source={this.getImage()} />
+            <View style={styles.viewText}>
+              <Text style={styles.repTitle}>{this.state.vacancies}</Text>
+              <Text style={styles.repTitle}>{this.state.title}</Text>
+              <Text style={styles.repLocalization}>{this.state.localization}</Text>
+            </View>
+          </View>
 
           {/* VIEW ICONES */}
           <View>
@@ -92,8 +114,13 @@ export default class RepCard extends Component {
     if (this.state.repImage == '../../image/houseIcon.png') {
       return require('../image/houseIcon.png');
     } else {
-      return { uri: this.state.repImage }
+      var len = this.state.repImage.length
+      return { uri: this.state.repImage[this.state.iImage % len] }
     }
+  }
+
+  componentWillUnmount() {
+    EventRegister.removeEventListener(this.listener)
   }
 };
 

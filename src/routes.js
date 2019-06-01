@@ -14,6 +14,7 @@ import Anuncio from './pages/anuncio';
 import MembersList from './pages/membersList';
 import MembersAdd from './pages/membersAdd';
 import UserRegistAlt from './pages/userRegstAlt';
+import Options from './pages/options'
 
 
 const Teste = createBottomTabNavigator({
@@ -36,6 +37,7 @@ const Routes = createAppContainer(
         Anuncio: Anuncio,
         MembersList: MembersList,
         MembersAdd: MembersAdd,
+        Options: Options,
 
     }, {
         initialRouteName: 'RepCard'
