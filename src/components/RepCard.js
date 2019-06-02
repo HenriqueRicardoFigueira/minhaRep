@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { View, Image, Text, StyleSheet, Alert } from 'react-native';
+import { View, /*Image,*/ Text, Alert } from 'react-native';
 import { styles } from '../components/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { EventRegister } from 'react-native-event-listeners'
+
+import Image from 'react-native-image-progress';
+import ProgressBar from 'react-native-progress/Bar';
 
 export default class RepCard extends Component {
 
@@ -55,7 +58,7 @@ export default class RepCard extends Component {
         <View style={styles.card}>
           {/* VIEW SUPERIOR */}
           <View style={styles.viewImage}>
-            <Image style={styles.repImage} source={this.getImage()} />
+            <Image style={styles.repImage} source={this.getImage()} indicator={ProgressBar} />
             <View style={styles.viewText}>
               <Text style={styles.repTitle}>{this.state.vacancies}</Text>
               <Text style={styles.repTitle}>{this.state.title}</Text>
