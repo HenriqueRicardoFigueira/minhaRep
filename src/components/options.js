@@ -28,5 +28,4 @@ class Options extends Component {
     );
   }
 }
-module.exports = Options
 export default withNavigation(Options)
