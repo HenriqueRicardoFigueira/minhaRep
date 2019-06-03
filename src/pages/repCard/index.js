@@ -56,9 +56,14 @@ export default class App extends React.Component {
       outputRange: [1, 0.8, 1],
       extrapolate: 'clamp'
     })
+
+    // essa var será lida pelo card e verificado se ele foi para 'SIM' ou 'NÃO'
+    // -1 para NÃO - esquerda; 1 para SIM - direita.
+    this.dragTo = {drag: 'NONE'}
   }
 
   removeSim = (gestureState, speed) => {
+    this.dragTo.drag = 'SIM'
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: styles.screen.width + 100, y: gestureState.dy },
@@ -70,6 +75,7 @@ export default class App extends React.Component {
   }
 
   removeNao = (gestureState, speed) => {
+    this.dragTo.drag = 'NAO'
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: -styles.screen.width - 100, y: gestureState.dy }
@@ -169,7 +175,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard rep={item} />
+            <RepCard rep={item} dragTo={this.dragTo} />
 
           </Animated.View>
         )
@@ -190,7 +196,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard rep={item} />
+            <RepCard rep={item} dragTo={this.dragTo} />
 
           </Animated.View>
         )

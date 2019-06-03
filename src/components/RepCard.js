@@ -12,6 +12,8 @@ export default class RepCard extends Component {
   constructor(props) {
     super(props);
 
+    this.dragTo = props.dragTo
+
     this.state = {
       iImage: 0,
       bed: props.rep.bed,
@@ -125,6 +127,12 @@ export default class RepCard extends Component {
 
   componentWillUnmount() {
     EventRegister.removeEventListener(this.listener)
+
+    if(this.dragTo.drag == 'SIM') {  // realiza o match
+      // match()
+    } else {
+      // do nothing
+    }
   }
 };
 
