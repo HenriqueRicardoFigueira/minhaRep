@@ -6,7 +6,7 @@ import { styles } from '../../components/styles';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 import { EventRegister } from 'react-native-event-listeners'
 
-const Reps = [];
+var Reps = [];
 const photoURL = '../../image/houseIcon.png'
 
 export default class App extends React.Component {
@@ -234,6 +234,7 @@ export default class App extends React.Component {
   }
 
   async getDados() {
+    Reps = []   // 'limpando' a lista de reps
     this.ref = firebase.firestore().collection('republics');
     this.refAnuncio = firebase.firestore().collection('anuncio');
     this.refUser = firebase.auth().currentUser.uid;
