@@ -13,7 +13,7 @@ import Anuncio from './pages/anuncio';
 import MembersList from './pages/membersList';
 import MembersAdd from './pages/membersAdd';
 import UserRegistAlt from './pages/userRegstAlt';
-
+import Chat from './pages/chat';
 
 const Teste = createBottomTabNavigator({
     User : HomeUser,
@@ -34,9 +34,10 @@ const Routes = createAppContainer(
         Anuncio: Anuncio,
         MembersList: MembersList,
         MembersAdd: MembersAdd,
+        Chat: Chat,
 
     }, {
-        initialRouteName: 'Login'
+        initialRouteName: 'Chat'
     })
  
 );
