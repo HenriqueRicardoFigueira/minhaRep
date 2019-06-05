@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { View, /*Image,*/ Text, Alert } from 'react-native';
+import { View, /*Image,*/ Text, Alert, TouchableOpacity } from 'react-native';
 import { styles } from '../components/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { EventRegister } from 'react-native-event-listeners'
-
+import { withNavigation } from 'react-navigation';
 import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 
-export default class RepCard extends Component {
+
+class RepCard extends Component {
 
   constructor(props) {
     super(props);
@@ -30,6 +31,13 @@ export default class RepCard extends Component {
     }
   }
 
+
+  mapView = () => {
+      var latitude = this.state.latitude;
+      var longitude = this.state.longitude;
+      this.props.navigation.navigate("Maps", {latitude, longitude});
+  }
+
   componentWillMount() {
     var qtd = this.state.vacancies
     this.state.vacancies = qtd > 1 ? qtd + ' Vagas' : qtd + ' Vaga'
@@ -38,7 +46,7 @@ export default class RepCard extends Component {
     this.listener = EventRegister.addEventListener('changeImage', (info) => {
       this.setState((state) => {
         // isso evita que o card sobreposto atualize também
-        if(this.state.currentIndex != info.currentIndex) {
+        if (this.state.currentIndex != info.currentIndex) {
           return
         }
 
@@ -107,6 +115,10 @@ export default class RepCard extends Component {
               <View style={styles.iconViewText}>
                 <Icon name='check' size={this.iconSize} color='#008000' />
               </View>
+
+              <TouchableOpacity style={styles.button} onPress ={this.mapView}  >
+                <Text style={styles.buttonText}> Mapa </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -128,7 +140,7 @@ export default class RepCard extends Component {
   componentWillUnmount() {
     EventRegister.removeEventListener(this.listener)
 
-    if(this.dragTo.drag == 'SIM') {  // realiza o match
+    if (this.dragTo.drag == 'SIM') {  // realiza o match
       // match()
     } else {
       // do nothing
@@ -140,3 +152,5 @@ export default class RepCard extends Component {
 RepCard.defaultProps = {
   title: 'Título da República',
 }
+
+export default withNavigation(RepCard)

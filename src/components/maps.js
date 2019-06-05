@@ -18,8 +18,9 @@ class Maps extends Component {
 
     this.state = {
       region: null,
-      latitude: -24.0413672,
-      longitude: -52.3773069,
+      //pegando parametros passados por props com o navigation
+      latitude: this.props.navigation.getParam('latitude'),
+      longitude: this.props.navigation.getParam('longitude'),
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     }
@@ -75,9 +76,10 @@ class Maps extends Component {
       >
         <MapView.Marker
           coordinate={{
-            latitude: -24.0413672,
-            longitude: -52.3773069,
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
           }}
+          tittle={"nozes"}
         />
 
       </MapView>
