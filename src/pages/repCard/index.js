@@ -140,6 +140,25 @@ export default class App extends React.Component {
     }
   }
 
+  verificaCliqueFoto = (x0, y0) => {
+    regionYmin = Math.floor(styles.screen.height * 0.785)
+    regionYmax = Math.floor(styles.screen.height * 0.885)
+    regionXmin = Math.floor(styles.screen.width * 0.03125)
+    regionXmax = Math.floor(styles.screen.width * 0.98438)
+
+    if (y0*0.922 > styles.repImage.height) {
+      return
+    }
+
+    if (x0 > regionXmin && x0 < regionXmax) {
+      if(x0 >= Math.floor(styles.screen.width/2)) {
+        EventRegister.emit('changeImage', {pos: 1, currentIndex: this.state.currentIndex})  // avança a imagem
+      } else {
+        EventRegister.emit('changeImage', {pos: -1, currentIndex: this.state.currentIndex}) // retrocede a imagem
+      }
+    }
+  }
+
   async componentWillMount() {
     handleAndroidBackButton(this.props.navigation.navigate, 'RepCard');
 
