@@ -81,7 +81,7 @@ class Anuncio extends Component {
       value: value,
       vacancies: vacancies,
     })
-    this.props.navigation.navigate("Home");
+    this.props.navigation.navigate("RepCard");
   }
 
   render() {

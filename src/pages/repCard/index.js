@@ -8,7 +8,7 @@ import Swiper from 'react-native-swiper';
 import PhotoCard from '../../components/photoCard'
 import Options from '../options/index'
 import { Header, Button, Right, Left, Body } from 'native-base';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { EventRegister } from 'react-native-event-listeners'
 
 const Reps = [];
@@ -20,7 +20,7 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.iconSize = styles.screen.width * 0.05
+    this.iconSize = styles.screen.width * 0.06
     this.position = new Animated.ValueXY()
     this.state = {
       currentIndex: 0,
@@ -108,15 +108,15 @@ export default class App extends React.Component {
 
     if (x0 > regionXmin && x0 < regionXmax) {
       if (x0 >= Math.floor(styles.screen.width / 2)) {
-        EventRegister.emit('changeImage', {pos: 1, currentIndex: this.state.currentIndex})  // avança a imagem
+        EventRegister.emit('changeImage', { pos: 1, currentIndex: this.state.currentIndex })  // avança a imagem
       } else {
-        EventRegister.emit('changeImage', {pos: -1, currentIndex: this.state.currentIndex}) // retrocede a imagem
+        EventRegister.emit('changeImage', { pos: -1, currentIndex: this.state.currentIndex }) // retrocede a imagem
       }
     }
   }
 
   async componentWillMount() {
-    handleAndroidBackButton(this.props.navigation.navigate, 'Home');
+    handleAndroidBackButton(this.props.navigation.navigate, 'RepCard');
 
 
     this.PanResponder = PanResponder.create({
@@ -214,7 +214,10 @@ export default class App extends React.Component {
   }
   sectionOptions() {
     return (
-      [<Options></Options>]
+      [<View>
+        <Options></Options>
+      </View>
+      ]
     )
   }
 
@@ -265,8 +268,8 @@ export default class App extends React.Component {
     const componentReturn = [...sectionOptionsArray, ...sectionRepsArray, ...sectionTesteArray]
     const componentList = componentReturn.map((item, i) => item);
     return (
-      <Swiper ref='swiper' index = {pageIndex} onIndexChanged = {(index) => 
-      pageIndex = index}>
+      <Swiper ref='swiper' index={pageIndex} onIndexChanged={(index) =>
+        pageIndex = index} showsPagination={false} style={{backgroundColor: "#eff7f9"}}>
 
         {componentList}
       </Swiper>
@@ -280,12 +283,12 @@ export default class App extends React.Component {
         <Header style={{ backgroundColor: '#F0803C' }} androidStatusBarColor='#ef752a'>
           <Left>
             <Button transparent>
-              <Icon name='cog' size={this.iconSize} onPress={() => this.selectSection(0)} />
+              <Icon name='settings' size={this.iconSize} onPress={() => this.selectSection(0)} />
             </Button>
           </Left>
           <Body>
             <Button transparent>
-              <Icon name='home' size={this.iconSize} onPress={() =>this.selectSection(1)}></Icon>
+              <Icon name='home' size={this.iconSize} onPress={() => this.selectSection(1)}></Icon>
             </Button>
           </Body>
           <Right>

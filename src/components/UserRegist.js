@@ -60,7 +60,7 @@ class UserRegist extends Component {
       isSubmited: true,
     });
 
-    this.props.navigation.navigate("Home");
+    this.props.navigation.navigate("RepCard");
   }
 
   render() {

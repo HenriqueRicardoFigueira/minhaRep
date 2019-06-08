@@ -79,7 +79,7 @@ class RepCRUD extends Component {
           })
         } else {
           alert("Não existe republica cadastrada neste usuário");
-          this.props.navigation.navigate("Home");
+          this.props.navigation.navigate("RepCard");
         }
       })
   }

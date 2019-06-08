@@ -52,7 +52,7 @@ class Login extends Component {
         .then((firebaseUser) => { // login com sucesso
           this.setState({ isAuthenticated: true });
           console.log(email, password);
-          this.props.navigation.navigate("Home");
+          this.props.navigation.navigate("RepCard");
         }).catch((error) => {   // erro no login
           /* PRECISA VERIFICAR O TIPO DE ERRO */
           Alert.alert(this.errorMessage(error), '', [{ text: 'OK' }])

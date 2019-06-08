@@ -69,7 +69,7 @@ class RepForm extends Component {
       .then((repData) => {
         if (repData.exists) {
           alert("Já existe republica cadastrada neste usuário");
-          this.props.navigation.navigate("Home");
+          this.props.navigation.navigate("RepCard");
         }
       });
     this.setState({
@@ -177,7 +177,7 @@ class RepForm extends Component {
       isAnnounced: false,
 
     });
-    this.props.navigation.navigate("Home");
+    this.props.navigation.navigate("RepCard");
   }
 
   imageSelect = () => {

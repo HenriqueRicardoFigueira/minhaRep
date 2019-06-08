@@ -8,6 +8,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@mdi/font": "^3.6.95",
     "axios": "^0.18.0",
     "native-base": "^2.12.1",
     "prop-types": "^15.7.2",
