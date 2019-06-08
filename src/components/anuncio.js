@@ -35,10 +35,12 @@ class Anuncio extends Component {
           })
 
           if(repDatas.isAnnounced) { // verificar aqui se a república já foi anunciada
-            // não permitir continuar
+            alert("Esta república já está anunciada");
+            this.props.navigation.navigate("Home");
           }
         } else {
           alert("Não existe republica cadastrada neste usuário");
+          this.props.navigation.navigate("Home");
         }
       })
   }
@@ -81,7 +83,7 @@ class Anuncio extends Component {
       value: value,
       vacancies: vacancies,
     })
-    this.props.navigation.navigate("Home");
+    this.props.navigation.navigate("RepCard");
   }
 
   render() {

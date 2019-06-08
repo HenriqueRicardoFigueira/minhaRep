@@ -50,11 +50,11 @@ class GoogleLogin extends Component {
       await this.ref.doc(currentUser.user.uid).get().then((user) => {
         console.log(user.exists)
         if (user.exists == true && user.data().age != null && user.data().bio != null) {
-          this.props.navigation.navigate("Home");
+          this.props.navigation.navigate("RepCard");
         } else {
           this.ref.doc(currentUser.user.uid).set({
-            bio: user.data().bio,
-            age: user.data().age,
+            bio: null,
+            age: null,
             uid: currentUser.user.uid,
             name: currentUser.additionalUserInfo.profile.given_name,
             email: currentUser.user.email,

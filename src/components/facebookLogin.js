@@ -54,7 +54,7 @@ class FacebookLogin extends Component {
                   await ref.doc(currentUser.user.uid).get().then((user) => {
                     console.log(user.exists)
                     if (user.exists == true) {
-                      navigation.navigate("Home");
+                      navigation.navigate("RepCard");
                     } else {
                       ref.doc(currentUser.user.uid).set({
                         name: currentUser.additionalUserInfo.profile.first_name,

@@ -4,18 +4,27 @@ import RepCard from '../../components/RepCard';
 import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
+import Swiper from 'react-native-swiper';
+import PhotoCard from '../../components/photoCard'
+import Options from '../options/index'
+import { Header, Button, Right, Left, Body } from 'native-base';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { EventRegister } from 'react-native-event-listeners'
 
-const Reps = [];
+var Reps = [];
 const photoURL = '../../image/houseIcon.png'
+
+let pageIndex = 1;
 
 export default class App extends React.Component {
 
   constructor(props) {
     super(props);
-
+    this.iconSize = styles.screen.width * 0.06
     this.position = new Animated.ValueXY()
     this.state = {
-      currentIndex: 0
+      currentIndex: 0,
+
     }
 
     this.rotate = this.position.x.interpolate({
@@ -55,9 +64,16 @@ export default class App extends React.Component {
       outputRange: [1, 0.8, 1],
       extrapolate: 'clamp'
     })
+
+    // essa var será lida pelo card e verificado se ele foi para 'SIM' ou 'NÃO'
+    // -1 para NÃO - esquerda; 1 para SIM - direita.
+    this.dragTo = {drag: 'NONE'}
   }
 
+
+
   removeSim = (gestureState, speed) => {
+    this.dragTo.drag = 'SIM'
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: styles.screen.width + 100, y: gestureState.dy },
@@ -69,6 +85,7 @@ export default class App extends React.Component {
   }
 
   removeNao = (gestureState, speed) => {
+    this.dragTo.drag = 'NAO'
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: -styles.screen.width - 100, y: gestureState.dy }
@@ -85,10 +102,47 @@ export default class App extends React.Component {
       friction: 4
     }).start()
   }
+  verificaCliqueFoto = (x0, y0) => {
+    regionYmin = Math.floor(styles.screen.height * 0.785)
+    regionYmax = Math.floor(styles.screen.height * 0.885)
+    regionXmin = Math.floor(styles.screen.width * 0.03125)
+    regionXmax = Math.floor(styles.screen.width * 0.98438)
+
+    if (y0 * 0.922 > styles.repImage.height) {
+      return
+    }
+
+    if (x0 > regionXmin && x0 < regionXmax) {
+      if (x0 >= Math.floor(styles.screen.width / 2)) {
+        EventRegister.emit('changeImage', { pos: 1, currentIndex: this.state.currentIndex })  // avança a imagem
+      } else {
+        EventRegister.emit('changeImage', { pos: -1, currentIndex: this.state.currentIndex }) // retrocede a imagem
+      }
+    }
+  }
+
+  verificaCliqueFoto = (x0, y0) => {
+    regionYmin = Math.floor(styles.screen.height * 0.785)
+    regionYmax = Math.floor(styles.screen.height * 0.885)
+    regionXmin = Math.floor(styles.screen.width * 0.03125)
+    regionXmax = Math.floor(styles.screen.width * 0.98438)
+
+    if (y0*0.922 > styles.repImage.height) {
+      return
+    }
+
+    if (x0 > regionXmin && x0 < regionXmax) {
+      if(x0 >= Math.floor(styles.screen.width/2)) {
+        EventRegister.emit('changeImage', {pos: 1, currentIndex: this.state.currentIndex})  // avança a imagem
+      } else {
+        EventRegister.emit('changeImage', {pos: -1, currentIndex: this.state.currentIndex}) // retrocede a imagem
+      }
+    }
+  }
 
   async componentWillMount() {
-    handleAndroidBackButton(this.props.navigation.navigate, 'Home');
-    
+    handleAndroidBackButton(this.props.navigation.navigate, 'RepCard');
+
 
     this.PanResponder = PanResponder.create({
 
@@ -115,6 +169,9 @@ export default class App extends React.Component {
             } else if (gestureState.x0 > regionXminS && gestureState.x0 < regionXmaxS) {  // clicou no botão do SIM
               this.removeSim(gestureState, 10)
             }
+            // se não clicou no botão, pode ter clicado na foto
+          } else {
+            this.verificaCliqueFoto(gestureState.x0, gestureState.y0)
           }
         } else {    // não foi clicado, foi movido
           if (gestureState.dx > 120) {
@@ -126,7 +183,7 @@ export default class App extends React.Component {
           }
         }
       }
-    })    
+    })
   }
 
   renderReps = () => {
@@ -134,7 +191,7 @@ export default class App extends React.Component {
 
       if (i == this.state.currentIndex) {
         return (
-          
+
           <Animated.View
             {...this.PanResponder.panHandlers}
             key={item.id} style={[this.rotateAndTranslate, { height: styles.screen.height - 120, width: styles.screen.width, padding: 10, position: 'absolute' }]}>
@@ -147,7 +204,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard rep={item} />
+            <RepCard rep={item} dragTo={this.dragTo} />
 
           </Animated.View>
         )
@@ -168,7 +225,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard rep={item} />
+            <RepCard rep={item} dragTo={this.dragTo} />
 
           </Animated.View>
         )
@@ -178,18 +235,95 @@ export default class App extends React.Component {
     }).reverse()
   }
 
+  getReponse(index) {
+    pageIndex = index;
+  }
+  sectionOptions() {
+    return (
+      [<View>
+        <Options></Options>
+      </View>
+      ]
+    )
+  }
+
+  sectionReps() {
+    return (
+      [<View style={{ flex: 1 }}>
+        {this.renderReps()}
+      </View>]
+    )
+  }
+  sectionTeste() {
+    return (
+      [<View>
+        <PhotoCard></PhotoCard>
+      </View>]
+    )
+  }
+
+  selectSection(index) {
+    console.log('index >>> ', index);
+    //pageIndex = index
+    if (index === 0) {
+      const finalIndex = index - pageIndex;
+
+      this.refs.swiper.scrollBy(finalIndex);
+      pageIndex = 0;
+    } else if (index === 1) {
+      const finalIndex = index - pageIndex;
+
+      this.refs.swiper.scrollBy(finalIndex);
+      pageIndex = 1;
+    } else if (index === 2) {
+      const finalIndex = index - pageIndex;
+
+      this.refs.swiper.scrollBy(finalIndex);
+      pageIndex = 2;
+    }
+  }
+  swiperFunc(componentList) {
+
+  }
+
+  renderSection = () => {
+    const sectionOptionsArray = this.sectionOptions();
+    const sectionRepsArray = this.sectionReps();
+    const sectionTesteArray = this.sectionTeste();
+
+    const componentReturn = [...sectionOptionsArray, ...sectionRepsArray, ...sectionTesteArray]
+    const componentList = componentReturn.map((item, i) => item);
+    return (
+      <Swiper ref='swiper' index={pageIndex} onIndexChanged={(index) =>
+        pageIndex = index} showsPagination={false} style={{backgroundColor: "#eff7f9"}}>
+
+        {componentList}
+      </Swiper>
+    )
+
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ height: 60 }}>
-
-        </View>
-        <View style={{ flex: 1 }}>
-          {this.renderReps()}
-        </View>
-        <View style={{ height: 60 }}>
-
-        </View>
+        <Header style={{ backgroundColor: '#F0803C' }} androidStatusBarColor='#ef752a'>
+          <Left>
+            <Button transparent>
+              <Icon name='settings' size={this.iconSize} onPress={() => this.selectSection(0)} />
+            </Button>
+          </Left>
+          <Body>
+            <Button transparent>
+              <Icon name='home' size={this.iconSize} onPress={() => this.selectSection(1)}></Icon>
+            </Button>
+          </Body>
+          <Right>
+            <Button transparent>
+              <Icon name='wechat' size={this.iconSize} onPress={() => this.selectSection(2)}></Icon>
+            </Button>
+          </Right>
+        </Header>
+        {this.renderSection()}
       </View>
     );
   }
@@ -206,6 +340,7 @@ export default class App extends React.Component {
   }
 
   async getDados() {
+    Reps = []   // 'limpando' a lista de reps
     this.ref = firebase.firestore().collection('republics');
     this.refAnuncio = firebase.firestore().collection('anuncio');
     this.refUser = firebase.auth().currentUser.uid;
@@ -229,9 +364,9 @@ export default class App extends React.Component {
           id: i,
           title: ref.name,
           localization: ref.street,
-          photoURL: ref.photoURL ? ref.photoURL : photoURL,
-          bathroom: ref.bathroom ? ref.bathroom : 0,
-          bed: ref.bed ? ref.bed : 0,
+          photoURL: ref.photoURL,
+          bathroom: ref.bathroom,
+          bed: ref.bed,
           members: null,  // este valor será preenchido abaixo
           value: ref.value,
           vacancies: ref.vacancies,

@@ -7,7 +7,7 @@ import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../a
 export default class AnuncioPage extends Component {
 
   componentWillMount() {
-    handleAndroidBackButton(this.props.navigation.navigate, 'Home');
+    handleAndroidBackButton(this.props.navigation.navigate, 'RepCard');
   }
 
   componentWillUnmount() {
