@@ -1,24 +1,13 @@
 import React, { Component } from 'react'
-import { ScrollView, View, Text, Platform } from 'react-native'
+import { ScrollView, View, Text } from 'react-native'
 import { Button, Input, Label, Item, } from 'native-base'
 import { withNavigation } from 'react-navigation'
 import { firebase } from '../../Firebase'
 import axios from 'axios';
-import ImagePicker from 'react-native-image-picker';
-import RNFetchBlob from 'react-native-fetch-blob';
 import { styles } from './styles'
 import { nameColor, bioColor, genericColor, memberColor, cepColor } from '../formValidation';
+import { imageSelect } from './commonPhoto'
 
-const Blob = RNFetchBlob.polyfill.Blob
-const fs = RNFetchBlob.fs
-window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-window.Blob = Blob
-
-const options = {
-  title: 'Foto de Perfil',
-  takePhotoButtonTitle: 'Enviar da Câmera',
-  chooseFromLibraryButtonTitle: 'Enviar da Biblioteca'
-}
 
 class RepForm extends Component {
   constructor(props) {
@@ -46,7 +35,7 @@ class RepForm extends Component {
       isSubmited: false,
 
       avatarSource: null,
-      photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/repImages%2FDefaultRepPic.jpg?alt=media&token=60298d1d-c5f4-42d2-964b-58504da8bd0d',
+      photoURL: [],
       gotUrl: false,
       uri: '',
 
@@ -75,7 +64,6 @@ class RepForm extends Component {
     this.setState({
       uid: user.uid,
     })
-    //this.getUrl();
   }
 
   canRegister = (name, bio, members, bathroom, bed) => {
@@ -87,7 +75,7 @@ class RepForm extends Component {
     boolBed = genericColor.call(this, bed, this.state.regex, 'borderColorBed')
     boolBathroom = genericColor.call(this, bathroom, this.state.regex, 'borderColorBathroom')
 
-    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBed && boolBathroom
+    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBed && boolBathroom && this.state.photoURL.length != 0
   }
 
   searchAdress = (cep) => {
@@ -180,51 +168,9 @@ class RepForm extends Component {
     this.props.navigation.navigate("RepCard");
   }
 
-  imageSelect = () => {
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        this.uploadImage(response.uri)
-          .then((url) => {
-            alert('uploaded');
-            this.setState({ photoURL: url, gotUrl: true });
-            console.log(this.state.photoURL)
-          })
-          .catch(error => console.log(error))
-      }
-    });
-  }
-
-  uploadImage = (uri, mime = 'image/jpg') => {
-    return new Promise((resolve, reject) => {
-      const imageName = this.state.uid
-      const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-
-      let uploadBlob = null
-      const imageRef = firebase.storage().ref('repImages').child(imageName);
-      fs.readFile(uploadUri, 'base64')
-        .then((data) => {
-          return Blob.build(data, { type: `${mime};BASE64` })
-        })
-        .then((blob) => {
-          uploadBlob = blob
-          return imageRef.put(blob._ref, { contentType: mime })
-        })
-        .then(() => {
-          uploadBlob.close()
-          return imageRef.getDownloadURL()
-        })
-        .then((url) => {
-          resolve(url)
-        })
-        .catch((error) => {
-          reject(error)
-        })
-    })
+  updateStateCallback = (url) => {
+    this.state.photoURL.push(url)
+    this.setState({ gotUrl: true })
   }
 
   render() {
@@ -315,7 +261,7 @@ class RepForm extends Component {
             ></Input>
           </Item>
           
-          <Button style={styles.button} onPress={this.imageSelect}>
+          <Button style={styles.button} onPress={() => {imageSelect(this.state.admUID, this.updateStateCallback)}}>
             <Text style={styles.buttonText}> Enviar Foto </Text>
           </Button>
 

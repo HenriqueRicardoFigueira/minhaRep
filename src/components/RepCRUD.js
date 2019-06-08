@@ -4,22 +4,11 @@ import { firebase } from '../../Firebase'
 import { styles } from './styles';
 import { Button, Item, Input, Label } from 'native-base';
 import { withNavigation } from 'react-navigation';
-import ImagePicker from 'react-native-image-picker';
-import RNFetchBlob from 'react-native-fetch-blob';
+import { imageSelect } from './commonPhoto'
+import Gallery from 'rep-gallery';
 
 import axios from 'axios';
 import { nameColor, memberColor, bioColor, cepColor, genericColor } from '../formValidation'
-
-const Blob = RNFetchBlob.polyfill.Blob
-const fs = RNFetchBlob.fs
-window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-window.Blob = Blob
-
-const options = {
-  title: 'Foto de Perfil',
-  takePhotoButtonTitle: 'Enviar da Câmera',
-  chooseFromLibraryButtonTitle: 'Enviar da Biblioteca'
-}
 
 class RepCRUD extends Component {
   constructor(props) {
@@ -29,25 +18,38 @@ class RepCRUD extends Component {
     //this.imgRef = firebase.storage().ref().child('republicsImages');
 
     this.state = {
+      regex: /^[0-9][0-9]*$/,
+
       admUID: '',
       bio: '',
       members: '',
       name: '',
       tags: '',
+      bed: '',
+      bathroom: '',
+      latitude: '',
+      longitude: '',
+      cep: '',
+      numberHome: '',
+      street: '',
+      complement: '',
+      uf: '',
+      city: '',
 
       avatarSource: null,
-      photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/repImages%2FDefaultRepPic.jpg?alt=media&token=60298d1d-c5f4-42d2-964b-58504da8bd0d',
+      photoURL: [],
       gotUrl: false,
       uri: '',
 
-
       isEditado: false,
-      boolLocalization: false,
+      boolLocalization: true,
       borderColorBio: '#e6e6e6',
+      borderColorBed: '#e6e6e6',
       borderColorCep: '#e6e6e6',
       borderColorName: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
       borderColorMember: '#e6e6e6',
+      borderColorBathroom: '#e6e6e6',
     };
   }
 
@@ -61,6 +63,9 @@ class RepCRUD extends Component {
           const repDatas = repData.data();
           this.setState({ // INITIALIZE THE FIELDS WITH THE REPUBLIC'S INFO
 
+            bathroom: repDatas.bathroom,
+            bed: repDatas.bed,
+            isAnnounced: repDatas.isAnnounced,
             name: repDatas.name,
             bio: repDatas.bio,
             members: repDatas.members,
@@ -75,6 +80,8 @@ class RepCRUD extends Component {
             admUID: repDatas.admUID,
             photoURL: repDatas.photoURL,
             gotUrl: repDatas.gotUrl,
+            vacancies: repDatas.vacancies,
+            value: repDatas.value,
 
           })
         } else {
@@ -90,9 +97,11 @@ class RepCRUD extends Component {
     boolBio = bioColor.call(this, bio)
     boolName = nameColor.call(this, name)
     boolMember = memberColor.call(this, members)
-    boolNumberHome = genericColor.call(this, this.state.numberHome, /^[0-9][0-9]*/, 'borderColorNumberHome')
+    boolBed = genericColor.call(this, this.state.bed, this.state.regex, 'borderColorBed')
+    boolBathroom = genericColor.call(this, this.state.bathroom, this.state.regex, 'borderColorBathroom')
+    boolNumberHome = genericColor.call(this, this.state.numberHome, this.state.regex, 'borderColorNumberHome')
 
-    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization()
+    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBathroom && boolBed && this.state.photoURL.length != 0
   }
 
   editRep = () => {
@@ -106,6 +115,12 @@ class RepCRUD extends Component {
     var user = firebase.auth().currentUser;
     this.ref.doc(user.uid)
       .set({
+
+        bathroom: this.state.bathroom,
+        bed: this.state.bed,
+        isAnnounced: this.state.isAnnounced,
+        vacancies: this.state.vacancies,
+        value: this.state.value,
         name: this.state.name,
         bio: this.state.bio,
         members: this.state.members,
@@ -117,7 +132,7 @@ class RepCRUD extends Component {
         latitude: this.state.latitude,
         longitude: this.state.longitude,
         tags: this.state.tags,
-        admUID: this.state.uid,
+        admUID: this.state.admUID,
         photoURL: this.state.photoURL,
         gotUrl: this.state.gotUrl,
       });
@@ -159,8 +174,12 @@ class RepCRUD extends Component {
   }
 
   getLocalization = () => {
-    if(!genericColor.call(this, this.state.numberHome, /^[0-9][0-9]*/, 'borderColorNumberHome')) {
-      return
+    if (!this.state.boolLocalization) {
+      this.setState({ borderColorCep: '#ff0000' });
+      return false
+    } else if (!genericColor.call(this, this.state.numberHome, this.state.regex, 'borderColorNumberHome')) {
+      this.setState({ borderColorNumber: '#ff0000' })
+      return false
     }
 
     axios.get('https://maps.google.com/maps/api/geocode/json?address=' + this.state.logradouro + ',' + this.state.numberHome + ','
@@ -179,76 +198,19 @@ class RepCRUD extends Component {
           })
         }
       })
+
+    return true
   }
 
-  imageSelect = () => {
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        this.uploadImage(response.uri)
-          .then((url) => {
-            alert('uploaded');
-            this.setState({ photoURL: url, gotUrl: true });
-            console.log(this.state.photoURL)
-          })
-          .catch(error => console.log(error))
-        this.getUrl();
-      }
-    });
-  }
-
-  getUrl = async () => {
-    const imageName = this.state.uid;
-    const imageRef = firebase.storage().ref('repImages');
-    await imageRef.child(imageName).getDownloadURL().then((url) => {
-      this.setState({ photoURL: url, gotUrl: true })
-    }).catch((error) => {
-      //reject(error)
-    });
-  }
-
-  uploadImage = (uri, mime = 'image/jpg') => {
-    return new Promise((resolve, reject) => {
-      const imageName = this.state.uid
-      const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-
-      let uploadBlob = null
-      const imageRef = firebase.storage().ref('repImages').child(imageName);
-      fs.readFile(uploadUri, 'base64')
-        .then((data) => {
-          return Blob.build(data, { type: `${mime};BASE64` })
-        })
-        .then((blob) => {
-          uploadBlob = blob
-          return imageRef.put(blob._ref, { contentType: mime })
-        })
-        .then(() => {
-          uploadBlob.close()
-          return imageRef.getDownloadURL()
-        })
-        .then((url) => {
-          resolve(url)
-        })
-        .catch((error) => {
-          reject(error)
-        })
-    })
+  updateStateCallback = (url) => {
+    this.state.photoURL.push(url)
+    this.setState({ gotUrl: true })
   }
 
   render() {
     return (
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.container}>
-
-          <Image
-            style={{ width: 100, height: 100 }}
-            disabled={!this.state.gotUrl}
-            source={{ uri: this.state.photoURL }}
-          />
 
           <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)}>
             <Label>Nome da Republica:</Label>
@@ -289,13 +251,34 @@ class RepCRUD extends Component {
           </Item>
 
           <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorNumberHome }, styles.floatInput)}>
-            <Label>Numero da Casa:</Label>
+            <Label>Numero:</Label>
             <Input
               keyboardType='number-pad'
               value={this.state.numberHome}
               onChangeText={(numberHome) => this.setState({ numberHome })}
-              onEndEditing={() => {this.getLocalization()}}
+              onEndEditing={() => { this.getLocalization() }}
             ></Input>
+          </Item>
+
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBathroom }, styles.floatInput)}>
+            <Label>Banheiros:</Label>
+            <Input
+              keyboardType='number-pad'
+              value={this.state.bathroom}
+              onChangeText={(bathroom) => this.setState({ bathroom })}
+              onEndEditing={() => genericColor.call(this, this.state.bathroom, this.state.regex, 'borderColorBathroom')}
+            ></Input>
+          </Item>
+
+          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorBed }, styles.floatInput)}>
+            <Label>Quartos:</Label>
+            <Input
+              keyboardType='number-pad'
+              value={this.state.bed}
+              onChangeText={(bed) => this.setState({ bed })}
+              onEndEditing={() => genericColor.call(this, this.state.bed, this.state.regex, 'borderColorBed')}
+            ></Input>
+
           </Item>
 
           <Item floatingLabel style={styles.floatInput}>
@@ -305,7 +288,7 @@ class RepCRUD extends Component {
               disabled
               onChangeText={(tags) => this.setState({ tags })}
             ></Input>
-          </Item>
+          </Item>                                                                                                   
 
           {this.state.isEditado ? <Text> Editado com sucesso </Text> : <Text />}
 
@@ -313,8 +296,8 @@ class RepCRUD extends Component {
             <Text style={styles.buttonText}> Lista de Membros </Text>
           </Button>
 
-          <Button style={styles.button} onPress={this.imageSelect}>
-            <Text style={styles.buttonText}> Enviar Foto </Text>
+          <Button style={styles.button} onPress={() => this.props.navigation.navigate("PhotoGallery", {photoURL: this.state.photoURL})} >
+            <Text style={styles.buttonText}> Fotos </Text>
           </Button>
 
           <Button style={styles.button} onPress={this.editRep}>

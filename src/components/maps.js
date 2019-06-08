@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import { styles } from './styles';
 import { withNavigation } from 'react-navigation'
 import MapView from 'react-native-maps';
+import { Dimensions } from "react-native";
+
+//SETANDO CONSTANTES PARA MELHOR VISUALIZAÇÃO DO MAPA
+
+const screen = Dimensions.get('window');
+const ASPECT_RATIO = screen.width / screen.height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 class Maps extends Component {
 
@@ -10,10 +18,11 @@ class Maps extends Component {
 
     this.state = {
       region: null,
-      latitude: props.latitude,
-      longitude: props.longitude,
-      latitudeDelta: props.latitudeDelta,
-      longitudeDelta: props.longitudeDelta,
+      //pegando parametros passados por props com o navigation
+      latitude: this.props.navigation.getParam('latitude'),
+      longitude: this.props.navigation.getParam('longitude'),
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     }
   }
 
@@ -64,7 +73,16 @@ class Maps extends Component {
         initialRegion={region}
         showsUserLocation
         loadingEnabled
-      />
+      >
+        <MapView.Marker
+          coordinate={{
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+          }}
+          tittle={"nozes"}
+        />
+
+      </MapView>
     );
   }
 }
@@ -77,3 +95,5 @@ Maps.defaultProps = {
 }
 
 export default withNavigation(Maps);
+
+

@@ -11,7 +11,7 @@ import { Header, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { EventRegister } from 'react-native-event-listeners'
 
-const Reps = [];
+var Reps = [];
 const photoURL = '../../image/houseIcon.png'
 
 let pageIndex = 1;
@@ -64,11 +64,16 @@ export default class App extends React.Component {
       outputRange: [1, 0.8, 1],
       extrapolate: 'clamp'
     })
+
+    // essa var será lida pelo card e verificado se ele foi para 'SIM' ou 'NÃO'
+    // -1 para NÃO - esquerda; 1 para SIM - direita.
+    this.dragTo = {drag: 'NONE'}
   }
 
 
 
   removeSim = (gestureState, speed) => {
+    this.dragTo.drag = 'SIM'
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: styles.screen.width + 100, y: gestureState.dy },
@@ -80,6 +85,7 @@ export default class App extends React.Component {
   }
 
   removeNao = (gestureState, speed) => {
+    this.dragTo.drag = 'NAO'
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: -styles.screen.width - 100, y: gestureState.dy }
@@ -115,6 +121,25 @@ export default class App extends React.Component {
     }
   }
 
+  verificaCliqueFoto = (x0, y0) => {
+    regionYmin = Math.floor(styles.screen.height * 0.785)
+    regionYmax = Math.floor(styles.screen.height * 0.885)
+    regionXmin = Math.floor(styles.screen.width * 0.03125)
+    regionXmax = Math.floor(styles.screen.width * 0.98438)
+
+    if (y0*0.922 > styles.repImage.height) {
+      return
+    }
+
+    if (x0 > regionXmin && x0 < regionXmax) {
+      if(x0 >= Math.floor(styles.screen.width/2)) {
+        EventRegister.emit('changeImage', {pos: 1, currentIndex: this.state.currentIndex})  // avança a imagem
+      } else {
+        EventRegister.emit('changeImage', {pos: -1, currentIndex: this.state.currentIndex}) // retrocede a imagem
+      }
+    }
+  }
+
   async componentWillMount() {
     handleAndroidBackButton(this.props.navigation.navigate, 'RepCard');
 
@@ -144,6 +169,7 @@ export default class App extends React.Component {
             } else if (gestureState.x0 > regionXminS && gestureState.x0 < regionXmaxS) {  // clicou no botão do SIM
               this.removeSim(gestureState, 10)
             }
+            // se não clicou no botão, pode ter clicado na foto
           } else {
             this.verificaCliqueFoto(gestureState.x0, gestureState.y0)
           }
@@ -178,7 +204,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard rep={item} />
+            <RepCard rep={item} dragTo={this.dragTo} />
 
           </Animated.View>
         )
@@ -199,7 +225,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard rep={item} />
+            <RepCard rep={item} dragTo={this.dragTo} />
 
           </Animated.View>
         )
@@ -314,6 +340,7 @@ export default class App extends React.Component {
   }
 
   async getDados() {
+    Reps = []   // 'limpando' a lista de reps
     this.ref = firebase.firestore().collection('republics');
     this.refAnuncio = firebase.firestore().collection('anuncio');
     this.refUser = firebase.auth().currentUser.uid;
@@ -337,9 +364,9 @@ export default class App extends React.Component {
           id: i,
           title: ref.name,
           localization: ref.street,
-          photoURL: ref.photoURL ? ref.photoURL : photoURL,
-          bathroom: ref.bathroom ? ref.bathroom : 0,
-          bed: ref.bed ? ref.bed : 0,
+          photoURL: ref.photoURL,
+          bathroom: ref.bathroom,
+          bed: ref.bed,
           members: null,  // este valor será preenchido abaixo
           value: ref.value,
           vacancies: ref.vacancies,
