@@ -36,11 +36,11 @@ class Anuncio extends Component {
 
           if(repDatas.isAnnounced) { // verificar aqui se a república já foi anunciada
             alert("Esta república já está anunciada");
-            this.props.navigation.navigate("Home");
+            this.props.navigation.navigate("RepCard");
           }
         } else {
           alert("Não existe republica cadastrada neste usuário");
-          this.props.navigation.navigate("Home");
+          this.props.navigation.navigate("RepCard");
         }
       })
   }

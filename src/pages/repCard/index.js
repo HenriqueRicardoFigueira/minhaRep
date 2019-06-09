@@ -3,7 +3,7 @@ import { View, Animated, PanResponder, Text } from 'react-native';
 import RepCard from '../../components/RepCard';
 import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
-import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
+import { handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert } from '../../androidBackButton';
 import Swiper from 'react-native-swiper';
 import PhotoCard from '../../components/photoCard'
 import Options from '../options/index'
@@ -160,8 +160,6 @@ export default class App extends React.Component {
   }
 
   async componentWillMount() {
-    handleAndroidBackButton(this.props.navigation.navigate, 'RepCard');
-
 
     this.PanResponder = PanResponder.create({
 
@@ -203,6 +201,8 @@ export default class App extends React.Component {
         }
       }
     })
+
+    handleAndroidBackButton(exitAlert);
   }
 
   renderReps = () => {
