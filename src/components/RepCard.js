@@ -6,6 +6,7 @@ import { EventRegister } from 'react-native-event-listeners'
 import { withNavigation } from 'react-navigation';
 import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
+import { firebase } from '../../Firebase'
 
 
 class RepCard extends Component {
@@ -17,14 +18,15 @@ class RepCard extends Component {
 
     this.state = {
       iImage: 0,
+      id: props.rep.id,
       bed: props.rep.bed,
       title: props.rep.title,
       value: props.rep.value,
       members: props.rep.members,
-      currentIndex: props.rep.id,
       latitude: props.rep.latitude,
       bathroom: props.rep.bathroom,
       repImage: props.rep.photoURL,
+      currentIndex: props.rep.index,
       longitude: props.rep.longitude,
       vacancies: props.rep.vacancies,
       localization: props.rep.localization,
@@ -137,11 +139,28 @@ class RepCard extends Component {
     }
   }
 
+  match = () => {
+    repId = this.state.id
+    uid = firebase.auth().currentUser.uid
+
+    // o dono da república é o usuário
+    if(repId == uid) {
+      return
+    }
+
+    firebase.firestore()
+    .collection('chats')
+    .doc(uid)
+    .collection(repId)
+    .doc('minicial')
+    .set(this.createMessage('Agora vocês podem trocar mensagem', uid, repId))
+  }
+
   componentWillUnmount() {
     EventRegister.removeEventListener(this.listener)
 
     if (this.dragTo.drag == 'SIM') {  // realiza o match
-      // match()
+      this.match()
     } else {
       // do nothing
     }

@@ -380,7 +380,8 @@ export default class App extends React.Component {
         }
 
         var rep = {
-          id: i,
+          index: i,
+          id: ref.admUID,
           title: ref.name,
           localization: ref.street,
           photoURL: ref.photoURL,
