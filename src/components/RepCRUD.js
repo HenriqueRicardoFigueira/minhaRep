@@ -5,7 +5,6 @@ import { styles } from './styles';
 import { Button, Item, Input, Label } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { imageSelect } from './commonPhoto'
-import Gallery from 'rep-gallery';
 
 import axios from 'axios';
 import { nameColor, memberColor, bioColor, cepColor, genericColor } from '../formValidation'
@@ -37,7 +36,7 @@ class RepCRUD extends Component {
       city: '',
 
       avatarSource: null,
-      photoURL: [],
+      photoURL: props.photoURL ? props.photoURL : [],
       gotUrl: false,
       uri: '',
 
@@ -78,7 +77,7 @@ class RepCRUD extends Component {
             longitude: repDatas.longitude,
             tags: repDatas.tags,
             admUID: repDatas.admUID,
-            photoURL: repDatas.photoURL,
+            photoURL: this.state.photoURL.length ? this.state.photoUrRL : repDatas.photoURL,
             gotUrl: repDatas.gotUrl,
             vacancies: repDatas.vacancies,
             value: repDatas.value,
@@ -296,8 +295,12 @@ class RepCRUD extends Component {
             <Text style={styles.buttonText}> Lista de Membros </Text>
           </Button>
 
+          <Button style={styles.button} onPress={() => {imageSelect(this.state.admUID, this.updateStateCallback)}}>
+            <Text style={styles.buttonText}> Enviar Foto </Text>
+          </Button>
+
           <Button style={styles.button} onPress={() => this.props.navigation.navigate("PhotoGallery", {photoURL: this.state.photoURL})} >
-            <Text style={styles.buttonText}> Fotos </Text>
+            <Text style={styles.buttonText}> Galeria </Text>
           </Button>
 
           <Button style={styles.button} onPress={this.editRep}>
