@@ -7,6 +7,7 @@ import { withNavigation } from 'react-navigation';
 import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import { firebase } from '../../Firebase'
+import createMessage from './message'
 
 
 class RepCard extends Component {
@@ -153,7 +154,7 @@ class RepCard extends Component {
     .doc(uid)
     .collection(repId)
     .doc('minicial')
-    .set(this.createMessage('Agora vocês podem trocar mensagem', uid, repId))
+    .set(createMessage('Agora vocês podem trocar mensagem', uid, repId))
   }
 
   componentWillUnmount() {
