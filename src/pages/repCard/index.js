@@ -391,7 +391,9 @@ export default class App extends React.Component {
           value: ref.value,
           vacancies: ref.vacancies,
           latitude: ref.latitude,
-          longitude: ref.longitude
+          longitude: ref.longitude,
+          bio: ref.bio,
+          city: ref.city
         }
 
         // recupera os membros da república

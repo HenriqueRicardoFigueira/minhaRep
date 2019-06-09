@@ -13,8 +13,9 @@ import Anuncio from './pages/anuncio';
 import MembersList from './pages/membersList';
 import MembersAdd from './pages/membersAdd';
 import UserRegistAlt from './pages/userRegstAlt';
-import Options from './pages/options'
-import PhotoGallery from './pages/photoGallery'
+import Options from './pages/options';
+import PhotoGallery from './pages/photoGallery';
+import Description from './pages/description';
 
 
 const Teste = createBottomTabNavigator({
@@ -38,8 +39,9 @@ const Routes = createAppContainer(
         MembersAdd: MembersAdd,
         Options: Options,
         PhotoGallery: PhotoGallery,
+        Description: Description
     }, {
-        initialRouteName: 'Login'
+        initialRouteName: 'RepCard'
     })
  
 );

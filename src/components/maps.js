@@ -4,6 +4,7 @@ import { withNavigation } from 'react-navigation'
 import MapView from 'react-native-maps';
 import { Dimensions } from "react-native";
 
+
 //SETANDO CONSTANTES PARA MELHOR VISUALIZAÇÃO DO MAPA
 
 const screen = Dimensions.get('window');
@@ -38,8 +39,10 @@ class Maps extends Component {
           latitudeDelta: this.state.latitudeDelta,
           longitudeDelta: this.state.longitudeDelta,
         }
+        
       })
-
+      console.log(this.state.latitude);
+      console.log(this.state.longitude);
       return
     }
 
@@ -76,8 +79,8 @@ class Maps extends Component {
       >
         <MapView.Marker
           coordinate={{
-            latitude: this.state.latitude,
-            longitude: this.state.longitude
+            latitude: -24.0413672,
+            longitude: -52.3773069
           }}
           tittle={"nozes"}
         />
