@@ -6,9 +6,9 @@ import { BackHandler, Alert } from 'react-native';
  * back button
  * @param  {Function} callback The function to call on click
  */
-const handleAndroidBackButton = (callback, screen) => {
+const handleAndroidBackButton = (callback, screen, props) => {
   BackHandler.addEventListener('hardwareBackPress', () => {
-    callback(screen);
+    callback(screen, props);
     return true;
   });
 };

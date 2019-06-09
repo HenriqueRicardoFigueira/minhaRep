@@ -13,8 +13,8 @@ class RepCRUD extends Component {
   constructor(props) {
     super(props);
 
+    const { navigation } = this.props
     this.ref = firebase.firestore().collection('republics');
-    //this.imgRef = firebase.storage().ref().child('republicsImages');
 
     this.state = {
       regex: /^[0-9][0-9]*$/,
@@ -36,7 +36,7 @@ class RepCRUD extends Component {
       city: '',
 
       avatarSource: null,
-      photoURL: props.photoURL ? props.photoURL : [],
+      photoURL: navigation.getParam('photoURL') ? navigation.getParam('photoURL') : [],
       gotUrl: false,
       uri: '',
 
@@ -77,7 +77,7 @@ class RepCRUD extends Component {
             longitude: repDatas.longitude,
             tags: repDatas.tags,
             admUID: repDatas.admUID,
-            photoURL: this.state.photoURL.length ? this.state.photoUrRL : repDatas.photoURL,
+            photoURL: this.state.photoURL.length ? this.state.photoURL : repDatas.photoURL,
             gotUrl: repDatas.gotUrl,
             vacancies: repDatas.vacancies,
             value: repDatas.value,

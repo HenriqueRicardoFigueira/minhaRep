@@ -14,6 +14,7 @@ import MembersList from './pages/membersList';
 import MembersAdd from './pages/membersAdd';
 import UserRegistAlt from './pages/userRegstAlt';
 import Options from './pages/options'
+import PhotoGallery from './pages/photoGallery'
 
 
 const Teste = createBottomTabNavigator({
@@ -36,7 +37,7 @@ const Routes = createAppContainer(
         MembersList: MembersList,
         MembersAdd: MembersAdd,
         Options: Options,
-
+        PhotoGallery: PhotoGallery,
     }, {
         initialRouteName: 'Login'
     })

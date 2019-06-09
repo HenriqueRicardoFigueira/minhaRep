@@ -1,5 +1,5 @@
 import Gallery from 'rep-gallery'
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { withNavigation } from 'react-navigation'
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton'
 
@@ -13,7 +13,7 @@ class PhotoGallery extends Component {
   }
 
   componentWillMount () {
-    handleAndroidBackButton(this.props.navigation.navigate, 'RepCRUD')
+    handleAndroidBackButton(this.props.navigation.navigate, 'RepCRUD', {photoURL: this.photoURL})
   }
 
   createObjects = () => { 
@@ -22,12 +22,23 @@ class PhotoGallery extends Component {
     })
   }
 
+  doneURL = (delPhotos) => {
+    for(var url in delPhotos) {
+      for(var index = 0; index < this.photoURL.length; index ++) {
+        if(url.id == this.photoURL[index].id) {
+          this.photoURL.splice(index, 1)
+          break
+        }
+      }
+    }
+  }
+
   render() {
 
     this.createObjects()
 
     return (
-      <Gallery photos={this.photoURLReal} />
+        <Gallery photos={this.photoURLReal} callback={this.doneURL} />
     );
   }
 
