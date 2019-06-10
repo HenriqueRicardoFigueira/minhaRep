@@ -216,11 +216,11 @@ export default class App extends React.Component {
             key={item.id} style={[this.rotateAndTranslate, { height: styles.screen.height - 120, width: styles.screen.width, padding: 10, position: 'absolute' }]}>
 
             <Animated.View style={{ opacity: this.likeOpacity, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
-              <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>SIM</Text>
+              <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: '#e102ff', color: '#e102ff', fontSize: 32, fontWeight: '800', padding: 10 }}>SIM</Text>
             </Animated.View>
 
             <Animated.View style={{ opacity: this.dislikeOpacity, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
-              <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
+              <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: '#8002ff', color: '#8002ff', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
             <RepCard rep={item} dragTo={this.dragTo} />
@@ -237,11 +237,11 @@ export default class App extends React.Component {
             }]}>
 
             <Animated.View style={{ opacity: 0, transform: [{ rotate: '-30deg' }], position: 'absolute', top: 50, left: 40, zIndex: 1000 }}>
-              <Text style={{ borderWidth: 5, borderColor: 'green', color: 'green', fontSize: 32, fontWeight: '800', padding: 10 }}>SIM</Text>
+              <Text style={{ borderWidth: 5, borderColor: '#e102ff', color: '#e102ff', fontSize: 32, fontWeight: '800', padding: 10 }}>SIM</Text>
             </Animated.View>
 
             <Animated.View style={{ opacity: 0, transform: [{ rotate: '30deg' }], position: 'absolute', top: 50, right: 40, zIndex: 1000 }}>
-              <Text style={{ borderWidth: 5, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
+              <Text style={{ borderWidth: 5, borderColor: '#8002ff', color: '#8002ff', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
             <RepCard rep={item} dragTo={this.dragTo} />
@@ -325,7 +325,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Header style={{ backgroundColor: '#F0803C' }} androidStatusBarColor='#ef752a'>
+        <Header style={{ backgroundColor: '#c6dcf4' }} androidStatusBarColor='#869cb4'>
           <Left>
             <Button transparent>
               <Icon name='settings' size={this.iconSize} onPress={() => this.selectSection(0)} />

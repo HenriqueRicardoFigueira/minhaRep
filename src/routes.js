@@ -41,7 +41,7 @@ const Routes = createAppContainer(
         PhotoGallery: PhotoGallery,
         Description: Description
     }, {
-        initialRouteName: 'RepCard'
+        initialRouteName: 'Login'
     })
  
 );

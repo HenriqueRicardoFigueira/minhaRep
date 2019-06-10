@@ -25,7 +25,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#eff7f9',
-    padding: SCREEN_WIDTH*0.025,
+    padding: SCREEN_HEIGHT*0.03,
+  },
+  containerCard: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#eff7f9',
+    marginTop: SCREEN_WIDTH*0.10,
   },
   scrollView: {
     flexGrow: 1,
@@ -77,7 +84,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: SCREEN_WIDTH *0.8, 
     height: SCREEN_HEIGHT*0.050,
-    backgroundColor: '#F0803C',
+    backgroundColor: '#8002ff',
     marginTop: SCREEN_HEIGHT*0.015,
     marginBottom: SCREEN_HEIGHT*0.005,
     //paddingHorizontal: 20,
@@ -86,12 +93,12 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   registerText: {
-    color: '#1b2021',
+    color: '#465c84',
     textDecorationLine: 'underline',
     fontSize: 18
   },
   buttonText: {
-    color: '#1b2021',
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 20
   },
@@ -99,6 +106,7 @@ const styles = StyleSheet.create({
     width: 180,
     height: 180,
     justifyContent: 'center',
+    borderRadius: 30,
     marginBottom:SCREEN_HEIGHT * 0.05
   },
 
@@ -112,9 +120,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
     width: SCREEN_WIDTH*0.98,
-    height: SCREEN_HEIGHT*0.90,
+    height: SCREEN_HEIGHT*0.85,
     borderRadius: 20,
   },
   map: {
@@ -130,7 +138,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH * 0.97,
   },
   viewText: {
-    paddingLeft: 5,
+    paddingLeft: SCREEN_WIDTH * 0.07,
     paddingTop: SCREEN_HEIGHT * 0.58,
     position: 'absolute',
   },
@@ -154,21 +162,21 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ff944d',
-    width: SCREEN_WIDTH * 0.17,
-    height: SCREEN_WIDTH * 0.17,
+    backgroundColor: '#eff7f9',
+    width: SCREEN_WIDTH * 0.13,
+    height: SCREEN_WIDTH * 0.13,
   },
   repImage: {
     borderWidth: 2,
     borderRadius: 10,
     alignSelf: 'center',
     borderColor: '#8c8c8c',
-    width: SCREEN_WIDTH * 0.98 * 0.97,
-    height: SCREEN_HEIGHT * 0.90 * 0.80,
+    width: SCREEN_WIDTH * 0.89,
+    height: SCREEN_HEIGHT * 0.70,
   },
   iconViewText: {
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   iconText: {
     fontSize: 15
