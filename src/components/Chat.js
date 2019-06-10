@@ -6,17 +6,38 @@ import { styles } from './styles';
 import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
 import { withNavigation } from 'react-navigation';
 import { GiftedChat } from 'react-native-gifted-chat'
+import firebaseSvc from './FirebaseSvc'
 
 class Chat extends Component {
   constructor(props) {
     super(props);
 
-    this.ref = firebase.firestore().collection('message');
+    this.ref = firebase.firestore().collection('chats'); // COLEÇÃO DE DESTINO DAS CONVERSAS
 
     this.state = {
+      toUid: 'XSfhxSVNswMgkrJphNgCGFonnAP2', // PARA FINS DE TESTE
       messages: [],
     };
+
   };
+
+  get user() {
+    return {
+      name: 'jao',
+      email: 'jvzavatin004@gmail.com',
+      avatar: '',
+      id: firebaseSvc.uid,
+      _id: firebaseSvc.uid, // need for gifted-chat
+    };
+  }
+
+  componentDidMount() {
+    firebaseSvc.refOn(message =>
+      this.setState(previousState => ({
+        messages: GiftedChat.append(previousState.messages, message),
+      }))
+    );
+  }
 
   componentWillMount() {
     this.setState({
@@ -45,10 +66,8 @@ class Chat extends Component {
     return (
       <GiftedChat
         messages={this.state.messages}
-        onSend={messages => this.onSend(messages)}
-        user={{
-          _id: 1,
-        }}
+        onSend={firebaseSvc.send}
+        user={this.user}
       />
     );
   }

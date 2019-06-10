@@ -39,6 +39,9 @@ class HomeUser extends Component {
         <TouchableOpacity onPress={() => this.props.navigation.navigate('Maps')} style={styles.button}>
           <Text>Mapa</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Chat')} style={styles.button}>
+          <Text>Chat</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={this.logout} style={styles.button}>
           <Text>Logout</Text>
         </TouchableOpacity>

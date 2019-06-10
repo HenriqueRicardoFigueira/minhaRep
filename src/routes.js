@@ -37,7 +37,7 @@ const Routes = createAppContainer(
         Chat: Chat,
 
     }, {
-        initialRouteName: 'Chat'
+        initialRouteName: 'Login'
     })
  
 );
