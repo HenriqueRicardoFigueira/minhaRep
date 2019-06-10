@@ -20,11 +20,12 @@ class RepCard extends Component {
 
     this.state = {
       iImage: 0,
+      id: props.rep.id,
       bed: props.rep.bed,
       title: props.rep.title,
       value: props.rep.value,
       members: props.rep.members,
-      currentIndex: props.rep.id,
+      currentIndex: props.rep.index,
       latitude: props.rep.latitude,
       bathroom: props.rep.bathroom,
       repImage: props.rep.photoURL,
