@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    
     fontSize: 20
   },
   image: {

@@ -1,20 +1,30 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
-
+import { Alert, Platform  } from 'react-native';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Button, Item, Input, Label } from 'native-base';
 import FacebookLogin from './facebookLogin';
 import GoogleLogin from './googleLogin';
-
 import { withNavigation } from 'react-navigation';
-
 import { emailColor, passwordColor } from '../formValidation';
-
+import {
+  setCustomView,
+  setCustomTextInput,
+  setCustomText,
+  setCustomImage,
+  setCustomTouchableOpacity
+} from 'react-native-global-props';
 // import { Container } from './styles';
 import firebase from 'react-native-firebase';
-
 import { styles } from './styles';
 
+const customTextProps = {
+  style: {
+    fontFamily: Platform.OS === 'ios' ? 'HelveticaNeue' : 'Oswald-Light',
+  }
+};
+setCustomTouchableOpacity(customTextProps);
+setCustomText(customTextProps);
+setCustomTextInput(customTextProps);
 class Login extends Component {
   state = {
     email: '',
@@ -125,6 +135,7 @@ class Login extends Component {
 
     return canLoginNow
   };
+  
 }
 
 export default withNavigation(Login);
