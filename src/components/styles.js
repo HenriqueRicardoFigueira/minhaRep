@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   viewText: {
     paddingLeft: SCREEN_WIDTH * 0.07,
-    paddingTop: SCREEN_HEIGHT * 0.58,
+    paddingTop: SCREEN_HEIGHT * 0.55,
     position: 'absolute',
   },
   repTitle: {

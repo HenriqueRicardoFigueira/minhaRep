@@ -304,7 +304,7 @@ class RepCRUD extends Component {
           </Button>
 
           <Button style={styles.button} onPress={this.editRep}>
-            <Text style={styles.buttonText}> Editar </Text>
+            <Text style={styles.buttonText}> Salvar </Text>
           </Button>
 
         </View>
