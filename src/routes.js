@@ -16,7 +16,7 @@ import UserRegistAlt from './pages/userRegstAlt';
 import Options from './pages/options';
 import PhotoGallery from './pages/photoGallery';
 import Description from './pages/description';
-
+import Chat from './pages/chat';
 
 const Teste = createBottomTabNavigator({
     User : HomeUser,
@@ -39,7 +39,9 @@ const Routes = createAppContainer(
         MembersAdd: MembersAdd,
         Options: Options,
         PhotoGallery: PhotoGallery,
-        Description: Description
+        Description: Description,
+        Chat: Chat,
+
     }, {
         initialRouteName: 'Login'
     })
