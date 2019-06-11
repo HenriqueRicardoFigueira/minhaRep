@@ -11,30 +11,40 @@ const config = {
 class FirebaseSvc {
   constructor() {
   }
-  
+
   get uid() { // GET USER UID
     return (firebase.auth().currentUser || {}).uid;
   }
 
-  get ref() { // GET FIREBASE REFERENCE
+  get refFirebase() { // GET FIREBASE REFERENCE
     return firebase.database()
       .ref(`chats/${this.uid}/XSfhxSVNswMgkrJphNgCGFonnAP2`)
   }
 
+  get refFirestore() {
+    return firebase.firestore()
+      .collection('chats')
+      .doc(this.uid)
+      .collection('XSfhxSVNswMgkrJphNgCGFonnAP2')
+  }
+
   get timestamp() {
-    return firebase.database.ServerValue.TIMESTAMP;
+    return new Date().getTime();
   }
 
   refOn = callback => {
-    console.log(this);
-    this.ref
-      .limitToLast(20)
-      .on('child_added', snapshot => callback(this.parse(snapshot)));
+    if (this.refFirestore) {
+      this.refFirestore
+        .limit(20)
+        .onSnapshot(snapshot => callback(this.parse(snapshot)));
+    } else {
+      alert('No data')
+    }
   }
 
 
   parse = snapshot => { // PARSE THE FIREBASE DATA
-    const { timestamp: numberStamp, text, user } = snapshot.val();
+    const { timestamp: numberStamp, text, user } = snapshot.data();
     const { key: id } = snapshot;
     const { key: _id } = snapshot; //needed for giftedchat
     const timestamp = new Date(numberStamp);
@@ -57,13 +67,10 @@ class FirebaseSvc {
         user,
         createdAt: this.timestamp,
       };
-      this.ref.push(message);
+      this.refFirestore.add(message);
     }
   };
 
-  refOff() {
-    this.ref.off();
-  }
 }
 const firebaseSvc = new FirebaseSvc();
 export default firebaseSvc;

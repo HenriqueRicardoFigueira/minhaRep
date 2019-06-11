@@ -23,7 +23,7 @@ class Chat extends Component {
 
   get user() {
     return {
-      name: 'jao',
+      name: 'João',
       email: 'jvzavatin004@gmail.com',
       avatar: '',
       id: firebaseSvc.uid,
@@ -37,6 +37,7 @@ class Chat extends Component {
         messages: GiftedChat.append(previousState.messages, message),
       }))
     );
+    console.log(firebaseSvc.uid);
   }
 
   componentWillMount() {
