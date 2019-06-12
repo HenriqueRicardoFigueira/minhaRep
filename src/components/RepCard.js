@@ -176,6 +176,7 @@ class RepCard extends Component {
       .collection(repId)
       .doc('minicial')
       .set(createMessage('Agora vocês podem trocar mensagem', uid, repId))
+      this.props.navigation.navigate('Chat', { repId });
   }
 
   componentWillUnmount() {
