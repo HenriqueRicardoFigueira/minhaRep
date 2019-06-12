@@ -13,26 +13,108 @@ class Chat extends Component {
     super(props);
 
     this.ref = firebase.firestore().collection('chats'); // COLEÇÃO DE DESTINO DAS CONVERSAS
+    this.refUsers = firebase.firestore().collection('users');
 
     this.state = {
-      toUid: 'XSfhxSVNswMgkrJphNgCGFonnAP2', // PARA FINS DE TESTE
       messages: [],
+
+      name: '',
+      email: '',
+      uid: '',
+      repId: '',
+      photoURL: '',
+      gotUrl: false,
     };
 
   };
 
-  get user() {
-    return {
-      name: 'João',
-      email: 'jvzavatin004@gmail.com',
-      avatar: '',
-      id: firebaseSvc.uid,
-      _id: firebaseSvc.uid, // need for gifted-chat
-    };
+  getUrl = async () => {
+    const imageName = this.state.uid;
+    const imageRef = firebase.storage().ref('userImages');
+    await imageRef.child(imageName).getDownloadURL().then((url) => {
+      this.setState({ photoURL: url, gotUrl: true })
+    }).catch((error) => {
+      reject(error)
+    });
+    this.editUser();
+    console.log(this.state.photoURL)
   }
 
-  componentDidMount() {
-    firebaseSvc.refOn(message =>
+  get user() {
+    this.getUrl();
+    if (this.state.gotUrl) {
+      return {
+        name: this.state.name,
+        email: user.email,
+        avatar: '',
+        id: firebaseSvc.uid,
+        _id: firebaseSvc.uid, // need for gifted-chat
+      };
+    }
+  }
+
+  refOn = callback => {
+    this.unsubscribe = this.ref
+      .onSnapshot(snapshot => callback(this.parse(snapshot)));
+  }
+
+
+  parse = snapshot => { // PARSE THE FIREBASE DATA
+    console.log(snapshot);
+    const { timestamp: numberStamp, text, user } = snapshot.data();
+    const { key: id } = snapshot;
+    const { key: _id } = snapshot; //needed for giftedchat
+    const timestamp = new Date(numberStamp);
+
+    const message = {
+      id,
+      _id,
+      timestamp,
+      text,
+      user,
+    };
+    return message;
+  };
+
+  send = messages => {
+    for (var i = 0; i < messages.length; i++) {
+      const { text, user } = messages[i];
+      const message = {
+        text,
+        user,
+        createdAt: this.timestamp,
+      };
+      this.ref.add(message);
+    }
+  };
+
+  onSend(messages = []) {
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }))
+  }
+
+  componentDidMount = async () => {
+    var repId = this.props.navigation.getParam(repId, 'noValue'); // PEGA O REPID DO NAVIGATION
+    var user = firebase.auth().currentUser; // PEGA O USUÁRIO
+    this.ref = firebase.firestore().collection('chats').doc(user.uid).collection(repId);
+
+    await this.refUsers.doc(user.uid)
+      .get()
+      .then((userData) => {
+        if (userData.exists) {
+          const userP = userData.data();
+          this.setState({
+            name: userP.name,
+            email: userP.email,
+            uid: user.uid,
+            repId: repId,
+          })
+        } else {
+          console.log("Não existe usuário");
+        }
+      })
+    this.refOn(message =>
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, message),
       }))
@@ -57,17 +139,15 @@ class Chat extends Component {
     })
   }
 
-  onSend(messages = []) {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }))
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   render() {
     return (
       <GiftedChat
         messages={this.state.messages}
-        onSend={firebaseSvc.send}
+        onSend={this.send}
         user={this.user}
       />
     );
