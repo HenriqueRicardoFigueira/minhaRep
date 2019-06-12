@@ -5,6 +5,8 @@ import { styles } from './styles';
 import { Button, Item, Input, Label } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { numberColor, valueColor } from '../formValidation';
+import Tags from './tags';
+
 
 class Anuncio extends Component {
 
@@ -34,7 +36,7 @@ class Anuncio extends Component {
             repDatas: repDatas,
           })
 
-          if(repDatas.isAnnounced) { // verificar aqui se a república já foi anunciada
+          if (repDatas.isAnnounced) { // verificar aqui se a república já foi anunciada
             alert("Esta república já está anunciada");
             this.props.navigation.navigate("RepCard");
           }
@@ -107,6 +109,9 @@ class Anuncio extends Component {
             onEndEditing={() => numberColor.call(this, this.state.vacancies)}
           ></Input>
         </Item>
+
+        <Tags />
+
 
         <Button style={styles.button} onPress={() => this.registerRep()}>
           <Text style={styles.buttonText}> Anunciar </Text>
