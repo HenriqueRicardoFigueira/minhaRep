@@ -1,5 +1,7 @@
 package com.invertase.rnfirebasestarter;
 import com.imagepicker.ImagePickerPackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 
 import android.app.Application;
 
@@ -60,7 +62,11 @@ public class MainApplication extends Application implements ReactApplication {
           new RNGoogleSigninPackage(),
           new MapsPackage(),    
          
-          new RNFirebaseDatabasePackage()
+          new RNFirebaseDatabasePackage(),
+
+          // notifications
+          new RNFirebaseMessagingPackage(),
+          new RNFirebaseNotificationsPackage()
         );
     }
 
