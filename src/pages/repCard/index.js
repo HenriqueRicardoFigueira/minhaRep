@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Animated, PanResponder, Text } from 'react-native';
+import { Alert, AsyncStorage, View, Animated, PanResponder, Text } from 'react-native';
 import RepCard from '../../components/RepCard';
 import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
@@ -70,10 +70,7 @@ export default class App extends React.Component {
     this.dragTo = {drag: 'NONE'}
   }
 
-
-
   removeSim = (gestureState, speed) => {
-    this.dragTo.drag = 'SIM'
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: styles.screen.width + 100, y: gestureState.dy },
@@ -85,7 +82,6 @@ export default class App extends React.Component {
   }
 
   removeNao = (gestureState, speed) => {
-    this.dragTo.drag = 'NAO'
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: -styles.screen.width - 100, y: gestureState.dy }
@@ -102,6 +98,7 @@ export default class App extends React.Component {
       friction: 4
     }).start()
   }
+
   verificaCliqueFoto = (x0, y0) => {
     regionYmin = Math.floor(styles.screen.height * 0.785)
     regionYmax = Math.floor(styles.screen.height * 0.885)
@@ -146,7 +143,7 @@ export default class App extends React.Component {
     regionXmin = Math.floor(styles.screen.width * 0.03125)
     regionXmax = Math.floor(styles.screen.width * 0.98438)
 
-    if (y0*0.922 > styles.repImage.height) {
+    if (y0*0.89 > styles.repImage.height) {
       return
     }
 
@@ -172,24 +169,7 @@ export default class App extends React.Component {
 
         // se a distancia é igual a 0, então clicou
         if (gestureState.dx == 0 && gestureState.dy == 0) {
-          // se clicou na região do botão
-          regionYmin = Math.floor(styles.screen.height * 0.785)
-          regionYmax = Math.floor(styles.screen.height * 0.885)
-          if (gestureState.y0 > regionYmin && gestureState.y0 < regionYmax) {
-            // recupera a região do botão NÃO e SIM
-            regionXminN = Math.floor(styles.screen.width * 0.03125)
-            regionXmaxN = Math.floor(styles.screen.width * 0.125)
-            regionXminS = Math.floor(styles.screen.width * 0.84375)
-            regionXmaxS = Math.floor(styles.screen.width * 0.98438)
-            if (gestureState.x0 > regionXminN && gestureState.x0 < regionXmaxN) { // clicou no botão do NÃO
-              this.removeNao(gestureState, 10)
-            } else if (gestureState.x0 > regionXminS && gestureState.x0 < regionXmaxS) {  // clicou no botão do SIM
-              this.removeSim(gestureState, 10)
-            }
-            // se não clicou no botão, pode ter clicado na foto
-          } else {
             this.verificaCliqueFoto(gestureState.x0, gestureState.y0)
-          }
         } else {    // não foi clicado, foi movido
           if (gestureState.dx > 120) {
             this.removeSim(gestureState, 12)
@@ -223,7 +203,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderRadius: 20, borderColor: '#8002ff', color: '#8002ff', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard rep={item} dragTo={this.dragTo} />
+            <RepCard rep={item} />
 
           </Animated.View>
         )
@@ -244,7 +224,7 @@ export default class App extends React.Component {
               <Text style={{ borderWidth: 5, borderColor: '#8002ff', color: '#8002ff', fontSize: 32, fontWeight: '800', padding: 10 }}>NAO</Text>
             </Animated.View>
 
-            <RepCard rep={item} dragTo={this.dragTo} />
+            <RepCard rep={item} />
 
           </Animated.View>
         )
@@ -257,6 +237,7 @@ export default class App extends React.Component {
   getReponse(index) {
     pageIndex = index;
   }
+
   sectionOptions() {
     return (
       [<View>
@@ -393,7 +374,9 @@ export default class App extends React.Component {
           latitude: ref.latitude,
           longitude: ref.longitude,
           bio: ref.bio,
-          city: ref.city
+          city: ref.city,
+          removeSim: this.removeSim,
+          removeNao: this.removeNao
         }
 
         // recupera os membros da república
@@ -407,8 +390,54 @@ export default class App extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.getDados();
+    this.checkPermission()
+  }
+
+  // 1
+  async checkPermission() {
+    const enabled = await firebase.messaging().hasPermission()
+    if (enabled) {
+        this.getToken()
+    } else {
+        this.requestPermission()
+    }
+  }
+
+  // 3
+  async getToken() {
+    this.refUser = firebase.auth().currentUser.uid
+    this.fcmToken = await firebase.messaging().getToken()
+
+    ref = firebase.firestore().collection('users');
+    ref.doc(this.refUser)
+      .get()
+      .then((userData) => {
+          userData = userData.data();
+          // update user with token
+          ref.doc(userData.uid).set({
+            age: userData.age,
+            bio: userData.bio,
+            email: userData.email,
+            gotUrl: userData.gotUrl,
+            name: userData.name,
+            photoURL: userData.photoURL,
+            uid: this.refUser,
+            token: this.fcmToken
+          })
+      })
+  }
+
+  async requestPermission() {
+    try {
+        await firebase.messaging().requestPermission()
+        // User has authorised
+        this.getToken()
+    } catch (error) {
+        // User has rejected permissions
+        console.log('permission rejected')
+    }
   }
 
   componentWillUnmount() {

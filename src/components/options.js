@@ -45,11 +45,14 @@ class Options extends Component {
   logout = () => {
     let isLogged = true;
     Alert.alert(
-      "Alerta!",
+      "Logout!",
       "Tem certeza que deseja sair?",
       [
         {
-          text: "Sim", onPress: async () => {
+        text: "Cancelar",
+        onPress: ()=> console.log("cancelado")
+        },
+        { text: "Sim", onPress: async() => {
             await firebase.auth().signOut().then(function () {
               console.log("deslogado");
               isLogged = false
@@ -60,6 +63,7 @@ class Options extends Component {
               this.props.navigation.navigate("Login");
             }
           }
+
         },
         {
           text: "Cancelar",

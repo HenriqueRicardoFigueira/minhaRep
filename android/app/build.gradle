@@ -153,6 +153,9 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
+    // BIBLIOTECA PARA RECEBER AS MENSAGENS DO FIREBASE
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
+
     // BIBLIOTECA PARA ACESSAR O FIREBASE
     implementation 'com.google.firebase:firebase-core:16.0.6'
     // BIBLIOTECA PARA AUTENTICAÇÃO

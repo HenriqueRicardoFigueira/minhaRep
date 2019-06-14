@@ -31,7 +31,9 @@ class RepCard extends Component {
   constructor(props) {
     super(props);
 
-    this.dragTo = props.dragTo
+    this.drag = null
+    this.removeSim = props.rep.removeSim
+    this.removeNao = props.rep.removeNao
 
     this.repIds = [],
 
@@ -140,14 +142,18 @@ class RepCard extends Component {
                 <Text style={styles.repLocalization}>{this.state.localization}</Text>
               </View>
             </View>
+          {/* VIEW ICONES */}
+          <View>
+            <Body>
+              <View style={styles.iconView}>
+                {/*BOTÃO NÃO */}
+                <View style={styles.iconViewText}>
+                  <MaterialCommunityIcons name='close' size={this.iconSize} color='#8002ff' onPress={() => {this.remove('NAO', this.removeNao, 1)}} />
+                </View>
+                {/*icone banheiros*/}
+                <View style={styles.iconViewText} >
+                  <View style={styles.icon} >
 
-            {/* VIEW ICONES */}
-            <View>
-              <Body>
-                <View style={styles.iconView}>
-                  {/*BOTÃO NÃO */}
-                  <View style={styles.iconViewText}>
-                    <MaterialCommunityIcons name='close' size={this.iconSize} color='#8002ff' />
                   </View>
                   {/*icone banheiros*/}
                   <View style={styles.iconViewText} >
@@ -184,6 +190,14 @@ class RepCard extends Component {
                   <View>
                     <MaterialCommunityIcons name='information-outline' color='#c6dcf4' size={this.iconSize} onPress={this.descView} />
                   </View>
+                  <Text style={styles.iconText}>{this.state.value}</Text>
+                </View>
+                {/*BOTÃO SIM*/}
+                <View style={styles.iconViewText}>
+                  <MaterialCommunityIcons name='check' size={this.iconSize} color='#e102ff' onPress={() => {this.remove('SIM', this.removeSim, 1)}}/>
+                </View>
+                <View>
+                  <MaterialCommunityIcons name='information-outline' color='#c6dcf4' size={this.iconSize} onPress={this.descView} />
                 </View>
               </Body>
             </View>
@@ -192,6 +206,11 @@ class RepCard extends Component {
 
       </View>
     );
+  }
+
+  remove = (size, callback, param) => {
+    this.drag = size
+    callback({dy: param}, 10)
   }
 
   // se for passado uma imagem para o componente, então recupera pelo link
@@ -215,7 +234,7 @@ class RepCard extends Component {
       return
     }
 
-    await firebase.firestore()
+     await firebase.firestore()
       .collection('chats')
       .doc(uid)
       .collection(repId)
@@ -258,7 +277,7 @@ class RepCard extends Component {
   componentWillUnmount() {
     EventRegister.removeEventListener(this.listener)
 
-    if (this.dragTo.drag == 'SIM') {  // realiza o match
+    if (this.drag == 'SIM') {  // realiza o match
       this.match()
     } else {
       // do nothing
