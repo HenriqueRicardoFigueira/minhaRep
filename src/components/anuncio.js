@@ -6,6 +6,7 @@ import { Button, Item, Input, Label } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { numberColor, valueColor } from '../formValidation';
 import Tags from './tags';
+import { EventRegister } from 'react-native-event-listeners'
 
 
 class Anuncio extends Component {
@@ -26,6 +27,9 @@ class Anuncio extends Component {
   componentWillMount() {
     this.ref = firebase.firestore().collection('republics');
     var user = firebase.auth().currentUser;
+    this.listener = EventRegister.addEventListener('changeIcon', (newTags) =>{
+      console.log(newTags);
+    })
     this.ref.doc(user.uid)
       .get()
       .then((repData) => {

@@ -3,15 +3,15 @@ import { withNavigation } from 'react-navigation';
 import { Container, Header, Content, Button, Icon, Text, Item, Label } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from './styles';
+import { EventRegister } from 'react-native-event-listeners'
 
 class Tags extends Component {
 
   state = {
     iconSize: styles.screen.width * 0.1,
     garageColor: '#c6dcf4',
-    garagem: false,
+    garage: false,
     suitsColor: '#c6dcf4',
     suits: false,
     wifiColor: '#c6dcf4',
@@ -32,44 +32,62 @@ class Tags extends Component {
       <Row>
         <Label>Tags:    </Label>
         <Button transparent onPress={() => {
-          if (this.state.suitsColor == '#c6dcf4')
+          if (this.state.suitsColor == '#c6dcf4') {
             this.setState({ suitsColor: '#8002ff', suits: true });
-
-          else
+            EventRegister.emit('changeIcon', this.state)
+          }
+          else {
             this.setState({ suitsColor: '#c6dcf4', suits: false })
-          console.log(this.state);
+            EventRegister.emit('changeIcon', this.state)
+          }
         }}>
           <FontAwesome size={this.state.iconSize} name='bath' color={this.state.suitsColor} />
         </Button>
         <Button transparent onPress={() => {
-          if (this.state.garageColor == '#c6dcf4')
-            this.setState({ garageColor: '#8002ff', garage: true })
-          else
+          if (this.state.garageColor == '#c6dcf4') {
+            this.setState({ garageColor: '#8002ff', suits: true, garage: true, wifi: false, party: false, pets: false })
+            EventRegister.emit('changeIcon', { garage: true })
+          }
+          else {
             this.setState({ garageColor: '#c6dcf4', garage: false })
+            EventRegister.emit('changeIcon', { garage: false })
+          }
         }} >
           <FontAwesome size={this.state.iconSize} name='car' color={this.state.garageColor} />
         </Button>
         <Button transparent onPress={() => {
-          if (this.state.petsColor == '#c6dcf4')
+          if (this.state.petsColor == '#c6dcf4') {
             this.setState({ petsColor: '#8002ff', pets: true })
-          else
+            EventRegister.emit('changeIcon', { pets: true })
+          }
+          else {
             this.setState({ petsColor: '#c6dcf4', pets: false })
+            EventRegister.emit('changeIcon', { pets: false })
+          }
         }} >
           <FontAwesome size={this.state.iconSize} name='paw' color={this.state.petsColor} />
         </Button>
         <Button transparent onPress={() => {
-          if (this.state.wifiColor == '#c6dcf4')
+          if (this.state.wifiColor == '#c6dcf4') {
             this.setState({ wifiColor: '#8002ff', wifi: true })
-          else
+            EventRegister.emit('changeIcon', { wifi: true })
+          }
+          else {
             this.setState({ wifiColor: '#c6dcf4', wifi: false })
+            EventRegister.emit('changeIcon', { wifi: false })
+          }
         }}>
           <FontAwesome size={this.state.iconSize} name='wifi' color={this.state.wifiColor} />
         </Button>
         <Button transparent onPress={() => {
-          if (this.state.partyColor == '#c6dcf4')
+          if (this.state.partyColor == '#c6dcf4') {
             this.setState({ partyColor: '#8002ff', party: true })
-          else
+            EventRegister.emit('changeIcon', { party: true })
+          }
+          else {
             this.setState({ partyColor: '#c6dcf4', party: false })
+            EventRegister.emit('changeIcon', {party: false})
+          }
         }}>
           <FontAwesome size={this.state.iconSize} name='music' color={this.state.partyColor} />
         </Button>
