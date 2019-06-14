@@ -90,7 +90,6 @@ class RepCard extends Component {
 
   descView = () => {
     var rep = this.state
-    console.log("chameeeiiii");
     this.props.navigation.navigate("Description", { rep });
   }
 
@@ -101,8 +100,6 @@ class RepCard extends Component {
   }
 
   componentWillMount() {
-
-    console.log("entrou na componentWillMount da repcard");
 
     var qtd = this.state.vacancies
     this.state.vacancies = qtd > 1 ? qtd + ' Vagas' : qtd + ' Vaga'
@@ -125,7 +122,6 @@ class RepCard extends Component {
       })
     })
 
-    console.log('saiu da willmount da repcard')
   }
 
   render() {
@@ -238,7 +234,6 @@ class RepCard extends Component {
       .get()
       .then(function (doc) {
         if (doc.exists) {
-          console.log("Document data:", doc.data());
           var data = doc.data().repIds;
           data.forEach(repId => { // COLOCA AS CONVERSAS EM UM ARRAY NO STATE
             this.repIds.push(repId)

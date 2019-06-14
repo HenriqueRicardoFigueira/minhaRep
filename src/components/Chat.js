@@ -20,7 +20,7 @@ class Chat extends Component {
       repId: '', // PARA FINS DE TESTE
       messages: [],
 
-      name:'',
+      name: '',
       photoURL: '',
       email: '',
     };
@@ -40,7 +40,7 @@ class Chat extends Component {
   get refFirestore() {
     return firebase.firestore()
       .collection('chats')
-      .doc(this.uid)
+      .doc(firebaseSvc.uid)
       .collection(this.state.repId)
   }
 
@@ -73,35 +73,60 @@ class Chat extends Component {
         messages: GiftedChat.append(previousState.messages, message),
       }))
     );
-    console.log(firebaseSvc.uid);
   }
 
-  refOn = callback => {
+  refOn() {
+    var messages = [];
+    console.log('entro no refOn')
     if (this.refFirestore) {
       this.refFirestore
         .limit(20)
-        .onSnapshot(snapshot => callback(this.parse(snapshot)));
+        .onSnapshot(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            console.log('DATA FROM SNAPSHOT', doc.data());
+            const { createdAt, text, user } = doc.data();
+            const { key: id } = doc.data().user._id;
+            const { key: _id } = doc.data().user._id; //needed for giftedchat
+            const timestamp = new Date(createdAt);
+
+            const message = {
+              id,
+              _id,
+              timestamp,
+              text,
+              user,
+            };
+            messages.push(message)
+            console.log('MESSAGE SNAPSHOT', message);
+          });
+        });
+        this.setState({
+          messages,
+        })
     } else {
       alert('No data')
     }
   }
 
-
-  parse = snapshot => { // PARSE THE FIREBASE DATA
-    const { timestamp: numberStamp, text, user } = snapshot.data();
-    const { key: id } = snapshot;
-    const { key: _id } = snapshot; //needed for giftedchat
-    const timestamp = new Date(numberStamp);
-
-    const message = {
-      id,
-      _id,
-      timestamp,
-      text,
-      user,
+  /*
+    parse = doc => { // PARSE THE FIREBASE DATA
+      console.log('DATA FROM SNAPSHOT', doc.data());
+      const { timestamp: numberStamp, text, user } = doc.data();
+      const { key: id } = doc;
+      const { key: _id } = doc; //needed for giftedchat
+      const timestamp = new Date(numberStamp);
+  
+      const message = {
+        id,
+        _id,
+        timestamp,
+        text,
+        user,
+      };
+      console.log('MESSAGE SNAPSHOT', message);
+      return message;
     };
-    return message;
-  };
+  */
 
   send = messages => {
     for (let i = 0; i < messages.length; i++) {
@@ -109,16 +134,18 @@ class Chat extends Component {
       const message = {
         text,
         user,
-        createdAt: this.timestamp,
+        createdAt: firebaseSvc.timestamp,
       };
       this.refFirestore.add(message);
     }
   };
 
   onSend(messages = []) {
+    console.log('ONSEND METHOD MESSAGES antes: ', messages)
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }))
+    console.log('ONSEND METHOD MESSAGES depois: ', messages)
   }
 
   render() {

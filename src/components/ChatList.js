@@ -36,34 +36,22 @@ class ChatList extends Component {
   }
 
   componentDidMount = async () => {
-
-    console.log('entrou na did da chatlist')
     var chats = [];
     var userUid = firebaseSvc.uid;
-    console.log(userUid)
 
     await this.refChats.doc(userUid).get().then(function (doc) { // PEGA OS DADOS DO DOCUMENTO
-
-      console.log('entrou na get do did do chatlist')
-      console.log(doc.exists)
       if (doc.exists) {
-
-        console.log("repIds l.53:", doc.data().repIds);
-
         doc.data().repIds.forEach(repId => { // PASSA O ARRAY DO BANCO PRO STATE
           chats.push({
             repId
           });
         });
-
       } else {
         console.log("No such document!");
       }
     }).catch(function (error) {
       console.log("Error getting document:", error);
     });
-    console.log('saiu da did da chatlist', chats)
-    console.log("this", this);
     this.setState({
       chats,
     });
@@ -73,8 +61,6 @@ class ChatList extends Component {
   }
 
   chatNavigate(item) {
-    var userUid = firebaseSvc.uid;
-    console.log(item);
     this.props.navigation.navigate("Chat", { repId: item.repId }); // VAI PARA O CHAT LEVANDO O REP ID
   }
 

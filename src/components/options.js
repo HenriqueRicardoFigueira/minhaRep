@@ -24,9 +24,6 @@ class Options extends Component {
     }
   }
   componentDidMount = async () => {
-    
-    console.log('entrou na did mount da options')
-
     var user = firebase.auth().currentUser;
 
     await this.ref.doc(user.uid) 
@@ -39,14 +36,11 @@ class Options extends Component {
             uid: user.uid,
             photoURL: userP.photoURL,
           })
-          console.log(this.state.photoURL)
         } else {
           console.log("Não existe usuário");
         }
       })
       
-    console.log('saiu na did mount da options')
-
   }
   logout = () => {
     let isLogged = true;

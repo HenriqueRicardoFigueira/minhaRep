@@ -17,9 +17,8 @@ class FirebaseSvc {
     return (firebase.auth().currentUser || {}).uid;
   }
 
-  get refFirebase() { // GET FIREBASE REFERENCE
-    return firebase.database()
-      .ref(`chats/${this.uid}/XSfhxSVNswMgkrJphNgCGFonnAP2`)
+  get email() { // GET USER EMAIL
+    return (firebase.auth().currentUser || {}).email;
   }
 
   get timestamp() {
