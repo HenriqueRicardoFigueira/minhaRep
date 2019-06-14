@@ -5,7 +5,7 @@ import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert } from '../../androidBackButton';
 import Swiper from 'react-native-swiper';
-import PhotoCard from '../../components/photoCard'
+import ChatList from '../../components/ChatList'
 import Options from '../options/index'
 import { Header, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -273,10 +273,10 @@ export default class App extends React.Component {
       </View>]
     )
   }
-  sectionTeste() {
+  sectionChatsList() {
     return (
       [<View>
-        <PhotoCard></PhotoCard>
+        <ChatList></ChatList>
       </View>]
     )
   }
@@ -308,9 +308,9 @@ export default class App extends React.Component {
   renderSection = () => {
     const sectionOptionsArray = this.sectionOptions();
     const sectionRepsArray = this.sectionReps();
-    const sectionTesteArray = this.sectionTeste();
+    const sectionChatsListArray = this.sectionChatsList();
 
-    const componentReturn = [...sectionOptionsArray, ...sectionRepsArray, ...sectionTesteArray]
+    const componentReturn = [...sectionOptionsArray, ...sectionRepsArray, ...sectionChatsListArray]
     const componentList = componentReturn.map((item, i) => item);
     return (
       <Swiper ref='swiper' index={pageIndex} onIndexChanged={(index) =>

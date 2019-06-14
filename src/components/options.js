@@ -24,9 +24,12 @@ class Options extends Component {
     }
   }
   componentDidMount = async () => {
+    
+    console.log('entrou na did mount da options')
+
     var user = firebase.auth().currentUser;
 
-    await this.ref.doc(user.uid)
+    await this.ref.doc(user.uid) 
       .get()
       .then((userData) => {
         if (userData.exists) {
@@ -41,6 +44,8 @@ class Options extends Component {
           console.log("Não existe usuário");
         }
       })
+      
+    console.log('saiu na did mount da options')
 
   }
   logout = () => {
@@ -49,24 +54,25 @@ class Options extends Component {
       "Alerta!",
       "Tem certeza que deseja sair?",
       [
-        { text: "Sim", onPress: async() => {
+        {
+          text: "Sim", onPress: async () => {
             await firebase.auth().signOut().then(function () {
               console.log("deslogado");
               isLogged = false
             }).catch(function (error) {
               console.log(error);
             });
-            if (isLogged == false){
+            if (isLogged == false) {
               this.props.navigation.navigate("Login");
             }
           }
         },
         {
           text: "Cancelar",
-          onPress: ()=> console.log("cancelado")
+          onPress: () => console.log("cancelado")
         },
       ],
-      {cancelable: false},
+      { cancelable: false },
     )
   }
 
