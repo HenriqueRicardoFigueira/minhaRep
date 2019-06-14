@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Animated, PanResponder, Text } from 'react-native';
+import { Alert, AsyncStorage, View, Animated, PanResponder, Text } from 'react-native';
 import RepCard from '../../components/RepCard';
 import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
@@ -390,8 +390,44 @@ export default class App extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.getDados();
+    this.checkPermission()
+    this.createNotificationListeners()
+  }
+
+  // 1
+  async checkPermission() {
+    const enabled = await firebase.messaging().hasPermission()
+    if (enabled) {
+        this.getToken()
+    } else {
+        this.requestPermission()
+    }
+  }
+
+  // 3
+  async getToken() {
+    this.fcmToken = await AsyncStorage.getItem('fcmToken')
+    if (!this.fcmToken) {
+        this.fcmToken = await firebase.messaging().getToken()
+        if (this.fcmToken) {
+            console.log(this.fcmToken)
+            // user has a device token
+            await AsyncStorage.setItem('fcmToken', this.fcmToken)
+        }
+    }
+  }
+
+  async requestPermission() {
+    try {
+        await firebase.messaging().requestPermission()
+        // User has authorised
+        this.getToken()
+    } catch (error) {
+        // User has rejected permissions
+        console.log('permission rejected')
+    }
   }
 
   componentWillUnmount() {
