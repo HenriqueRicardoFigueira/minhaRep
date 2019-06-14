@@ -393,7 +393,6 @@ export default class App extends React.Component {
   async componentDidMount() {
     this.getDados();
     this.checkPermission()
-    this.createNotificationListeners()
   }
 
   // 1
