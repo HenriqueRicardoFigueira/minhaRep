@@ -38,58 +38,44 @@ class ChatList extends Component {
   componentDidMount = async () => {
 
     console.log('entrou na did da chatlist')
-
+    var chats = [];
     var userUid = firebaseSvc.uid;
     console.log(userUid)
 
     await this.refChats.doc(userUid).get().then(function (doc) { // PEGA OS DADOS DO DOCUMENTO
 
       console.log('entrou na get do did do chatlist')
+      console.log(doc.exists)
       if (doc.exists) {
-        console.log("Document data:", doc.data());
 
-        var chats = [];
+        console.log("repIds l.53:", doc.data().repIds);
+
         doc.data().repIds.forEach(repId => { // PASSA O ARRAY DO BANCO PRO STATE
           chats.push({
-            key: repId.id,
             repId
           });
         });
-        this.setState({
-          chats,
-        });
-        console.log(this.chats);
+
       } else {
         console.log("No such document!");
       }
     }).catch(function (error) {
       console.log("Error getting document:", error);
     });
-    console.log(this.state.chats);
-    console.log('saiu da did da chatlist')
+    console.log('saiu da did da chatlist', chats)
+    console.log("this", this);
+    this.setState({
+      chats,
+    });
   };
 
   componentwillMount() {
   }
 
-  repName = (repId) => {
-    this.refRep.doc(repId).get().then(function (doc) { // PEGA OS DADOS DO DOCUMENTO
-      if (doc.exists) {
-        console.log("Document data:", doc.data());
-        return doc.data().name; // PASSA O ARRAY DO BANCO PRO STATE
-      } else {
-        console.log("No such document!");
-        return null;
-      }
-    }).catch(function (error) {
-      console.log("Error getting document:", error);
-    });
-  }
-
   chatNavigate(item) {
     var userUid = firebaseSvc.uid;
     console.log(item);
-    this.props.navigation.navigate("ChatList", { repId: item.repId }); // VAI PARA O CHAT LEVANDO O REP ID
+    this.props.navigation.navigate("Chat", { repId: item.repId }); // VAI PARA O CHAT LEVANDO O REP ID
   }
 
   renderContent = (item) => {
@@ -108,7 +94,7 @@ class ChatList extends Component {
     return (
       <View style={styles.content}>
         <Text style={styles.listText}>
-          {item.name}
+          {item.repId}
         </Text>
       </View>
     );
