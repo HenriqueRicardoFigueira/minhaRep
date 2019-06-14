@@ -407,15 +407,26 @@ export default class App extends React.Component {
 
   // 3
   async getToken() {
-    this.fcmToken = await AsyncStorage.getItem('fcmToken')
-    if (!this.fcmToken) {
-        this.fcmToken = await firebase.messaging().getToken()
-        if (this.fcmToken) {
-            console.log(this.fcmToken)
-            // user has a device token
-            await AsyncStorage.setItem('fcmToken', this.fcmToken)
-        }
-    }
+    this.refUser = firebase.auth().currentUser.uid
+    this.fcmToken = await firebase.messaging().getToken()
+
+    ref = firebase.firestore().collection('users');
+    ref.doc(this.refUser)
+      .get()
+      .then((userData) => {
+          userData = userData.data();
+          // update user with token
+          ref.doc(userData.uid).set({
+            age: userData.age,
+            bio: userData.bio,
+            email: userData.email,
+            gotUrl: userData.gotUrl,
+            name: userData.name,
+            photoURL: userData.photoURL,
+            uid: this.refUser,
+            token: this.fcmToken
+          })
+      })
   }
 
   async requestPermission() {
