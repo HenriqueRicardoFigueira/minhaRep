@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { View, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { styles } from './styles';
-
+import Tags from './tags';
 
 // import { Container } from './styles';
 
@@ -29,6 +29,7 @@ class Desc extends Component {
             longitude: '',
             vacancies: '',
             localization: '',
+            tags: '',
             city: '',
             bio: '',
         }
@@ -54,6 +55,7 @@ class Desc extends Component {
             latitude: rep.latitude,
             longitude: rep.longitude,
             city: rep.city,
+            tags: rep.tags,
             bio: rep.bio
         })
         console.log(this.state);
@@ -114,6 +116,9 @@ class Desc extends Component {
                         <Label>{this.state.city}</Label>
                     </Right>
                 </ListItem>
+
+                <Tags tags={this.state.tags}/>
+
                 <ListItem button >
                     <Button transparent style={{ width: this.buttonWidth, height: this.buttonHeight }} onPress={this.mapView}>
                         <Left>

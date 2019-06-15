@@ -30,6 +30,12 @@ class Anuncio extends Component {
     }
   }
 
+  /* 
+  adicionando as tags no estado, criado um evento para identificar as mudanças nos icones do componente tags, 
+  foi feito dessa forma pois ainda há um número pequeno de tags, após o termino da disciplina repensar o modelo!!
+  
+  */ 
+
   componentWillMount() {
     this.ref = firebase.firestore().collection('republics');
     var user = firebase.auth().currentUser;

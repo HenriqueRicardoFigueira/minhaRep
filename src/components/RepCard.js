@@ -33,6 +33,7 @@ class RepCard extends Component {
       repImage: props.rep.photoURL,
       longitude: props.rep.longitude,
       vacancies: props.rep.vacancies,
+      tags: props.rep.tags,
       localization: props.rep.localization,
       bio: props.rep.bio,
       city: props.rep.city,

@@ -260,15 +260,6 @@ class RepForm extends Component {
               style = {styles.inputStyle}
             ></Input>
           </Item>
-
-          <Item floatingLabel style={styles.floatInput}>
-            <Label>Tags:</Label>
-            <Input
-              value={this.state.tags}
-              onChangeText={(tags) => this.setState({ tags })}
-              style = {styles.inputStyle}
-            ></Input>
-          </Item>
           
           <Button style={styles.button} onPress={() => {imageSelect(this.state.admUID, this.updateStateCallback)}}>
             <Text style={styles.buttonText}> Enviar Foto </Text>

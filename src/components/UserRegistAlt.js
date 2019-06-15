@@ -5,6 +5,8 @@ import { firebase } from '../../Firebase'
 import { styles } from './styles';
 import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
 import { withNavigation } from 'react-navigation';
+import Tags from './tags';
+import { EventRegister } from 'react-native-event-listeners'
 
 class UserRegistAlt extends Component {
   constructor(props) {
@@ -20,13 +22,53 @@ class UserRegistAlt extends Component {
       bio: null,
       uid: '',
       photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381',
-
+      tags: {
+        garage: false,
+        suits: false,
+        pets: false,
+        wifi: false,
+        party: false
+      },
       borderColorAge: '#e6e6e6',
       borderColorName: '#e6e6e6',
       borderColorEmail: '#e6e6e6',
       borderColorPassword: '#e6e6e6',
     };
   };
+
+  componentWillMount() {
+    
+    var suits = false;
+    var garage = false;
+    var wifi = false;
+    var party = false;
+    var pets = false;
+    this.listener = EventRegister.addEventListener('changeIcon', (newTags) => {
+      console.log(newTags);
+      if (newTags == 'suits')
+        suits = true;
+      else if (newTags == 'nosuits')
+        suits = false;
+      else if (newTags == 'garage')
+        garage = true;
+      else if (newTags == 'nogarage')
+        garage = false;
+      else if (newTags == 'pets')
+        pets = true;
+      else if (newTags == 'nopets')
+        pets = false;
+      else if (newTags == 'wifi')
+        wifi = true;
+      else if (newTags == 'nowifi')
+        wifi = false;
+      else if (newTags == 'party')
+        party = true;
+      else if (newTags == 'noparty')
+        party = false;
+
+      this.setState({ tags: { suits: suits, garage: garage, pets: pets, wifi: wifi, party: party } })
+    })
+  }
 
   componentDidMount = async () => {
     var user = firebase.auth().currentUser;
@@ -52,7 +94,7 @@ class UserRegistAlt extends Component {
   }
 
   registerUser = async () => {
-    const { email, age, name, bio, photoURL } = this.state;
+    const { email, age, name, bio, photoURL, tags } = this.state;
     if (!this.canRegister(email, age, name)) {
       return
     }
@@ -69,6 +111,7 @@ class UserRegistAlt extends Component {
       uid: user.uid,
       age: age,
       name: name,
+      tags: tags,
       photoURL: photoURL,
     }).catch((error) => {
       console.error("Error registering user: ", error);
@@ -90,40 +133,42 @@ class UserRegistAlt extends Component {
     return (
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.container}>
-        <Image
-          style={{ width: 100, height: 100 }}
-          source={{ uri: this.state.photoURL }} />
+          <Image
+            style={{ width: 100, height: 100 }}
+            source={{ uri: this.state.photoURL }} />
 
-        <Text h1>Estamos quase lá {this.state.name}!</Text>
-        <Text h1>Só precisamos de mais algumas informações:</Text>
-        <Text />
+          <Text h1>Estamos quase lá {this.state.name}!</Text>
+          <Text h1>Só precisamos de mais algumas informações:</Text>
+          <Text />
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorAge }}>
-          <Label>Digite sua idade:</Label>
-          <Input
-            value={this.state.age}
-            keyboardType='number-pad'
-            onChangeText={(age) => this.setState({ age })}
-            onEndEditing={() => ageColor.call(this, this.state.age)}
-            style = {styles.inputStyle}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={styles.floatInput}
+            style={{ borderColor: this.state.borderColorAge }}>
+            <Label>Digite sua idade:</Label>
+            <Input
+              value={this.state.age}
+              keyboardType='number-pad'
+              onChangeText={(age) => this.setState({ age })}
+              onEndEditing={() => ageColor.call(this, this.state.age)}
+              style={styles.inputStyle}
+            ></Input>
+          </Item>
 
-        <Item floatingLabel style={styles.floatInput}
-          style={{ borderColor: this.state.borderColorAge }}>
-          <Label>Descreva um pouco sobre você:</Label>
-          <Input
-            value={this.state.bio}
-            onChangeText={(bio) => this.setState({ bio })}
-            onEndEditing={() => ageColor.call(this, this.state.bio)}
-            style = {styles.inputStyle}
-          ></Input>
-        </Item>
+          <Item floatingLabel style={styles.floatInput}
+            style={{ borderColor: this.state.borderColorAge }}>
+            <Label>Descreva um pouco sobre você:</Label>
+            <Input
+              value={this.state.bio}
+              onChangeText={(bio) => this.setState({ bio })}
+              onEndEditing={() => ageColor.call(this, this.state.bio)}
+              style={styles.inputStyle}
+            ></Input>
+          </Item>
 
-        <Button style={styles.button} onPress={this.registerUser}>
-          <Text style={styles.buttonText}> Registrar </Text>
-        </Button>
+          <Tags />
+
+          <Button style={styles.button} onPress={this.registerUser}>
+            <Text style={styles.buttonText}> Registrar </Text>
+          </Button>
 
         </View>
       </ScrollView>

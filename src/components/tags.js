@@ -16,7 +16,7 @@ class Tags extends Component {
     partyColor: '#c6dcf4',
     petsColor: '#c6dcf4',
   }
-
+  
 
   // logica usada é quando alguem clicar em um botao ele troca de cor e seta um status true no estado
   // foi feito dessa forma pois tive problemas com setState em objetos
