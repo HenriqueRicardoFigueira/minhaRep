@@ -18,7 +18,13 @@ class Anuncio extends Component {
       value: '',
       vacancies: '',
       repUID: firebase.auth().currentUser.uid,
-
+      tags: {
+        garage: false,
+        suits: false,
+        pets: false,
+        wifi: false,
+        party: false
+      },
       borderColorValue: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
     }
@@ -27,9 +33,37 @@ class Anuncio extends Component {
   componentWillMount() {
     this.ref = firebase.firestore().collection('republics');
     var user = firebase.auth().currentUser;
-    this.listener = EventRegister.addEventListener('changeIcon', (newTags) =>{
+    var suits = false;
+    var garage = false;
+    var wifi = false;
+    var party = false;
+    var pets = false;
+    this.listener = EventRegister.addEventListener('changeIcon', (newTags) => {
       console.log(newTags);
+      if (newTags == 'suits')
+        suits = true;
+      else if (newTags == 'nosuits')
+        suits = false;
+      else if (newTags == 'garage')
+        garage = true;
+      else if (newTags == 'nogarage')
+        garage = false;
+      else if (newTags == 'pets')
+        pets = true;
+      else if (newTags == 'nopets')
+        pets = false;
+      else if (newTags == 'wifi')
+        wifi = true;
+      else if (newTags == 'nowifi')
+        wifi = false;
+      else if (newTags == 'party')
+        party = true;
+      else if (newTags == 'noparty')
+        party = false;
+
+      this.setState({ tags: { suits: suits, garage: garage, pets: pets, wifi: wifi, party: party } })
     })
+
     this.ref.doc(user.uid)
       .get()
       .then((repData) => {
@@ -49,6 +83,7 @@ class Anuncio extends Component {
           this.props.navigation.navigate("RepCard");
         }
       })
+    console.log(this.state)
   }
 
   canRegister = (number, value) => {
@@ -60,7 +95,7 @@ class Anuncio extends Component {
   // CHAMAR ESTA FUNÇÃO AO CLICAR NO BOTÃO DE CADASTRAR ANÚNCIO
   registerRep = () => {
 
-    const { value, vacancies, repUID } = this.state;
+    const { value, vacancies, repUID, tags } = this.state;
     if (!this.canRegister(vacancies, value)) {
       return
     }
@@ -84,7 +119,7 @@ class Anuncio extends Component {
       numberHome: repDatas.numberHome,
       photoURL: repDatas.photoURL,
       street: repDatas.street,
-      tags: repDatas.tags,
+      tags: tags,
       uf: repDatas.uf,
       value: value,
       vacancies: vacancies,
@@ -102,7 +137,7 @@ class Anuncio extends Component {
             keyboardType='number-pad'
             onChangeText={(value) => this.setState({ value })}
             onEndEditing={() => valueColor.call(this, this.state.value)}
-            style = {styles.inputStyle}
+            style={styles.inputStyle}
           ></Input>
         </Item>
 
@@ -112,7 +147,7 @@ class Anuncio extends Component {
             keyboardType='number-pad'
             onChangeText={(vacancies) => this.setState({ vacancies })}
             onEndEditing={() => numberColor.call(this, this.state.vacancies)}
-            style = {styles.inputStyle}
+            style={styles.inputStyle}
           ></Input>
         </Item>
 

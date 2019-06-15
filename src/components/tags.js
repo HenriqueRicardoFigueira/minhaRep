@@ -11,15 +11,10 @@ class Tags extends Component {
   state = {
     iconSize: styles.screen.width * 0.1,
     garageColor: '#c6dcf4',
-    garage: false,
     suitsColor: '#c6dcf4',
-    suits: false,
     wifiColor: '#c6dcf4',
-    wifi: false,
     partyColor: '#c6dcf4',
-    party: false,
     petsColor: '#c6dcf4',
-    pets: false
   }
 
 
@@ -33,60 +28,60 @@ class Tags extends Component {
         <Label>Tags:    </Label>
         <Button transparent onPress={() => {
           if (this.state.suitsColor == '#c6dcf4') {
-            this.setState({ suitsColor: '#8002ff', suits: true });
-            EventRegister.emit('changeIcon', this.state)
+            this.setState({ suitsColor: '#8002ff'});
+            EventRegister.emit('changeIcon', 'suits')
           }
           else {
-            this.setState({ suitsColor: '#c6dcf4', suits: false })
-            EventRegister.emit('changeIcon', this.state)
+            this.setState({ suitsColor: '#c6dcf4'})
+            EventRegister.emit('changeIcon', 'nosuits')
           }
         }}>
           <FontAwesome size={this.state.iconSize} name='bath' color={this.state.suitsColor} />
         </Button>
         <Button transparent onPress={() => {
           if (this.state.garageColor == '#c6dcf4') {
-            this.setState({ garageColor: '#8002ff', suits: true, garage: true, wifi: false, party: false, pets: false })
-            EventRegister.emit('changeIcon', { garage: true })
+            this.setState({ garageColor: '#8002ff' })
+            EventRegister.emit('changeIcon', 'garage')
           }
           else {
-            this.setState({ garageColor: '#c6dcf4', garage: false })
-            EventRegister.emit('changeIcon', { garage: false })
+            this.setState({ garageColor: '#c6dcf4'})
+            EventRegister.emit('changeIcon', 'nogarage')
           }
         }} >
           <FontAwesome size={this.state.iconSize} name='car' color={this.state.garageColor} />
         </Button>
         <Button transparent onPress={() => {
           if (this.state.petsColor == '#c6dcf4') {
-            this.setState({ petsColor: '#8002ff', pets: true })
-            EventRegister.emit('changeIcon', { pets: true })
+            this.setState({ petsColor: '#8002ff' })
+            EventRegister.emit('changeIcon', 'pets')
           }
           else {
-            this.setState({ petsColor: '#c6dcf4', pets: false })
-            EventRegister.emit('changeIcon', { pets: false })
+            this.setState({ petsColor: '#c6dcf4'})
+            EventRegister.emit('changeIcon', 'nopets')
           }
         }} >
           <FontAwesome size={this.state.iconSize} name='paw' color={this.state.petsColor} />
         </Button>
         <Button transparent onPress={() => {
           if (this.state.wifiColor == '#c6dcf4') {
-            this.setState({ wifiColor: '#8002ff', wifi: true })
-            EventRegister.emit('changeIcon', { wifi: true })
+            this.setState({ wifiColor: '#8002ff'})
+            EventRegister.emit('changeIcon', 'wifi')
           }
           else {
-            this.setState({ wifiColor: '#c6dcf4', wifi: false })
-            EventRegister.emit('changeIcon', { wifi: false })
+            this.setState({ wifiColor: '#c6dcf4' })
+            EventRegister.emit('changeIcon', 'nowifi')
           }
         }}>
           <FontAwesome size={this.state.iconSize} name='wifi' color={this.state.wifiColor} />
         </Button>
         <Button transparent onPress={() => {
           if (this.state.partyColor == '#c6dcf4') {
-            this.setState({ partyColor: '#8002ff', party: true })
-            EventRegister.emit('changeIcon', { party: true })
+            this.setState({ partyColor: '#8002ff' })
+            EventRegister.emit('changeIcon', 'party')
           }
           else {
-            this.setState({ partyColor: '#c6dcf4', party: false })
-            EventRegister.emit('changeIcon', {party: false})
+            this.setState({ partyColor: '#c6dcf4' })
+            EventRegister.emit('changeIcon', 'noparty')
           }
         }}>
           <FontAwesome size={this.state.iconSize} name='music' color={this.state.partyColor} />
