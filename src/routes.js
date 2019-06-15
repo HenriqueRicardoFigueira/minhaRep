@@ -17,7 +17,9 @@ import Options from './pages/options';
 import PhotoGallery from './pages/photoGallery';
 import Description from './pages/description';
 import Chat from './pages/chat';
+import ChatList from './pages/chatList';
 import Tags from './components/tags';
+
 
 const Teste = createBottomTabNavigator({
     User : HomeUser,
@@ -42,7 +44,9 @@ const Routes = createAppContainer(
         PhotoGallery: PhotoGallery,
         Description: Description,
         Chat: Chat,
+        ChatList: ChatList
         Tags: Tags,
+
 
     }, {
         initialRouteName: 'Login'

@@ -1,9 +1,8 @@
-createMessage = (text, sendId, receiveId) => {
+createMessage = (text, user) => {
     return {
-      messenge: text,
-      receive: receiveId,
-      send: sendId,
-      timestamp: new Date().getTime()
+      createdAt: new Date().getTime(),
+      text: text,
+      user: user,
     }
   }
   

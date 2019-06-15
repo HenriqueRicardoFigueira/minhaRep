@@ -8,148 +8,147 @@ import { withNavigation } from 'react-navigation';
 import { GiftedChat } from 'react-native-gifted-chat'
 import firebaseSvc from './FirebaseSvc'
 
+
 class Chat extends Component {
   constructor(props) {
     super(props);
 
     this.ref = firebase.firestore().collection('chats'); // COLEÇÃO DE DESTINO DAS CONVERSAS
-    this.refUsers = firebase.firestore().collection('users');
+    this.refUsers = firebase.firestore().collection('users'); // COLEÇÃO DOS USERS
 
     this.state = {
       messages: [],
 
-      name: '',
-      email: '',
-      uid: '',
       repId: '',
+      name: '',
       photoURL: '',
-      gotUrl: false,
+
+      isLoaded: false,
     };
 
   };
 
-  getUrl = async () => {
-    const imageName = this.state.uid;
-    const imageRef = firebase.storage().ref('userImages');
-    await imageRef.child(imageName).getDownloadURL().then((url) => {
-      this.setState({ photoURL: url, gotUrl: true })
-    }).catch((error) => {
-      reject(error)
-    });
-    this.editUser();
-    console.log(this.state.photoURL)
+  get user() {
+    return {
+      _id: firebaseSvc.uid,
+      name: this.state.name,
+      avatar: this.state.photoURL,
+    };
   }
 
-  get user() {
-    this.getUrl();
-    if (this.state.gotUrl) {
-      return {
-        name: this.state.name,
-        email: user.email,
-        avatar: '',
-        id: firebaseSvc.uid,
-        _id: firebaseSvc.uid, // need for gifted-chat
-      };
+  get refFirestore() { // REF DA FIRESTORE
+    return firebase.firestore()
+      .collection('chats')
+      .doc(firebaseSvc.uid)
+      .collection(this.state.repId)
+  }
+
+  componentDidMount = async () => {
+    if (!this.isLoaded) {
+
+      var repId = this.props.navigation.getParam('repId', 'Default');
+      this.setState({
+        repId: repId,
+      })
+      this.ref = this.refFirestore;
+
+      var userUid = firebaseSvc.uid;
+      await this.refUsers //PUXA OS DADOS DO USUÁRIO
+        .doc(userUid)
+        .get()
+        .then((userData) => {
+          if (userData.exists) {
+            const userP = userData.data();
+            this.setState({
+              name: userP.name,
+              photoURL: userP.photoURL,
+            })
+          } else {
+            console.log("Não existe usuário");
+          }
+        })
+
+      this.refOn(message => // PEGAS AS MSGS DA CONVERSA ANTERIOR
+        this.setState(previousState => ({
+          messages: GiftedChat.append(previousState.messages, message),
+        }))
+      );
+      this.setState(this.state);
+      this.isLoaded = true
     }
   }
 
-  refOn = callback => {
-    this.unsubscribe = this.ref
-      .onSnapshot(snapshot => callback(this.parse(snapshot)));
+  componentWillMount = () => {
+    this.setState(this.state);
   }
 
+  refOn = async () => {
+    var messages = [];
+    await this.refFirestore
+      .limit(20)
+      .onSnapshot(function (querySnapshot) { // PUXA AS MENSAGENS DO BANCO E COLOCAM EM UM ARRAY 
+        querySnapshot.forEach(function (doc) {
+          console.log('DATA FROM SNAPSHOT', doc);
+          const { createdAt, text, user } = doc.data();
+          const timestamp = new Date(createdAt);
 
-  parse = snapshot => { // PARSE THE FIREBASE DATA
-    console.log(snapshot);
-    const { timestamp: numberStamp, text, user } = snapshot.data();
-    const { key: id } = snapshot;
-    const { key: _id } = snapshot; //needed for giftedchat
-    const timestamp = new Date(numberStamp);
+          const message = {
+            _id: doc.id,
+            text,
+            createdAt: timestamp,
+            user,
+          };
+          messages.push(message);
+          console.log('MESSAGES ARRAY', messages);
+        });
+      });
 
-    const message = {
-      id,
-      _id,
-      timestamp,
-      text,
-      user,
-    };
-    return message;
-  };
+    console.log('SETSTATE ANTES', this.state.messages);
+    this.setState({ // COLOCA O ARRAY EM STATE
+      messages,
+    })
+    this.setState(this.state);
+    console.log('SETSTATE DEPOIS', this.state.messages);
+  }
 
-  send = messages => {
-    for (var i = 0; i < messages.length; i++) {
+  send = messages => { // MANDA AS MENSAGES
+    for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
       const message = {
         text,
         user,
-        createdAt: this.timestamp,
+        createdAt: firebaseSvc.timestamp,
       };
-      this.ref.add(message);
-    }
+      console.log('SEND FUNC, MESSAGE: ', message)
+      this.refFirestore.add(message);
+    };
+    this.setState(this.state);
   };
 
-  onSend(messages = []) {
+  onSend(messages = []) { // ATUALIZA A API
+    var arr = this.state.messages.shift();
+    this.setState({
+      messages: arr,
+    })
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }))
-  }
-
-  componentDidMount = async () => {
-    var repId = this.props.navigation.getParam(repId, 'noValue'); // PEGA O REPID DO NAVIGATION
-    var user = firebase.auth().currentUser; // PEGA O USUÁRIO
-    this.ref = firebase.firestore().collection('chats').doc(user.uid).collection(repId);
-
-    await this.refUsers.doc(user.uid)
-      .get()
-      .then((userData) => {
-        if (userData.exists) {
-          const userP = userData.data();
-          this.setState({
-            name: userP.name,
-            email: userP.email,
-            uid: user.uid,
-            repId: repId,
-          })
-        } else {
-          console.log("Não existe usuário");
-        }
-      })
-    this.refOn(message =>
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, message),
-      }))
-    );
-    console.log(firebaseSvc.uid);
-  }
-
-  componentWillMount() {
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: 'Hello developer',
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
-        },
-      ],
-    })
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
+    console.log('ONSEND METHOD MESSAGES depois: ', messages)
+    this.setState(this.state)
   }
 
   render() {
+    console.log('Mensagens na render()', this.state.messages);
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        onSend={this.send}
-        user={this.user}
-      />
+      <View style={{ flex: 1 }}>
+        <GiftedChat
+          messages={this.state.messages}
+          isAnimated={true}
+          onSend={this.send}
+          user={this.user}
+        />
+      </View>
+
     );
   }
 

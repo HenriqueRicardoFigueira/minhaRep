@@ -9,26 +9,22 @@ const config = {
 }
 
 class FirebaseSvc {
+  constructor() {
+    this.refRep = firebase.firestore().collection('republics');
+  }
 
   get uid() { // GET USER UID
     return (firebase.auth().currentUser || {}).uid;
   }
 
-  get refFirebase() { // GET FIREBASE REFERENCE
-    return firebase.database()
-      .ref(`chats/${this.uid}/XSfhxSVNswMgkrJphNgCGFonnAP2`)
-  }
-
-  get refFirestore() {
-    return firebase.firestore()
-      .collection('chats')
-      .doc(this.uid)
-      .collection('XSfhxSVNswMgkrJphNgCGFonnAP2')
+  get email() { // GET USER EMAIL
+    return (firebase.auth().currentUser || {}).email;
   }
 
   get timestamp() {
     return new Date().getTime();
   }
+
 }
 const firebaseSvc = new FirebaseSvc();
 export default firebaseSvc;

@@ -26,7 +26,7 @@ class Options extends Component {
   componentDidMount = async () => {
     var user = firebase.auth().currentUser;
 
-    await this.ref.doc(user.uid)
+    await this.ref.doc(user.uid) 
       .get()
       .then((userData) => {
         if (userData.exists) {
@@ -36,12 +36,11 @@ class Options extends Component {
             uid: user.uid,
             photoURL: userP.photoURL,
           })
-          console.log(this.state.photoURL)
         } else {
           console.log("Não existe usuário");
         }
       })
-
+      
   }
   logout = () => {
     let isLogged = true;
@@ -60,13 +59,18 @@ class Options extends Component {
             }).catch(function (error) {
               console.log(error);
             });
-            if (isLogged == false){
+            if (isLogged == false) {
               this.props.navigation.navigate("Login");
             }
           }
-        }        
+
+        },
+        {
+          text: "Cancelar",
+          onPress: () => console.log("cancelado")
+        },
       ],
-      {cancelable: false},
+      { cancelable: false },
     )
   }
 

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import Chat from '../../components/Chat';
+import ChatList from '../../components/ChatList';
 
 import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../androidBackButton';
 
-export default class ChatPage extends Component {
+export default class ChatListPage extends Component {
 
   componentWillMount() {
     handleAndroidBackButton(this.props.navigation.navigate, 'RepCard');
@@ -15,6 +15,6 @@ export default class ChatPage extends Component {
   }
 
   render() {
-    return <Chat/>;
+    return <ChatList/>;
   }
 }
