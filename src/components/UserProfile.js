@@ -34,7 +34,7 @@ class UserProfile extends Component {
       age: '', //EDITAVEL
       bio: '', //EDITAVEL
       uid: '', //PK
-
+      
       avatarSource: null,
       photoURL: 'https://firebasestorage.googleapis.com/v0/b/minharep-6c7ba.appspot.com/o/userImages%2FDefaultUserPic.jpg?alt=media&token=0abdf2ac-06de-4ca6-b79d-7c1c08981381',
       gotUrl: false,
@@ -75,6 +75,7 @@ class UserProfile extends Component {
             bio: userP.bio,
             age: userP.age,
             uid: user.uid,
+            photoURL: user.photoURL,
           })
         } else {
           console.log("Não existe usuário");
@@ -200,13 +201,14 @@ class UserProfile extends Component {
         <View style={styles.container}>
 
           {this.state.avatarSource ? <Thumbnail source={{ uri: this.state.photoURL }} /> : <Text />}
-
+      
           <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorName }, styles.floatInput)} >
             <Label>Nome:</Label>
             <Input
               value={this.state.name}
               onChangeText={(name) => this.setState({ name })}
               onEndEditing={() => nameColor.call(this, this.state.name)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -217,6 +219,7 @@ class UserProfile extends Component {
               disabled
               onChangeText={(email) => this.setState({ email })}
               onEndEditing={() => emailColor.call(this, this.state.email)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -227,6 +230,7 @@ class UserProfile extends Component {
               keyboardType='number-pad'
               onChangeText={(age) => this.setState({ age })}
               onEndEditing={() => ageColor.call(this, this.state.age)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -236,6 +240,7 @@ class UserProfile extends Component {
               value={this.state.bio}
               onChangeText={(bio) => this.setState({ bio })}
               onEndEditing={() => bioColor.call(this, this.state.bio)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
           <Image

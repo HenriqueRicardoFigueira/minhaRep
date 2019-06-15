@@ -44,10 +44,8 @@ const Routes = createAppContainer(
         PhotoGallery: PhotoGallery,
         Description: Description,
         Chat: Chat,
-        ChatList: ChatList
+        ChatList: ChatList,
         Tags: Tags,
-
-
     }, {
         initialRouteName: 'Login'
     })

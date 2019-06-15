@@ -137,14 +137,14 @@ class RepForm extends Component {
       return true;
   }
 
-  addRep = () => {
+   addRep = async() => {
     const { name, bio, members, cep, numberHome, bathroom, bed } = this.state;
 
     if (!this.canRegister(name, bio, members, bathroom, bed)) {
       return
     }
 
-    this.ref.doc(this.state.uid).set({
+    await this.ref.doc(this.state.uid).set({
 
       name: name,
       bio: bio,
@@ -184,6 +184,7 @@ class RepForm extends Component {
               value={this.state.name}
               onChangeText={(name) => this.setState({ name })}
               onEndEditing={() => nameColor.call(this, this.state.name)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -193,6 +194,7 @@ class RepForm extends Component {
               value={this.state.bio}
               onChangeText={(bio) => this.setState({ bio })}
               onEndEditing={() => bioColor.call(this, this.state.bio)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -203,6 +205,7 @@ class RepForm extends Component {
               keyboardType='number-pad'
               onChangeText={(members) => this.setState({ members })}
               onEndEditing={() => memberColor.call(this, this.state.members)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -213,6 +216,7 @@ class RepForm extends Component {
               keyboardType='number-pad'
               onChangeText={(cep) => this.setState({ cep })}
               onEndEditing={() => this.searchAdress(this.state.cep)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -220,6 +224,7 @@ class RepForm extends Component {
             <Label>Rua:</Label>
             <Input
               value={this.state.street}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -230,6 +235,7 @@ class RepForm extends Component {
               value={this.state.numberHome}
               onChangeText={(numberHome) => this.setState({ numberHome })}
               onEndEditing={() => this.getLocalization()}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -240,6 +246,7 @@ class RepForm extends Component {
               value={this.state.bathroom}
               onChangeText={(bathroom) => this.setState({ bathroom })}
               onEndEditing={() => genericColor.call(this, this.state.bathroom, this.state.regex, 'borderColorBathroom')}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -250,6 +257,7 @@ class RepForm extends Component {
               value={this.state.bed}
               onChangeText={(bed) => this.setState({ bed })}
               onEndEditing={() => genericColor.call(this, this.state.bed, this.state.regex, 'borderColorBed')}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -258,6 +266,7 @@ class RepForm extends Component {
             <Input
               value={this.state.tags}
               onChangeText={(tags) => this.setState({ tags })}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
           

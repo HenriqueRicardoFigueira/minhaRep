@@ -81,6 +81,7 @@ class RepEdit extends Component {
                     <Input
                         value={this.state.name}
                         onChangeText={(text) => this.updateTextInput(text, 'name')}>
+                        style = {styles.inputStyle}
                     </Input>
                 </Item>
                 <Label>Nome da repúplica:</Label>

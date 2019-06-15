@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
@@ -207,6 +207,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     padding: 3,
   },
+  inputStyle:{
+    fontFamily: Platform.OS === 'ios' ? 'HelveticaNeue' : 'Oswald-Light',
+  }
 });
 
 module.exports = { input, styles };

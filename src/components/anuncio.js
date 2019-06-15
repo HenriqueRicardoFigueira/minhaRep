@@ -102,6 +102,7 @@ class Anuncio extends Component {
             keyboardType='number-pad'
             onChangeText={(value) => this.setState({ value })}
             onEndEditing={() => valueColor.call(this, this.state.value)}
+            style = {styles.inputStyle}
           ></Input>
         </Item>
 
@@ -111,6 +112,7 @@ class Anuncio extends Component {
             keyboardType='number-pad'
             onChangeText={(vacancies) => this.setState({ vacancies })}
             onEndEditing={() => numberColor.call(this, this.state.vacancies)}
+            style = {styles.inputStyle}
           ></Input>
         </Item>
 

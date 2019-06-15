@@ -217,6 +217,7 @@ class RepCRUD extends Component {
               value={this.state.name}
               onChangeText={(name) => this.setState({ name })}
               onEndEditing={() => nameColor.call(this, this.state.name)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -227,6 +228,7 @@ class RepCRUD extends Component {
               keyboardType='number-pad'
               onChangeText={(members) => this.setState({ members })}
               onEndEditing={() => memberColor.call(this, this.state.members)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -236,6 +238,7 @@ class RepCRUD extends Component {
               value={this.state.bio}
               onChangeText={(bio) => this.setState({ bio })}
               onEndEditing={() => bioColor.call(this, this.state.bio)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -246,6 +249,7 @@ class RepCRUD extends Component {
               value={this.state.cep}
               onChangeText={(cep) => this.setState({ cep })}
               onEndEditing={() => this.searchAdress(this.state.cep)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -256,6 +260,7 @@ class RepCRUD extends Component {
               value={this.state.numberHome}
               onChangeText={(numberHome) => this.setState({ numberHome })}
               onEndEditing={() => { this.getLocalization() }}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -266,6 +271,7 @@ class RepCRUD extends Component {
               value={this.state.bathroom}
               onChangeText={(bathroom) => this.setState({ bathroom })}
               onEndEditing={() => genericColor.call(this, this.state.bathroom, this.state.regex, 'borderColorBathroom')}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -276,6 +282,7 @@ class RepCRUD extends Component {
               value={this.state.bed}
               onChangeText={(bed) => this.setState({ bed })}
               onEndEditing={() => genericColor.call(this, this.state.bed, this.state.regex, 'borderColorBed')}
+              style = {styles.inputStyle}
             ></Input>
 
           </Item>
@@ -286,6 +293,7 @@ class RepCRUD extends Component {
               value={this.state.tags}
               disabled
               onChangeText={(tags) => this.setState({ tags })}
+              style = {styles.inputStyle}
             ></Input>
           </Item>                                                                                                   
 

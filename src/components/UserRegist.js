@@ -76,6 +76,7 @@ class UserRegist extends Component {
               value={this.state.name}
               onChangeText={(name) => this.setState({ name })}
               onEndEditing={() => nameColor.call(this, this.state.name)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -86,6 +87,7 @@ class UserRegist extends Component {
               autoCapitalize={'none'}
               onChangeText={(email) => this.setState({ email })}
               onEndEditing={() => emailColor.call(this, this.state.email)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -97,6 +99,7 @@ class UserRegist extends Component {
               autoCapitalize={'none'}
               onChangeText={(password) => this.setState({ password })}
               onEndEditing={() => passwordColor.call(this, this.state.password)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 
@@ -107,6 +110,7 @@ class UserRegist extends Component {
               keyboardType='number-pad'
               onChangeText={(age) => this.setState({ age })}
               onEndEditing={() => ageColor.call(this, this.state.age)}
+              style = {styles.inputStyle}
             ></Input>
           </Item>
 

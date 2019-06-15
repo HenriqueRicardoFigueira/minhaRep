@@ -10,21 +10,6 @@ import ProgressBar from 'react-native-progress/Bar';
 import { firebase } from '../../Firebase';
 import createMessage from './message';
 import { Body } from 'native-base';
-import firebaseSvc from './FirebaseSvc';
-
-if (!Array.prototype.forEach) {
-  Array.prototype.forEach = function (fun /*, thisp*/) {
-    var len = this.length;
-    if (typeof fun != "function")
-      throw new TypeError();
-
-    var thisp = arguments[1];
-    for (var i = 0; i < len; i++) {
-      if (i in this)
-        fun.call(thisp, this[i], i, this);
-    }
-  };
-}
 
 class RepCard extends Component {
 
@@ -34,8 +19,6 @@ class RepCard extends Component {
     this.drag = null
     this.removeSim = props.rep.removeSim
     this.removeNao = props.rep.removeNao
-
-    this.repIds = [],
 
     this.state = {
       iImage: 0,
@@ -53,42 +36,9 @@ class RepCard extends Component {
       localization: props.rep.localization,
       bio: props.rep.bio,
       city: props.rep.city,
-
-      name: '',
-      email: '',
-      photoURL: '',
-
     }
   }
 
-  get user() {
-    return {
-      name: this.state.name,
-      email: this.state.email,
-      avatar: this.state.photoURL,
-      id: firebaseSvc.uid,
-      _id: firebaseSvc.uid, // need for gifted-chat
-    };
-  }
-
-  componentDidMount = async () => {
-    var userUid = firebaseSvc.uid;
-    await this.refUsers
-      .doc(userUid)
-      .get()
-      .then((userData) => {
-        if (userData.exists) {
-          const userP = userData.data();
-          this.setState({
-            name: userP.name,
-            email: userP.email,
-            photoURL: userP.photoURL,
-          })
-        } else {
-          console.log("Não existe usuário");
-        }
-      })
-  }
 
   descView = () => {
     var rep = this.state
@@ -102,7 +52,6 @@ class RepCard extends Component {
   }
 
   componentWillMount() {
-
     var qtd = this.state.vacancies
     this.state.vacancies = qtd > 1 ? qtd + ' Vagas' : qtd + ' Vaga'
     this.iconSize = Math.floor(styles.screen.width * 0.08)
@@ -123,7 +72,6 @@ class RepCard extends Component {
         }
       })
     })
-
   }
 
   render() {
@@ -142,18 +90,14 @@ class RepCard extends Component {
                 <Text style={styles.repLocalization}>{this.state.localization}</Text>
               </View>
             </View>
-          {/* VIEW ICONES */}
-          <View>
-            <Body>
-              <View style={styles.iconView}>
-                {/*BOTÃO NÃO */}
-                <View style={styles.iconViewText}>
-                  <MaterialCommunityIcons name='close' size={this.iconSize} color='#8002ff' onPress={() => {this.remove('NAO', this.removeNao, 1)}} />
-                </View>
-                {/*icone banheiros*/}
-                <View style={styles.iconViewText} >
-                  <View style={styles.icon} >
 
+            {/* VIEW ICONES */}
+            <View>
+              <Body>
+                <View style={styles.iconView}>
+                  {/*BOTÃO NÃO */}
+                  <View style={styles.iconViewText}>
+                    <MaterialCommunityIcons name='close' size={this.iconSize} color='#8002ff' onPress={() => { this.remove('NAO', this.removeNao, 1) }} />
                   </View>
                   {/*icone banheiros*/}
                   <View style={styles.iconViewText} >
@@ -185,19 +129,11 @@ class RepCard extends Component {
                   </View>
                   {/*BOTÃO SIM*/}
                   <View style={styles.iconViewText}>
-                    <MaterialCommunityIcons name='check' size={this.iconSize} color='#e102ff' />
+                    <MaterialCommunityIcons name='check' size={this.iconSize} color='#e102ff' onPress={() => { this.remove('SIM', this.removeSim, 1) }} />
                   </View>
                   <View>
                     <MaterialCommunityIcons name='information-outline' color='#c6dcf4' size={this.iconSize} onPress={this.descView} />
                   </View>
-                  <Text style={styles.iconText}>{this.state.value}</Text>
-                </View>
-                {/*BOTÃO SIM*/}
-                <View style={styles.iconViewText}>
-                  <MaterialCommunityIcons name='check' size={this.iconSize} color='#e102ff' onPress={() => {this.remove('SIM', this.removeSim, 1)}}/>
-                </View>
-                <View>
-                  <MaterialCommunityIcons name='information-outline' color='#c6dcf4' size={this.iconSize} onPress={this.descView} />
                 </View>
               </Body>
             </View>
@@ -210,7 +146,7 @@ class RepCard extends Component {
 
   remove = (size, callback, param) => {
     this.drag = size
-    callback({dy: param}, 10)
+    callback({ dy: param }, 10)
   }
 
   // se for passado uma imagem para o componente, então recupera pelo link
@@ -224,8 +160,7 @@ class RepCard extends Component {
     }
   }
 
-  match = async () => {
-
+  match = () => {
     repId = this.state.id
     uid = firebase.auth().currentUser.uid
 
@@ -234,45 +169,14 @@ class RepCard extends Component {
       return
     }
 
-     await firebase.firestore()
+    firebase.firestore()
       .collection('chats')
       .doc(uid)
       .collection(repId)
       .doc('minicial')
-      .set(createMessage('Agora vocês podem trocar mensagem', this.user)).then({})
-    await this.newChat;
-    this.props.navigation.navigate("ChatList", { repId }); // VAI PARA O CHAT LEVANDO O REP ID
+      .set(createMessage('Agora vocês podem trocar mensagem', uid, repId))
+    this.props.navigation.navigate('Chat', { repId });
   }
-
-  newChat = async () => {
-
-    var uid = firebaseSvc.uid;
-    await firebase.firestore() // PUXA CONVERSAS JA EXISTENTES NO DOCUMENTO
-      .collection('chats')
-      .doc(uid)
-      .get()
-      .then(function (doc) {
-        if (doc.exists) {
-          var data = doc.data().repIds;
-          data.forEach(repId => { // COLOCA AS CONVERSAS EM UM ARRAY NO STATE
-            this.repIds.push(repId)
-          });
-        } else {
-          console.log("No such document!");
-        }
-      }).catch(function (error) {
-        console.log("Error getting document:", error);
-      });
-
-    await firebase.firestore() // COLOCA AS CONVERSAS NO BANCO
-      .collection('chats')
-      .doc(uid)
-      .set({
-        repIds: this.repIds
-      })
-
-  }
-
 
   componentWillUnmount() {
     EventRegister.removeEventListener(this.listener)

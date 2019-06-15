@@ -36,14 +36,6 @@ class FacebookLogin extends Component {
       await FBSDK.LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
         async function (result) {
           try {
-            if (result.isCancelled) {
-              alert('Login was cancelled');
-            } else {
-              alert('Login was successful with permissions: '
-                + result.grantedPermissions.toString());
-
-            }
-
             await FBSDK.AccessToken.getCurrentAccessToken()
               .then(
                 async (data) => {
@@ -56,6 +48,7 @@ class FacebookLogin extends Component {
                     if (user.exists == true) {
                       navigation.navigate("RepCard");
                     } else {
+                      console.log(currentUser)
                       ref.doc(currentUser.user.uid).set({
                         name: currentUser.additionalUserInfo.profile.first_name,
                         email: currentUser.user.email,

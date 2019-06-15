@@ -93,6 +93,7 @@ class Login extends Component {
             autoCapitalize={'none'}
             onChangeText={(email) => this.setState({ email })}
             onEndEditing={() => { emailColor.call(this, this.state.email) }}
+            style = {styles.inputStyle}
           ></Input>
         </Item>
 
@@ -103,6 +104,7 @@ class Login extends Component {
             secureTextEntry={true}
             onChangeText={(password) => this.setState({ password })}
             onEndEditing={() => { passwordColor.call(this, this.state.password) }}
+            style = {styles.inputStyle}
           ></Input>
         </Item>
 

@@ -106,6 +106,7 @@ class UserRegistAlt extends Component {
             keyboardType='number-pad'
             onChangeText={(age) => this.setState({ age })}
             onEndEditing={() => ageColor.call(this, this.state.age)}
+            style = {styles.inputStyle}
           ></Input>
         </Item>
 
@@ -116,6 +117,7 @@ class UserRegistAlt extends Component {
             value={this.state.bio}
             onChangeText={(bio) => this.setState({ bio })}
             onEndEditing={() => ageColor.call(this, this.state.bio)}
+            style = {styles.inputStyle}
           ></Input>
         </Item>
 
