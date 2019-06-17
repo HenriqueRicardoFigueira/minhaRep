@@ -209,6 +209,9 @@ const styles = StyleSheet.create({
   },
   inputStyle:{
     fontFamily: Platform.OS === 'ios' ? 'HelveticaNeue' : 'Oswald-Light',
+  },
+  tags: {
+    paddingHorizontal: SCREEN_WIDTH* 0.01
   }
 });
 

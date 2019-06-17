@@ -38,8 +38,8 @@ class Desc extends Component {
     mapView = () => {
         var latitude = this.state.latitude;
         var longitude = this.state.longitude;
-        this.props.navigation.navigate("Maps", {latitude, longitude});
-      }
+        this.props.navigation.navigate("Maps", { latitude, longitude });
+    }
 
     componentWillMount() {
         var rep = this.props.navigation.getParam('rep');
@@ -63,8 +63,8 @@ class Desc extends Component {
 
     render() {
         return (
-            <ScrollView>
-                <Image alignSelf='center' style={{ width: 100, height: 100, borderRadius: 100, marginTop: styles.screen.width * 0.05 }} source={{ uri: this.state.repImage[0] }} />
+            <ScrollView style={{ backgroundColor: '#eff7f9' }}>
+                <Image alignSelf='center' style={{ width: 100, height: 100, borderRadius: 20, marginTop: styles.screen.width * 0.05 }} source={{ uri: this.state.repImage[0] }} />
                 <Container style={{ backgroundColor: '#eff7f9', width: this.buttonWidth * 0.8, height: this.buttonHeight, alignSelf: "center" }}>
                     <Text style={{ color: '#1b2021', alignSelf: "center" }}>{this.state.title}</Text>
                 </Container>
@@ -116,9 +116,14 @@ class Desc extends Component {
                         <Label>{this.state.city}</Label>
                     </Right>
                 </ListItem>
-
-                <Tags tags={this.state.tags}/>
-
+                <ListItem>
+                    <Left>
+                        <Label>Tags:</Label>
+                    </Left>
+                    <Right>
+                        <Tags tags={this.state.tags} />
+                    </Right>
+                </ListItem>
                 <ListItem button >
                     <Button transparent style={{ width: this.buttonWidth, height: this.buttonHeight }} onPress={this.mapView}>
                         <Left>
