@@ -249,7 +249,7 @@ export default class App extends React.Component {
 
   sectionReps() {
     return (
-      [<View style={{ flex: 1 }}>
+      [<View style={styles.screen.width * 2}>
         {this.renderReps()}
       </View>]
     )
