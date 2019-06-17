@@ -15,11 +15,9 @@ exports.sendPushNotification = functions.firestore.document('chats/{userId}/{rep
   return admin.firestore().collection('users').doc(repId).get().then(snapshot => {
     const token = snapshot._fieldsProto.token.stringValue
     const payload = {
-          data: {
-            data_type: "direct_message",
+          notification: {
             title: "Mensagem de " + userName,
-            message: message,
-            message_id: messageId,
+            body: message
           }
         }
 
