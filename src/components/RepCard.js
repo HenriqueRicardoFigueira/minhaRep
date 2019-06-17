@@ -16,7 +16,7 @@ class RepCard extends Component {
   constructor(props) {
     super(props);
 
-    this.drag = null
+    this.dragTo = props.rep.dragTo
     this.removeSim = props.rep.removeSim
     this.removeNao = props.rep.removeNao
 
@@ -146,7 +146,6 @@ class RepCard extends Component {
   }
 
   remove = (size, callback, param) => {
-    this.drag = size
     callback({ dy: param }, 10)
   }
 
@@ -182,7 +181,7 @@ class RepCard extends Component {
   componentWillUnmount() {
     EventRegister.removeEventListener(this.listener)
 
-    if (this.drag == 'SIM') {  // realiza o match
+    if (this.dragTo.drag == 'SIM') {  // realiza o match
       this.match()
     } else {
       // do nothing

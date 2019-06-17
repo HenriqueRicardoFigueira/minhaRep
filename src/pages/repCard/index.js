@@ -71,6 +71,7 @@ export default class App extends React.Component {
   }
 
   removeSim = (gestureState, speed) => {
+    this.dragTo.drag = 'SIM'
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: styles.screen.width + 100, y: gestureState.dy },
@@ -82,6 +83,7 @@ export default class App extends React.Component {
   }
 
   removeNao = (gestureState, speed) => {
+    this.dragTo.drag = 'NAO'
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: -styles.screen.width - 100, y: gestureState.dy }
@@ -376,7 +378,8 @@ export default class App extends React.Component {
           bio: ref.bio,
           city: ref.city,
           removeSim: this.removeSim,
-          removeNao: this.removeNao
+          removeNao: this.removeNao,
+          dragTo: this.dragTo
         }
 
         // recupera os membros da república
@@ -449,5 +452,6 @@ export default class App extends React.Component {
 
   componentWillUnmount() {
     removeAndroidBackButtonHandler();
+    Reps = []
   }
 }

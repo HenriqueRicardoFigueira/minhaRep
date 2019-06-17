@@ -64,11 +64,7 @@ class Options extends Component {
             }
           }
 
-        },
-        {
-          text: "Cancelar",
-          onPress: () => console.log("cancelado")
-        },
+        }
       ],
       { cancelable: false },
     )

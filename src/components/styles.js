@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   header: {
-    backgroundColor: '#F0803C',
+    backgroundColor: '#c6dcf4',
   },
   body: {
     marginRight: 20,
