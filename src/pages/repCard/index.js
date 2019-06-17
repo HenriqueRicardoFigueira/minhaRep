@@ -391,8 +391,15 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
+    this.checkPermission();
+
+    // verificando se app foi aberto por notificacao
+    const notificationOpen = await firebase.notifications().getInitialNotification()
+    if (notificationOpen) {
+      this.selectSection(2)
+    }
+
     this.getDados();
-    this.checkPermission()
   }
 
   // 1
