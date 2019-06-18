@@ -190,7 +190,7 @@ export default class App extends React.Component {
   renderReps = () => {
     return Reps.map((item, i) => {
 
-      if (i == this.state.currentIndex) {
+      if (i == this.state.currentIndex%Reps.length) {
         return (
 
           <Animated.View
@@ -210,7 +210,7 @@ export default class App extends React.Component {
           </Animated.View>
         )
       }
-      else if (i == this.state.currentIndex + 1) {
+      else if (i == this.state.currentIndex%Reps.length + 1) {
         return (
           <Animated.View
             key={item.id} style={[{
@@ -256,6 +256,7 @@ export default class App extends React.Component {
       </View>]
     )
   }
+
   sectionChatsList() {
     return (
       [<View>
@@ -284,6 +285,7 @@ export default class App extends React.Component {
       pageIndex = 2;
     }
   }
+
   swiperFunc(componentList) {
 
   }
