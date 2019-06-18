@@ -5,6 +5,7 @@ import { firebase } from '../../Firebase'
 import { styles } from './styles';
 import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
 import { withNavigation } from 'react-navigation';
+import md5 from 'md5'; 
 
 class UserRegist extends Component {
   constructor(props) {
@@ -27,12 +28,13 @@ class UserRegist extends Component {
   };
 
   registerUser = async () => {
-    const { email, age, name, password } = this.state;
+    let { email, age, name, password } = this.state;
     if (!this.canRegister(email, age, name, password)) {
       return
     }
 
-    //try {
+    password = md5(password)
+
     // REGISTRA O USUARIO NO AUTHENTICATION
     // RETORNA UM OBJETO DO TIPO user
     const usr = await firebase.auth().createUserWithEmailAndPassword(email, password);

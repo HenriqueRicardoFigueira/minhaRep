@@ -16,6 +16,7 @@ import {
 // import { Container } from './styles';
 import firebase from 'react-native-firebase';
 import { styles } from './styles';
+import md5 from 'md5'
 
 const customTextProps = {
   style: {
@@ -58,7 +59,7 @@ class Login extends Component {
     }
 
     try {
-      const user = firebase.auth().signInWithEmailAndPassword(email, password)
+      const user = firebase.auth().signInWithEmailAndPassword(email, md5(password))
         .then((firebaseUser) => { // login com sucesso
           this.setState({ isAuthenticated: true });
           console.log(email, password);
