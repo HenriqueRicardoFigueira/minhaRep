@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, AsyncStorage, View, Animated, PanResponder, Text } from 'react-native';
+import { Alert, View, Animated, PanResponder, Text } from 'react-native';
 import RepCard from '../../components/RepCard';
 import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { EventRegister } from 'react-native-event-listeners'
 
 var Reps = [];
+var repMatchs = null
 const photoURL = '../../image/houseIcon.png'
 
 let pageIndex = 1;
@@ -343,11 +344,22 @@ export default class App extends React.Component {
     }
   }
 
+  // verifica se a república está na lista de conversas do user
+  // se estiver é porque já foi dado um match
+  isMatch = async (repId, repMatchs) => {
+
+  }
+
+  getRepMatchs = async () => {
+    
+  }
+
   async getDados() {
     Reps = []   // 'limpando' a lista de reps
     this.ref = firebase.firestore().collection('republics');
-    this.refAnuncio = firebase.firestore().collection('anuncio');
     this.refUser = firebase.auth().currentUser.uid;
+    // só faz essa requisição quando logar no app
+    repMatchs = repMatchs ? repMatchs : this.getRepMatchs()
 
     const repData = await this.ref.get()
     try {
@@ -359,8 +371,10 @@ export default class App extends React.Component {
       for (var i = 0; i < repData._docs.length; i++) {
 
         var ref = repData._docs[i]._data
-        // se a república não estiver anunciada, continua para a próxima iteração
-        if (!ref.isAnnounced) {
+        // se a república não estiver anunciada
+        // ou se nesta república já foi dado um match
+        // continua para a próxima iteração
+        if (!ref.isAnnounced || !this.isMatch(ref.admUID, repMatchs)) {
           continue
         }
 
