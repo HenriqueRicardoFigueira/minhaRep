@@ -354,6 +354,42 @@ export default class App extends React.Component {
     
   }
 
+  pontuation = (rep, tags) => {
+    rep.point = 0
+
+    if(!rep.tags) {
+      return
+    }
+
+    // verifica cada key do user
+    // a cada key que a rep tiver o mesmo valor, ganha um ponto
+    Object.keys(tags).forEach((key) => {
+      if(tags[key] == rep.tags[key]) {
+        rep.point ++
+      }
+    })
+  }
+
+  sortReps = async () => {
+    // recuperando as tags do usuario
+    userRef = await firebase.firestore().collection('users').doc(this.refUser).get()
+    tags = userRef._data.tags
+    if(!tags) {
+      return
+    }
+
+    Reps = Reps.sort((rep1, rep2) => {
+      if(rep1.point == undefined) this.pontuation(rep1, tags)
+      if(rep2.point == undefined) this.pontuation(rep2, tags)
+
+      if(rep1.point > rep2.point) {
+        return -1
+      } else {
+        return 1
+      }
+    })
+  }
+
   async getDados() {
     Reps = []   // 'limpando' a lista de reps
     this.ref = firebase.firestore().collection('republics');
@@ -395,7 +431,8 @@ export default class App extends React.Component {
           city: ref.city,
           removeSim: this.removeSim,
           removeNao: this.removeNao,
-          dragTo: this.dragTo
+          dragTo: this.dragTo,
+          tags: ref.tags,
         }
 
         // recupera os membros da república
@@ -403,6 +440,7 @@ export default class App extends React.Component {
         await this.getMembers(id, rep)
       }
 
+      await this.sortReps()
       this.forceUpdate();
     } catch (err) {
       console.log("Err first try: ", err)
