@@ -75,7 +75,7 @@ class Options extends Component {
       <ScrollView>
         <Image alignSelf='center' style={{ width: 100, height: 100, borderRadius: 100, marginTop: styles.screen.width * 0.05 }} source={{ uri: this.state.photoURL }}></Image>
         <Container style={{ backgroundColor: '#eff7f9', width: this.buttonWidth * 0.8, height: this.buttonHeight, alignSelf: "center" }}>
-          <Text style={{ color: '#1b2021', alignSelf: "center" }}>{this.state.name}</Text>
+          <Text style={{ color: '#6F6F6F', alignSelf: "center" }}>{this.state.name}</Text>
         </Container>
         <ListItem button >
           <Button transparent style={{ width: this.buttonWidth, height: this.buttonHeight }} onPress={() => this.props.navigation.navigate('UserProfile')}>
@@ -83,7 +83,7 @@ class Options extends Component {
               <Icon active name="account-edit" size={this.iconSize}></Icon>
             </Left>
             <Container style={{ backgroundColor: '#eff7f9', width: this.buttonWidth * 0.8, height: this.buttonHeight, position: "absolute", left: 30 }}>
-              <Text style={{ color: '#1b2021', alignSelf: "center" }}>Editar perfil</Text>
+              <Text style={{ color: '#6F6F6F', alignSelf: "center" }}>Editar perfil</Text>
             </Container>
             <Right>
               <Icon active name="chevron-right" size={this.iconSize * 0.6} />
@@ -96,7 +96,7 @@ class Options extends Component {
               <Icon active name="home-account" size={this.iconSize}></Icon>
             </Left>
             <Container style={{ backgroundColor: '#eff7f9', width: this.buttonWidth * 0.8, height: this.buttonHeight, position: "absolute", left: 30 }}>
-              <Text style={{ color: '#1b2021', alignSelf: "center" }}>Adicionar república</Text>
+              <Text style={{ color: '#6F6F6F', alignSelf: "center" }}>Adicionar república</Text>
             </Container>
             <Right>
               <Icon active name="chevron-right" size={this.iconSize * 0.6} />
@@ -109,7 +109,7 @@ class Options extends Component {
               <Icon active name="pencil" size={this.iconSize}></Icon>
             </Left>
             <Container style={{ backgroundColor: '#eff7f9', width: this.buttonWidth * 0.8, height: this.buttonHeight, position: "absolute", left: 30 }}>
-              <Text style={{ color: '#1b2021', alignSelf: "center" }}>Editar república</Text>
+              <Text style={{ color: '#6F6F6F', alignSelf: "center" }}>Editar república</Text>
             </Container>
             <Right>
               <Icon active name="chevron-right" size={this.iconSize * 0.6} />
@@ -122,7 +122,7 @@ class Options extends Component {
               <Icon active name="bullhorn" size={this.iconSize}></Icon>
             </Left>
             <Container style={{ backgroundColor: '#eff7f9', width: this.buttonWidth * 0.8, height: this.buttonHeight, position: "absolute", left: 30 }}>
-              <Text style={{ color: '#1b2021', alignSelf: "center" }}>Criar anúncio</Text>
+              <Text style={{ color: '#6F6F6F', alignSelf: "center" }}>Criar anúncio</Text>
             </Container>
             <Right>
               <Icon active name="chevron-right" size={this.iconSize * 0.6} />
@@ -135,7 +135,7 @@ class Options extends Component {
               <Icon active name="power" size={this.iconSize}></Icon>
             </Left>
             <Container style={{ backgroundColor: '#eff7f9', width: this.buttonWidth * 0.8, height: this.buttonHeight, position: "absolute", left: 30 }}>
-              <Text style={{ color: '#1b2021', alignSelf: "center" }}>Logout</Text>
+              <Text style={{ color: '#6F6F6F', alignSelf: "center" }}>Logout</Text>
             </Container>
             <Right>
               <Icon active name="chevron-right" size={this.iconSize * 0.6} />

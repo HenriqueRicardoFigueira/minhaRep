@@ -16,6 +16,7 @@ var repMatchs = null
 const photoURL = '../../image/houseIcon.png'
 
 let pageIndex = 1;
+let finalIndex = 1;
 
 export default class App extends React.Component {
 
@@ -25,7 +26,7 @@ export default class App extends React.Component {
     this.position = new Animated.ValueXY()
     this.state = {
       currentIndex: 0,
-
+      tabColors: ['#6F6F7F','#eff7f9','#6F6F7F']
     }
 
     this.rotate = this.position.x.interpolate({
@@ -240,7 +241,6 @@ export default class App extends React.Component {
   getReponse(index) {
     pageIndex = index;
   }
-
   sectionOptions() {
     return (
       [<View>
@@ -249,7 +249,6 @@ export default class App extends React.Component {
       ]
     )
   }
-
   sectionReps() {
     return (
       [<View style={styles.screen.width * 2}>
@@ -265,30 +264,36 @@ export default class App extends React.Component {
       </View>]
     )
   }
-
   selectSection(index) {
     console.log('index >>> ', index);
     //pageIndex = index
     if (index === 0) {
-      const finalIndex = index - pageIndex;
-
+      finalIndex = index - pageIndex;
+      console.log(finalIndex)
       this.refs.swiper.scrollBy(finalIndex);
-      pageIndex = 0;
+      pageIndex = index;
+      this.setState({
+        tabColors: ['#eff7f9','#6F6F6F','#6F6F6F']
+      })
     } else if (index === 1) {
-      const finalIndex = index - pageIndex;
-
+      finalIndex = index - pageIndex;
+      console.log(finalIndex)
       this.refs.swiper.scrollBy(finalIndex);
-      pageIndex = 1;
+      pageIndex = index;
+      this.setState({
+        tabColors: ['#6F6F6F','#eff7f9','#6F6F6F']
+      })
     } else if (index === 2) {
-      const finalIndex = index - pageIndex;
-
+      finalIndex = index - pageIndex;
+      console.log(finalIndex)
       this.refs.swiper.scrollBy(finalIndex);
-      pageIndex = 2;
+      pageIndex = index;
+      this.setState({
+        tabColors: ['#6F6F6F','#6F6F6F','#eff7f9']
+      })
     }
   }
-
   swiperFunc(componentList) {
-
   }
 
   renderSection = () => {
@@ -299,9 +304,8 @@ export default class App extends React.Component {
     const componentReturn = [...sectionOptionsArray, ...sectionRepsArray, ...sectionChatsListArray]
     const componentList = componentReturn.map((item, i) => item);
     return (
-      <Swiper ref='swiper' index={pageIndex} onIndexChanged={(index) =>
+      <Swiper ref='swiper' index = {1} onIndexChanged={(index) =>
         pageIndex = index} showsPagination={false} style={{backgroundColor: "#eff7f9"}}>
-
         {componentList}
       </Swiper>
     )
@@ -311,20 +315,20 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Header style={{ backgroundColor: '#c6dcf4' }} androidStatusBarColor='#869cb4'>
+        <Header style={{ backgroundColor: '#c6dcf4' }} androidStatusBarColor='#b1cff0'>
           <Left>
             <Button transparent>
-              <Icon name='settings' size={this.iconSize} onPress={() => this.selectSection(0)} />
+              <Icon name='settings' size={this.iconSize} onPress={() => this.selectSection(0)} color = {this.state.tabColors[0]} />
             </Button>
           </Left>
           <Body>
             <Button transparent>
-              <Icon name='home' size={this.iconSize} onPress={() => this.selectSection(1)}></Icon>
+              <Icon name='home' size={this.iconSize} onPress={() => this.selectSection(1)} color = {this.state.tabColors[1]}></Icon>
             </Button>
           </Body>
           <Right>
             <Button transparent>
-              <Icon name='wechat' size={this.iconSize} onPress={() => this.selectSection(2)}></Icon>
+              <Icon name='wechat' size={this.iconSize} onPress={() => this.selectSection(2)} color = {this.state.tabColors[2]}></Icon>
             </Button>
           </Right>
         </Header>

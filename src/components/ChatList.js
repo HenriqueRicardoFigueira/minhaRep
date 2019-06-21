@@ -97,7 +97,7 @@ class ChatList extends Component {
     return (
       <ScrollView>
         <Container>
-          <Header style={styles.header}>
+          <Header style={styles.header} androidStatusBarColor='#b1cff0'>
             <Body style={styles.body}>
               <Title style={styles.buttonText}>Conversas</Title>
             </Body>
