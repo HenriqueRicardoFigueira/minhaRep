@@ -355,7 +355,13 @@ export default class App extends React.Component {
   }
 
   getRepMatchs = async () => {
-    
+    repMatchs = await firebase.firestore().collection('chats').doc(this.refUser).get()
+
+    if (repMatchs.exists) {
+      return repMatchs.data().repIds ? repMatchs.data().repIds : []
+    } else {
+      return []
+    }
   }
 
   pontuation = (rep, tags) => {
@@ -399,8 +405,7 @@ export default class App extends React.Component {
     this.ref = firebase.firestore().collection('republics');
     this.refUser = firebase.auth().currentUser.uid;
     // só faz essa requisição quando logar no app
-    repMatchs = repMatchs ? repMatchs : this.getRepMatchs()
-
+    repMatchs = repMatchs ? repMatchs : await this.getRepMatchs()
     const repData = await this.ref.get()
     try {
 
