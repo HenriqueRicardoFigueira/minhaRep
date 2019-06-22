@@ -350,8 +350,14 @@ export default class App extends React.Component {
 
   // verifica se a república está na lista de conversas do user
   // se estiver é porque já foi dado um match
-  isMatch = async (repId, repMatchs) => {
+  isMatch = (repId) => {
+    repMatchs.forEach(id => {
+      if(id == repId) {
+        return true
+      }
+    })
 
+    return false
   }
 
   getRepMatchs = async () => {
@@ -419,7 +425,7 @@ export default class App extends React.Component {
         // se a república não estiver anunciada
         // ou se nesta república já foi dado um match
         // continua para a próxima iteração
-        if (!ref.isAnnounced || !this.isMatch(ref.admUID, repMatchs)) {
+        if (!ref.isAnnounced || this.isMatch(ref.admUID)) {
           continue
         }
 
