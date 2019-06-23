@@ -265,37 +265,43 @@ export default class App extends React.Component {
       </View>]
     )
   }
-  selectSection(index) {
-    console.log('index >>> ', index);
-    //pageIndex = index
+  selectTab(index){
     if (index === 0) {
-      finalIndex = index - pageIndex;
-      console.log(finalIndex)
-      this.refs.swiper.scrollBy(finalIndex);
       pageIndex = index;
       this.setState({
         tabColors: ['#eff7f9','#6F6F6F','#6F6F6F']
       })
     } else if (index === 1) {
-      finalIndex = index - pageIndex;
-      console.log(finalIndex)
-      this.refs.swiper.scrollBy(finalIndex);
       pageIndex = index;
       this.setState({
         tabColors: ['#6F6F6F','#eff7f9','#6F6F6F']
       })
     } else if (index === 2) {
-      finalIndex = index - pageIndex;
-      console.log(finalIndex)
-      this.refs.swiper.scrollBy(finalIndex);
       pageIndex = index;
       this.setState({
         tabColors: ['#6F6F6F','#6F6F6F','#eff7f9']
       })
     }
   }
-  swiperFunc(componentList) {
+  selectSection(index) {
+    if (index === 0) {
+      finalIndex = index - pageIndex;
+      console.log(finalIndex)
+      this.refs.swiper.scrollBy(finalIndex);
+      this.selectTab(index)
+    } else if (index === 1) {
+      finalIndex = index - pageIndex;
+      console.log(finalIndex)
+      this.refs.swiper.scrollBy(finalIndex);
+      this.selectTab(index)
+    } else if (index === 2) {
+      finalIndex = index - pageIndex;
+      console.log(finalIndex)
+      this.refs.swiper.scrollBy(finalIndex);
+      this.selectTab(index)
+    }
   }
+
 
   renderSection = () => {
     const sectionOptionsArray = this.sectionOptions();
@@ -306,7 +312,7 @@ export default class App extends React.Component {
     const componentList = componentReturn.map((item, i) => item);
     return (
       <Swiper ref='swiper' index = {1} onIndexChanged={(index) =>
-        pageIndex = index} showsPagination={false} style={{backgroundColor: "#eff7f9"}}>
+        this.selectTab(index)} showsPagination={false} style={{backgroundColor: "#eff7f9"}}>
         {componentList}
       </Swiper>
     )
@@ -318,18 +324,18 @@ export default class App extends React.Component {
       <View style={{ flex: 1 }}>
         <Header style={{ backgroundColor: '#c6dcf4' }} androidStatusBarColor='#b1cff0'>
           <Left>
-            <Button transparent>
-              <Icon name='settings' size={this.iconSize} onPress={() => this.selectSection(0)} color = {this.state.tabColors[0]} />
+            <Button transparent onPress={() => this.selectSection(0)}>
+              <Icon name='settings' size={this.iconSize}  color = {this.state.tabColors[0]} />
             </Button>
           </Left>
           <Body>
-            <Button transparent>
-              <Icon name='home' size={this.iconSize} onPress={() => this.selectSection(1)} color = {this.state.tabColors[1]}></Icon>
+            <Button transparent  onPress={() => this.selectSection(1)}>
+              <Icon name='home' size={this.iconSize} color = {this.state.tabColors[1]}></Icon>
             </Button>
           </Body>
           <Right>
-            <Button transparent>
-              <Icon name='wechat' size={this.iconSize} onPress={() => this.selectSection(2)} color = {this.state.tabColors[2]}></Icon>
+            <Button transparent onPress={() => this.selectSection(2)}>
+              <Icon ref= 'chat' name='wechat' size={this.iconSize}  color = {this.state.tabColors[2]}></Icon>
             </Button>
           </Right>
         </Header>
