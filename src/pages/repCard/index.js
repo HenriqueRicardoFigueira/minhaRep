@@ -241,9 +241,10 @@ export default class App extends React.Component {
   getReponse(index) {
     pageIndex = index;
   }
+  // não importa a key, visto que é uma lista com apenas um elemento
   sectionOptions() {
     return (
-      [<View>
+      [<View key={0}>
         <Options></Options>
       </View>
       ]
@@ -251,7 +252,7 @@ export default class App extends React.Component {
   }
   sectionReps() {
     return (
-      [<View style={styles.screen.width * 2}>
+      [<View style={styles.screen.width * 2} key={0}>
         {this.renderReps()}
       </View>]
     )
@@ -259,7 +260,7 @@ export default class App extends React.Component {
 
   sectionChatsList() {
     return (
-      [<View>
+      [<View key={0}>
         <ChatList></ChatList>
       </View>]
     )
