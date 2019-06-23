@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert } from '../../androidBackButton';
 import Login from '../../components/login';
 import RepCard from '../repCard';
-import firebase from 'react-native-firebase';
+import { firebase } from '../../../Firebase'
 
 export default class LoginPage extends Component {
 
