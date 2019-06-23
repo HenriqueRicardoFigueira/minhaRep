@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
 import { handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert } from '../../androidBackButton';
 import Login from '../../components/login';
+import RepCard from '../repCard';
+import firebase from 'react-native-firebase';
 
 export default class LoginPage extends Component {
 
   componentWillMount() {
     handleAndroidBackButton(exitAlert);
+    this.isLogged()
+  }
+
+  isLogged = () => {
+    if(firebase.auth().currentUser){
+      return true
+    } else {
+      return false
+    }
   }
 
   componentWillUnmount() {
@@ -13,6 +24,9 @@ export default class LoginPage extends Component {
   }
 
   render() {
-    return <Login />;
+    if(this.isLogged())
+      return (<RepCard />);
+    else
+      return (<Login />);
   }
 }
