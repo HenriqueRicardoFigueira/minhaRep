@@ -160,7 +160,7 @@ class RepCard extends Component {
     }
   }
 
-  match = () => {
+  match = async () => {
     repId = this.state.id
     uid = firebase.auth().currentUser.uid
 
@@ -169,12 +169,22 @@ class RepCard extends Component {
       return
     }
 
-    firebase.firestore()
+    await firebase.firestore()
       .collection('chats')
       .doc(uid)
       .collection(repId)
       .doc('minicial')
       .set(createMessage('Agora vocês podem trocar mensagem', uid, repId))
+
+    chatRef = firebase.firestore().collection('chats').doc(uid)
+    await chatRef.get().then((data) => {
+      repIds = data.data().repIds ? data.data().repIds : []
+      repIds.push(repId)
+      chatRef.update({
+        repIds: repIds
+      })
+    })
+
     this.props.navigation.navigate('Chat', { repId });
   }
 
