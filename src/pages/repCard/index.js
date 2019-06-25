@@ -74,6 +74,10 @@ export default class App extends React.Component {
 
   removeSim = (gestureState, speed) => {
     this.dragTo.drag = 'SIM'
+
+    // adicionando na lista dos matchs
+    repMatchs.push(Reps[this.state.currentIndex%Reps.length].id)
+
     Animated.spring(this.position, {
       tension: speed,
       toValue: { x: styles.screen.width + 100, y: gestureState.dy },
@@ -192,7 +196,7 @@ export default class App extends React.Component {
   renderReps = () => {
     return Reps.map((item, i) => {
 
-      if (i == this.state.currentIndex%Reps.length) {
+      if (i == this.state.currentIndex%Reps.length && !this.isMatch(item.id)) {
         return (
 
           <Animated.View
@@ -212,7 +216,7 @@ export default class App extends React.Component {
           </Animated.View>
         )
       }
-      else if (i == this.state.currentIndex%Reps.length + 1) {
+      else if (i == this.state.currentIndex%Reps.length + 1 && !this.isMatch(item.id)) {
         return (
           <Animated.View
             key={item.id} style={[{
@@ -358,11 +362,13 @@ export default class App extends React.Component {
   // verifica se a república está na lista de conversas do user
   // se estiver é porque já foi dado um match
   isMatch = (repId) => {
-    repMatchs.forEach(id => {
+    for (let i = 0; i < repMatchs.length; i ++) {
+      id = repMatchs[i]
+
       if(id == repId) {
         return true
       }
-    })
+    }
 
     return false
   }
