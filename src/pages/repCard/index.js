@@ -419,6 +419,8 @@ export default class App extends React.Component {
     })
   }
 
+  getIndex = () => {return this.state.currentIndex == Reps.length ? Reps.length : this.state.currentIndex%Reps.length}
+
   async getDados() {
     Reps = []   // 'limpando' a lista de reps
     this.ref = firebase.firestore().collection('republics');
@@ -432,7 +434,7 @@ export default class App extends React.Component {
         return
       }
 
-      for (var i = 0; i < repData._docs.length; i++) {
+      for (var i = 0, index = 0; i < repData._docs.length; i++) {
 
         var ref = repData._docs[i]._data
         // se a república não estiver anunciada
@@ -443,7 +445,7 @@ export default class App extends React.Component {
         }
 
         var rep = {
-          index: i,
+          index: index,
           id: ref.admUID,
           title: ref.name,
           localization: ref.street,
@@ -461,11 +463,13 @@ export default class App extends React.Component {
           removeNao: this.removeNao,
           dragTo: this.dragTo,
           tags: ref.tags,
+          currentIndexFunc: this.getIndex.bind(this),
         }
 
         // recupera os membros da república
         var id = repData._docs[i]._ref.id
         await this.getMembers(id, rep)
+        index ++
       }
 
       await this.sortReps()

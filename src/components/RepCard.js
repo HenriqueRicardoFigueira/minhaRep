@@ -37,6 +37,7 @@ class RepCard extends Component {
       localization: props.rep.localization,
       bio: props.rep.bio,
       city: props.rep.city,
+      currentIndexFunc: props.rep.currentIndexFunc
     }
   }
 
@@ -191,7 +192,9 @@ class RepCard extends Component {
   componentWillUnmount() {
     EventRegister.removeEventListener(this.listener)
 
-    if (this.dragTo.drag == 'SIM') {  // realiza o match
+    // realiza o match e
+    // evita que a rep que está por 'baixo' também dê um match
+    if (this.dragTo.drag == 'SIM' && this.state.currentIndex == this.state.currentIndexFunc()-1) {
       this.match()
     } else {
       // do nothing
