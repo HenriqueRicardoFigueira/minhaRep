@@ -17,7 +17,9 @@ exports.sendPushNotification = functions.firestore.document('chats/{userId}/{rep
     const payload = {
           notification: {
             title: "Mensagem de " + userName,
-            body: message
+            body: message,
+            vibrate: true,
+            vibration: 300
           }
         }
 
