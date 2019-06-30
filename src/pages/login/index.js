@@ -8,7 +8,6 @@ export default class LoginPage extends Component {
 
   componentWillMount() {
     handleAndroidBackButton(exitAlert);
-    this.isLogged()
   }
 
   isLogged = () => {

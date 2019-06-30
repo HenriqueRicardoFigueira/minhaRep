@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Platform, Image, FlatList, ScrollView } from 'react-native';
+import { Alert, View, Platform, Image, FlatList, ScrollView } from 'react-native';
 //import firebase from 'react-native-firebase';
 import { styles } from './styles';
 import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, Container, Accordion, Button, Body, Title } from 'native-base';
@@ -64,12 +64,56 @@ class ChatList extends Component {
     this.props.navigation.navigate("Chat", { repId: item.repId }); // VAI PARA O CHAT LEVANDO O REP ID
   }
 
+  exclude = async (otherUser) => {
+    var user = firebase.auth().currentUser.uid
+    docs = await firebase.firestore().collection('chats/' + user + '/' + otherUser).get()
+
+    // exclude doc
+    docs = docs.docs
+    for(var key in docs) {
+      await firebase.firestore().collection('chats/' + user + '/' + otherUser).doc(docs[key].id).delete()
+    }
+
+    // exclude from repIds
+    await firebase.firestore().collection('chats').doc(user)
+      .get()
+      .then(data => {
+
+        repIds = data._data.repIds
+        for(var i = 0; i < repIds.length; i ++) {
+          if(repIds[i] == otherUser) {
+            repIds.splice(i, 1)
+            break
+          }
+        }
+
+        firebase.firestore().collection('chats').doc(user).update({repIds})
+      })
+  }
+
+  confirmExclude = (item) => {
+    otherUser = item.repId
+
+    Alert.alert(
+      'Deseja apagar a conversa com ' + otherUser + ' ?',
+      '',
+      [
+        { text: 'CANCEL', style: 'cancel' },
+        { text: 'OK', onPress: () => this.exclude(otherUser) }
+      ]
+    )
+  }
+
   renderContent = (item) => {
     return (
       <View style={styles.containerList}>
         <Container style={styles.content}>
           <Button style={styles.button} onPress={() => this.chatNavigate(item)}>
             <Text style={styles.buttonText}> Ver </Text>
+          </Button>
+
+          <Button style={styles.button} onPress={() => this.confirmExclude(item)}>
+            <Text style={styles.buttonText}> Excluir </Text>
           </Button>
         </Container>
       </View>
