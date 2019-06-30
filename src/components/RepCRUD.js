@@ -7,7 +7,7 @@ import { withNavigation } from 'react-navigation';
 import { imageSelect } from './commonPhoto'
 
 import axios from 'axios';
-import { nameColor, memberColor, bioColor, cepColor, genericColor } from '../formValidation'
+import { nameColor, bioColor, cepColor, genericColor } from '../formValidation'
 
 class RepCRUD extends Component {
   constructor(props) {
@@ -21,7 +21,6 @@ class RepCRUD extends Component {
 
       admUID: '',
       bio: '',
-      members: '',
       name: '',
       tags: '',
       bed: '',
@@ -47,7 +46,6 @@ class RepCRUD extends Component {
       borderColorCep: '#e6e6e6',
       borderColorName: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
-      borderColorMember: '#e6e6e6',
       borderColorBathroom: '#e6e6e6',
     };
   }
@@ -67,7 +65,6 @@ class RepCRUD extends Component {
             isAnnounced: repDatas.isAnnounced,
             name: repDatas.name,
             bio: repDatas.bio,
-            members: repDatas.members,
             numberHome: repDatas.numberHome,
             street: repDatas.street,
             cep: repDatas.cep,
@@ -90,24 +87,23 @@ class RepCRUD extends Component {
       })
   }
 
-  canRegister = (name, bio, members) => {
+  canRegister = (name, bio) => {
     // se fizer as chamadas de função no retorno
     // só vai alterar a cor do primeiro que estiver fora do padrão
     boolBio = bioColor.call(this, bio)
     boolName = nameColor.call(this, name)
-    boolMember = memberColor.call(this, members)
     boolBed = genericColor.call(this, this.state.bed, this.state.regex, 'borderColorBed')
     boolBathroom = genericColor.call(this, this.state.bathroom, this.state.regex, 'borderColorBathroom')
     boolNumberHome = genericColor.call(this, this.state.numberHome, this.state.regex, 'borderColorNumberHome')
 
-    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBathroom && boolBed && this.state.photoURL.length != 0
+    return boolBio && boolName && this.state.boolLocalization && this.getLocalization() && boolBathroom && boolBed && this.state.photoURL.length != 0
   }
 
   editRep = () => {
 
-    const { name, members, bio, cep, numberHome } = this.state;
+    const { name, bio, cep, numberHome } = this.state;
 
-    if (!this.canRegister(name, bio, members, cep, numberHome)) {
+    if (!this.canRegister(name, bio, cep, numberHome)) {
       return
     }
 
@@ -122,7 +118,6 @@ class RepCRUD extends Component {
         value: this.state.value,
         name: this.state.name,
         bio: this.state.bio,
-        members: this.state.members,
         numberHome: this.state.numberHome,
         street: this.state.street,
         cep: this.state.cep,
@@ -217,17 +212,6 @@ class RepCRUD extends Component {
               value={this.state.name}
               onChangeText={(name) => this.setState({ name })}
               onEndEditing={() => nameColor.call(this, this.state.name)}
-              style = {styles.inputStyle}
-            ></Input>
-          </Item>
-
-          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorMember }, styles.floatInput)}>
-            <Label>Numero de Membros:</Label>
-            <Input
-              value={this.state.members}
-              keyboardType='number-pad'
-              onChangeText={(members) => this.setState({ members })}
-              onEndEditing={() => memberColor.call(this, this.state.members)}
               style = {styles.inputStyle}
             ></Input>
           </Item>

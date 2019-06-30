@@ -85,16 +85,6 @@ function numberColor(number) {
   return newColor == '#e6e6e6'
 }
 
-function memberColor(member) {
-  newColor = color(member, /^[0-9][0-9]?$/)
-
-  this.setState({
-    borderColorMembers: newColor
-  })
-
-  return newColor == '#e6e6e6'
-}
-
 function valueColor(value) {
   newColor = color(value, /^[0-9]+(\.[0-9]{1,2})?$/)
 
@@ -142,4 +132,4 @@ function genericColor(value, regex, valueInState) {
   return newColor == '#e6e6e6'
 }
 
-module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor, valueColor, memberColor, localColor, cepColor, genericColor };
+module.exports = { nameColor, emailColor, passwordColor, ageColor, bioColor, numberColor, valueColor, localColor, cepColor, genericColor };

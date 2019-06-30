@@ -17,7 +17,6 @@ class RepEdit extends Component {
             key: '',
             name: '',
             bio: '',
-            members: '',
             img: '',
             localization: '',
             tags: '',
@@ -34,7 +33,6 @@ class RepEdit extends Component {
                     key: rep.id,
                     name: republic.name,
                     bio: republic.bio,
-                    members: republic.members,
                     tags: republic.tags
                 })
             } else {
@@ -54,14 +52,12 @@ class RepEdit extends Component {
         updateRef.update({
             name: this.state.name,
             bio: this.state.bio,
-            members: this.state.members,
             tags: this.state.tags,
         }).then((repRef) => {
             this.setState({
                 key: '',
                 name: '',
                 bio: '',
-                members: '',
                 tags: ''
             })
 
@@ -93,11 +89,6 @@ class RepEdit extends Component {
                 <TextInput
                     value={this.state.bio}
                     onChangeText={(text) => this.updateTextInput(text, 'bio')}
-                ></TextInput>
-                <Label>Membros:</Label>
-                <TextInput
-                    value={this.state.members}
-                    onChangeText={(text) => this.updateTextInput(text, 'members')}
                 ></TextInput>
 
                 <Label>Tags:</Label>

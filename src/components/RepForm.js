@@ -5,7 +5,7 @@ import { withNavigation } from 'react-navigation'
 import { firebase } from '../../Firebase'
 import axios from 'axios';
 import { styles } from './styles'
-import { nameColor, bioColor, genericColor, memberColor, cepColor } from '../formValidation';
+import { nameColor, bioColor, genericColor, cepColor } from '../formValidation';
 import { imageSelect } from './commonPhoto'
 
 
@@ -18,7 +18,6 @@ class RepForm extends Component {
 
       name: '',
       bio: '',
-      members: '',
       bed: '',
       bathroom: '',
       latitude: '',
@@ -45,7 +44,6 @@ class RepForm extends Component {
       borderColorBed: '#e6e6e6',
       borderColorName: '#e6e6e6',
       borderColorNumber: '#e6e6e6',
-      borderColorMembers: '#e6e6e6',
       borderColorBathroom: '#e6e6e6',
       borderColorNumberHome: '#e6e6e6',
     }
@@ -66,16 +64,15 @@ class RepForm extends Component {
     })
   }
 
-  canRegister = (name, bio, members, bathroom, bed) => {
+  canRegister = (name, bio, bathroom, bed) => {
     // se fizer as chamadas de função no retorno
     // só vai alterar a cor do primeiro que estiver fora do padrão
     boolBio = bioColor.call(this, bio)
     boolName = nameColor.call(this, name)
-    boolMember = memberColor.call(this, members)
     boolBed = genericColor.call(this, bed, this.state.regex, 'borderColorBed')
     boolBathroom = genericColor.call(this, bathroom, this.state.regex, 'borderColorBathroom')
 
-    return boolBio && boolName && boolMember && this.state.boolLocalization && this.getLocalization() && boolBed && boolBathroom && this.state.photoURL.length != 0
+    return boolBio && boolName && this.state.boolLocalization && this.getLocalization() && boolBed && boolBathroom && this.state.photoURL.length != 0
   }
 
   searchAdress = (cep) => {
@@ -138,9 +135,9 @@ class RepForm extends Component {
   }
 
    addRep = async() => {
-    const { name, bio, members, cep, numberHome, bathroom, bed } = this.state;
+    const { name, bio, cep, numberHome, bathroom, bed } = this.state;
 
-    if (!this.canRegister(name, bio, members, bathroom, bed)) {
+    if (!this.canRegister(name, bio, bathroom, bed)) {
       return
     }
 
@@ -148,7 +145,6 @@ class RepForm extends Component {
 
       name: name,
       bio: bio,
-      members: members,
       numberHome: numberHome,
       street: this.state.street,
       cep: cep,
@@ -165,6 +161,21 @@ class RepForm extends Component {
       isAnnounced: false,
 
     });
+
+    // add o dono como primeiro membro
+    await firebase.firestore().collection('users').doc(this.state.uid).get()
+      .then(async (data) => {
+
+        nameUser = data.data().name
+        await firebase.firestore().collection('republics/' + this.state.uid + '/members')
+        .doc(this.state.uid)
+        .set({
+          name: nameUser,
+          uid: this.state.uid
+        })
+      })
+
+
     this.props.navigation.navigate("RepCard");
   }
 
@@ -194,17 +205,6 @@ class RepForm extends Component {
               value={this.state.bio}
               onChangeText={(bio) => this.setState({ bio })}
               onEndEditing={() => bioColor.call(this, this.state.bio)}
-              style = {styles.inputStyle}
-            ></Input>
-          </Item>
-
-          <Item floatingLabel style={Object.assign({ borderColor: this.state.borderColorMembers }, styles.floatInput)} >
-            <Label>Membros:</Label>
-            <Input
-              value={this.state.members}
-              keyboardType='number-pad'
-              onChangeText={(members) => this.setState({ members })}
-              onEndEditing={() => memberColor.call(this, this.state.members)}
               style = {styles.inputStyle}
             ></Input>
           </Item>
