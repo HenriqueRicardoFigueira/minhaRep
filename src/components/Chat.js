@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Container, Button, Item, Input, Label } from 'native-base';
-import { View, Text, ScrollView } from 'react-native';
+import { Alert, View, Text, ScrollView } from 'react-native';
 import { firebase } from '../../Firebase'
 import { styles } from './styles';
 import { nameColor, emailColor, passwordColor, ageColor } from '../formValidation';
 import { withNavigation } from 'react-navigation';
 import { GiftedChat } from 'react-native-gifted-chat'
 import firebaseSvc from './FirebaseSvc'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 
 class Chat extends Component {
@@ -137,10 +138,89 @@ class Chat extends Component {
     this.setState(this.state)
   }
 
+
+  remove = async () => {
+    user = firebase.auth().currentUser.uid
+
+    await firebase.firestore().collection('republics').doc(user).get()
+      .then(async (data) => {
+
+        data = data.data()
+        firebase.firestore().collection('republics').doc(user).update({
+          // apenas estes dois campos são atualizados
+          vacancies: data.vacancies-1 > 0 ? data.vacancies-1 : 0,
+          isAnnounced: data.vacancies-1 > 0 ? data.isAnnounced : false,
+          bathroom: data.bathroom,
+          bed: data.bed,
+          name: data.name,
+          bio: data.bio,
+          numberHome: data.numberHome,
+          street: data.street,
+          cep: data.cep,
+          city: data.city,
+          uf: data.uf,
+          latitude: data.latitude,
+          longitude: data.longitude,
+          tags: data.tags,
+          admUID: data.admUID,
+          photoURL: this.state.photoURL.length ? this.state.photoURL : data.photoURL,
+          gotUrl: data.gotUrl,
+          value: data.value
+        })
+
+        if(data.vacancies-1 == 0) {
+          alert('O anuncio foi fechado pois todas as vagas foram preenchidas')
+        }
+      })
+  }
+
+  confirmRemoveVacancies = async () => {
+    Alert.alert(
+      'Deseja remover uma vaga do anuncio?',
+      '',
+      [
+        { text: 'CANCEL', style: 'cancel' },
+        { text: 'OK', onPress: () => this.remove() }
+      ]
+    )
+  }
+
+  add = async () => {
+    user = firebase.auth().currentUser.uid
+
+    await firebase.firestore().collection('users').doc(this.state.repId).get()
+      .then(async (data) => {
+
+        nameUser = data.data().name
+        await firebase.firestore().collection('republics/' + user + '/members')
+        .doc(this.state.repId)
+        .set({
+          name: nameUser,
+          uid: this.state.repId
+        })
+      })
+
+    this.confirmRemoveVacancies()
+  }
+
+  confirmAdd = () => {
+    Alert.alert(
+      'Deseja adicionar usuário à república?',
+      this.state.repId,
+      [
+        { text: 'CANCEL', style: 'cancel' },
+        { text: 'OK', onPress: () => this.add() }
+      ]
+    )
+  }
+
   render() {
     console.log('Mensagens na render()', this.state.messages);
     return (
       <View style={{ flex: 1 }}>
+        <View style={{paddingTop: styles.screen.height*0.01, paddingLeft: styles.screen.width*0.85}}>
+          <FontAwesome name='user-plus' size={35} color='#c6dcf4' onPress={() => this.confirmAdd()} />
+        </View>
         <GiftedChat
           messages={this.state.messages}
           isAnimated={true}
