@@ -169,7 +169,7 @@ class Chat extends Component {
         })
 
         if(data.vacancies-1 == 0) {
-          alert('O anuncio foi fechado pois todas as vagas foram preenchidas')
+          Alert.alert('O anuncio foi fechado pois todas as vagas foram preenchidas', '')
         }
       })
   }
@@ -185,13 +185,32 @@ class Chat extends Component {
     )
   }
 
+  isAdd = async (user, repId) => {
+    resp = false
+    await firebase.firestore().collection('republics/' + user + '/members').doc(repId)
+      .get()
+      .then(async (data) => {
+        console.log(data.exists)
+        resp = data.exists
+      })
+
+    return resp
+  }
+
   add = async () => {
     user = firebase.auth().currentUser.uid
+    isAdd = false
 
     await firebase.firestore().collection('users').doc(this.state.repId).get()
       .then(async (data) => {
 
         nameUser = data.data().name
+        isAdd = await this.isAdd(user, this.state.repId)
+        if(isAdd) {
+          Alert.alert('Usuário já cadastrado na república', '')
+          return
+        }
+
         await firebase.firestore().collection('republics/' + user + '/members')
         .doc(this.state.repId)
         .set({
@@ -200,7 +219,8 @@ class Chat extends Component {
         })
       })
 
-    this.confirmRemoveVacancies()
+    if(!isAdd)
+      this.confirmRemoveVacancies()
   }
 
   confirmAdd = () => {

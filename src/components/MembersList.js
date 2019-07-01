@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Platform, Image, FlatList, ScrollView } from 'react-native';
+import { Alert, View, Platform, Image, FlatList, ScrollView } from 'react-native';
 //import firebase from 'react-native-firebase';
 import { styles } from './styles';
 import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, Container, Accordion, Button, Body, Title } from 'native-base';
@@ -42,9 +42,14 @@ class MembersList extends Component {
   }
 
   removeMember(item) {
-    var user = firebase.auth().currentUser;
+    var user = firebase.auth().currentUser.uid;
 
-    this.refRep.doc(user.uid).collection('members').doc(item.uid).delete().catch((error) => {
+    if(user == item.uid) {
+      Alert.alert('Impossível sair da própria república.', '')
+      return
+    }
+
+    this.refRep.doc(user).collection('members').doc(item.uid).delete().catch((error) => {
       console.error("Error deleting user: ", error);
     });
   }
