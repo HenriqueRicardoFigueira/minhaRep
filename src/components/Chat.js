@@ -234,13 +234,42 @@ class Chat extends Component {
     )
   }
 
+  // só quem recebeu o match que pode adicionar o outro
+  canAdd = async () => {
+    user = firebase.auth().currentUser.uid
+    resp = false
+
+     await firebase.firestore().collection('chats').doc(user)
+      .get()
+      .then(async (data) => {
+        if(!data.exists)
+          return
+
+        alert(data.data().repIds.length)
+        resp = data.data().repIds.indexOf(this.state.repId) == -1 ? false : true
+      })
+
+    return resp
+
+  }
+
+  getPlus = () => {
+    if(this.canAdd()) {
+      return (
+        <View style={{paddingTop: styles.screen.height*0.01, paddingLeft: styles.screen.width*0.85}}>
+          <FontAwesome name='user-plus' size={35} color='#c6dcf4' onPress={() => this.confirmAdd()} />
+        </View>
+      )
+    } else {
+      return null
+    }
+  }
+
   render() {
     console.log('Mensagens na render()', this.state.messages);
     return (
       <View style={{ flex: 1 }}>
-        <View style={{paddingTop: styles.screen.height*0.01, paddingLeft: styles.screen.width*0.85}}>
-          <FontAwesome name='user-plus' size={35} color='#c6dcf4' onPress={() => this.confirmAdd()} />
-        </View>
+        {this.getPlus()}
         <GiftedChat
           messages={this.state.messages}
           isAnimated={true}
