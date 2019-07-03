@@ -18,6 +18,10 @@ exports.sendPushNotification = functions.firestore.document('chats/{userId}/{rep
           notification: {
             title: "Mensagem de " + userName,
             body: message
+          },
+          data: {
+            invite: 'true', // remover este campo e passar dinamicamente
+            user: userName
           }
         }
 

@@ -3,6 +3,8 @@ import { handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert } fr
 import Login from '../../components/login';
 import RepCard from '../repCard';
 import { firebase } from '../../../Firebase'
+import fb_aux from 'react-native-firebase'
+import { Alert } from 'react-native';
 
 export default class LoginPage extends Component {
 
@@ -29,10 +31,38 @@ export default class LoginPage extends Component {
     }
   }
 
+  confirma = () => {
+
+  }
+
+  invite = (notification) => {
+    Alert.alert(
+      notification.data.user + ' te convidou a rep.', 'Deseja aceitar ?',
+      [
+        { text: 'CANCEL', style: 'cancel' },
+        { text: 'OK', onPress: () => this.confirma() }
+      ]
+    )
+  }
+
   createHandler = () => {
 
     this.notificationListener = firebase.notifications().onNotification((notification) => {
-      // do something
+      console.log(notification)
+
+      if(notification.data.invite == 'true') {
+        this.invite(notification)
+      } else {
+
+        const notificationForeground = new fb_aux.notifications.Notification()
+          .setTitle(notification.title)
+          .setBody(notification.body)
+          .setNotificationId(notification.notificationId)
+          .setSound('default')
+          .android.setChannelId('notification_rep')
+          .android.setPriority(fb_aux.notifications.Android.Priority.Max);
+
+          firebase.notifications().displayNotification(notificationForeground)}
     });
   }
 
