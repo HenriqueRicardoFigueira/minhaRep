@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">minharep</string>
     <string name="facebook_app_id">802005043499473</string>
+    <string name="notification_rep" translatable="false">fcm_default_channel</string>
 </resources>

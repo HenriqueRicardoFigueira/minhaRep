@@ -480,7 +480,7 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
-    this.checkPermission();
+    this.getToken();
 
     // verificando se app foi aberto por notificacao
     const notificationOpen = await firebase.notifications().getInitialNotification()
@@ -491,17 +491,6 @@ export default class App extends React.Component {
     this.getDados();
   }
 
-  // 1
-  async checkPermission() {
-    const enabled = await firebase.messaging().hasPermission()
-    if (enabled) {
-        this.getToken()
-    } else {
-        this.requestPermission()
-    }
-  }
-
-  // 3
   async getToken() {
     this.refUser = firebase.auth().currentUser.uid
     this.fcmToken = await firebase.messaging().getToken()
@@ -523,17 +512,6 @@ export default class App extends React.Component {
             token: this.fcmToken
           })
       })
-  }
-
-  async requestPermission() {
-    try {
-        await firebase.messaging().requestPermission()
-        // User has authorised
-        this.getToken()
-    } catch (error) {
-        // User has rejected permissions
-        console.log('permission rejected')
-    }
   }
 
   componentWillUnmount() {

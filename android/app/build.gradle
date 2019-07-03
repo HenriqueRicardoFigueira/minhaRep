@@ -166,6 +166,7 @@ dependencies {
 
     // BIBLIOTECA PARA RECEBER AS MENSAGENS DO FIREBASE
     implementation 'com.google.firebase:firebase-messaging:17.4.0'
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar' // <-- Add this line if you wish to use badge on Android
 
     // BIBLIOTECA PARA ACESSAR O FIREBASE
     implementation 'com.google.firebase:firebase-core:16.0.6'
