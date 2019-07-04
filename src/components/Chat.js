@@ -8,6 +8,7 @@ import { withNavigation } from 'react-navigation';
 import { GiftedChat } from 'react-native-gifted-chat'
 import firebaseSvc from './FirebaseSvc'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { createMessage, resolveName } from './message'
 
 
 class Chat extends Component {
@@ -174,13 +175,26 @@ class Chat extends Component {
       })
   }
 
+  // envia uma mensagem com alguns dados a mais
+  enviaConvite = async (close) => {
+    user = firebase.auth().currentUser.uid
+    repId = this.state.repId
+
+    await firebase.firestore()
+      .collection('chats')
+      .doc(user)
+      .collection(repId)
+      .doc()
+      .set(await createMessage('Você foi convidado para a república', user, {invite: true, user: await resolveName(user), closeAnnounce: close}))
+  }
+
   confirmRemoveVacancies = async () => {
     Alert.alert(
       'Deseja remover uma vaga do anuncio?',
-      '',
+      'Somente se o usuário aceitar.',
       [
-        { text: 'CANCEL', style: 'cancel' },
-        { text: 'OK', onPress: () => this.remove() }
+        { text: 'NÃO', style: 'cancel', onPress: () => this.enviaConvite(false) },
+        { text: 'SIM', onPress: () => this.enviaConvite(true) }
       ]
     )
   }
@@ -201,6 +215,7 @@ class Chat extends Component {
     user = firebase.auth().currentUser.uid
     isAdd = false
 
+    // verifica se user já foi adicionado
     await firebase.firestore().collection('users').doc(this.state.repId).get()
       .then(async (data) => {
 
@@ -210,23 +225,16 @@ class Chat extends Component {
           Alert.alert('Usuário já cadastrado na república', '')
           return
         }
-
-        await firebase.firestore().collection('republics/' + user + '/members')
-        .doc(this.state.repId)
-        .set({
-          name: nameUser,
-          uid: this.state.repId
-        })
       })
 
     if(!isAdd)
       this.confirmRemoveVacancies()
   }
 
-  confirmAdd = () => {
+  confirmAdd = async () => {
     Alert.alert(
       'Deseja adicionar usuário à república?',
-      this.state.repId,
+      await resolveName(this.state.repId),
       [
         { text: 'CANCEL', style: 'cancel' },
         { text: 'OK', onPress: () => this.add() }
@@ -245,7 +253,6 @@ class Chat extends Component {
         if(!data.exists)
           return
 
-        alert(data.data().repIds.length)
         resp = data.data().repIds.indexOf(this.state.repId) == -1 ? false : true
       })
 

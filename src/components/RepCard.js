@@ -8,7 +8,7 @@ import { withNavigation } from 'react-navigation';
 import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import { firebase } from '../../Firebase';
-import createMessage from './message';
+import { createMessage} from './message';
 import { Body } from 'native-base';
 
 class RepCard extends Component {
@@ -175,7 +175,7 @@ class RepCard extends Component {
       .doc(uid)
       .collection(repId)
       .doc('minicial')
-      .set(createMessage('Você tem um novo match', uid))
+      .set(await createMessage('Você tem um novo match', uid, null))
 
     chatRef = firebase.firestore().collection('chats').doc(uid)
     await chatRef.get().then((data) => {
