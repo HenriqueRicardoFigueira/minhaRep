@@ -7,7 +7,7 @@ import { handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert } fr
 import Swiper from 'react-native-swiper';
 import ChatList from '../../components/ChatList'
 import Options from '../options/index'
-import { Header, Button, Right, Left, Body } from 'native-base';
+import { Header, Button, Right, Left, Body, Input } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { EventRegister } from 'react-native-event-listeners'
 import { invite } from '../../components/message'
@@ -27,7 +27,8 @@ export default class App extends React.Component {
     this.position = new Animated.ValueXY()
     this.state = {
       currentIndex: 0,
-      tabColors: ['#6F6F7F','#eff7f9','#6F6F7F']
+      clickedSearch: false,
+      tabColors: ['#6F6F7F', '#eff7f9', '#6F6F7F']
     }
 
     this.rotate = this.position.x.interpolate({
@@ -70,14 +71,14 @@ export default class App extends React.Component {
 
     // essa var será lida pelo card e verificado se ele foi para 'SIM' ou 'NÃO'
     // -1 para NÃO - esquerda; 1 para SIM - direita.
-    this.dragTo = {drag: 'NONE'}
+    this.dragTo = { drag: 'NONE' }
   }
 
   removeSim = (gestureState, speed) => {
     this.dragTo.drag = 'SIM'
 
     // adicionando na lista dos matchs
-    repMatchs.push(Reps[this.state.currentIndex%Reps.length].id)
+    repMatchs.push(Reps[this.state.currentIndex % Reps.length].id)
 
     Animated.spring(this.position, {
       tension: speed,
@@ -133,15 +134,15 @@ export default class App extends React.Component {
     regionXmin = Math.floor(styles.screen.width * 0.03125)
     regionXmax = Math.floor(styles.screen.width * 0.98438)
 
-    if (y0*0.922 > styles.repImage.height) {
+    if (y0 * 0.922 > styles.repImage.height) {
       return
     }
 
     if (x0 > regionXmin && x0 < regionXmax) {
-      if(x0 >= Math.floor(styles.screen.width/2)) {
-        EventRegister.emit('changeImage', {pos: 1, currentIndex: this.state.currentIndex})  // avança a imagem
+      if (x0 >= Math.floor(styles.screen.width / 2)) {
+        EventRegister.emit('changeImage', { pos: 1, currentIndex: this.state.currentIndex })  // avança a imagem
       } else {
-        EventRegister.emit('changeImage', {pos: -1, currentIndex: this.state.currentIndex}) // retrocede a imagem
+        EventRegister.emit('changeImage', { pos: -1, currentIndex: this.state.currentIndex }) // retrocede a imagem
       }
     }
   }
@@ -152,15 +153,15 @@ export default class App extends React.Component {
     regionXmin = Math.floor(styles.screen.width * 0.03125)
     regionXmax = Math.floor(styles.screen.width * 0.98438)
 
-    if (y0*0.89 > styles.repImage.height) {
+    if (y0 * 0.89 > styles.repImage.height) {
       return
     }
 
     if (x0 > regionXmin && x0 < regionXmax) {
-      if(x0 >= Math.floor(styles.screen.width/2)) {
-        EventRegister.emit('changeImage', {pos: 1, currentIndex: this.state.currentIndex})  // avança a imagem
+      if (x0 >= Math.floor(styles.screen.width / 2)) {
+        EventRegister.emit('changeImage', { pos: 1, currentIndex: this.state.currentIndex })  // avança a imagem
       } else {
-        EventRegister.emit('changeImage', {pos: -1, currentIndex: this.state.currentIndex}) // retrocede a imagem
+        EventRegister.emit('changeImage', { pos: -1, currentIndex: this.state.currentIndex }) // retrocede a imagem
       }
     }
   }
@@ -178,7 +179,7 @@ export default class App extends React.Component {
 
         // se a distancia é igual a 0, então clicou
         if (gestureState.dx == 0 && gestureState.dy == 0) {
-            this.verificaCliqueFoto(gestureState.x0, gestureState.y0)
+          this.verificaCliqueFoto(gestureState.x0, gestureState.y0)
         } else {    // não foi clicado, foi movido
           if (gestureState.dx > 120) {
             this.removeSim(gestureState, 12)
@@ -193,11 +194,24 @@ export default class App extends React.Component {
 
     handleAndroidBackButton(exitAlert);
   }
-
+  verifyClick() {
+    if (this.state.clickedSearch == true) {
+      console.log(this.state.clickedSearch)
+      this.setState({
+        clickedSearch: false
+      })
+    }
+    else {
+      console.log(this.state.clickedSearch)
+      this.setState({
+        clickedSearch: true
+      })
+    }
+  }
   renderReps = () => {
     return Reps.map((item, i) => {
 
-      if (i == this.state.currentIndex%Reps.length && !this.isMatch(item.id)) {
+      if (i == this.state.currentIndex % Reps.length && !this.isMatch(item.id)) {
         return (
 
           <Animated.View
@@ -217,7 +231,7 @@ export default class App extends React.Component {
           </Animated.View>
         )
       }
-      else if (i == this.state.currentIndex%Reps.length + 1 && !this.isMatch(item.id)) {
+      else if (i == this.state.currentIndex % Reps.length + 1 && !this.isMatch(item.id)) {
         return (
           <Animated.View
             key={item.id} style={[{
@@ -270,21 +284,21 @@ export default class App extends React.Component {
       </View>]
     )
   }
-  selectTab(index){
+  selectTab(index) {
     if (index === 0) {
       pageIndex = index;
       this.setState({
-        tabColors: ['#eff7f9','#6F6F6F','#6F6F6F']
+        tabColors: ['#eff7f9', '#6F6F6F', '#6F6F6F']
       })
     } else if (index === 1) {
       pageIndex = index;
       this.setState({
-        tabColors: ['#6F6F6F','#eff7f9','#6F6F6F']
+        tabColors: ['#6F6F6F', '#eff7f9', '#6F6F6F']
       })
     } else if (index === 2) {
       pageIndex = index;
       this.setState({
-        tabColors: ['#6F6F6F','#6F6F6F','#eff7f9']
+        tabColors: ['#6F6F6F', '#6F6F6F', '#eff7f9']
       })
     }
   }
@@ -316,8 +330,8 @@ export default class App extends React.Component {
     const componentReturn = [...sectionOptionsArray, ...sectionRepsArray, ...sectionChatsListArray]
     const componentList = componentReturn.map((item, i) => item);
     return (
-      <Swiper ref='swiper' index = {1} onIndexChanged={(index) =>
-        this.selectTab(index)} showsPagination={false} style={{backgroundColor: "#eff7f9"}}>
+      <Swiper ref='swiper' index={1} onIndexChanged={(index) =>
+        this.selectTab(index)} showsPagination={false} style={{ backgroundColor: "#eff7f9" }}>
         {componentList}
       </Swiper>
     )
@@ -330,21 +344,38 @@ export default class App extends React.Component {
         <Header style={{ backgroundColor: '#c6dcf4' }} androidStatusBarColor='#b1cff0'>
           <Left>
             <Button transparent onPress={() => this.selectSection(0)}>
-              <Icon name='settings' size={this.iconSize}  color = {this.state.tabColors[0]} />
+              <Icon name='settings' size={this.iconSize} color={this.state.tabColors[0]} />
             </Button>
           </Left>
           <Body>
-            <Button transparent  onPress={() => this.selectSection(1)}>
-              <Icon name='home' size={this.iconSize} color = {this.state.tabColors[1]}></Icon>
+            <Button transparent onPress={() => this.selectSection(1)}>
+              <Icon name='home' size={this.iconSize} color={this.state.tabColors[1]}></Icon>
             </Button>
           </Body>
+          <Button transparent onPress={() => this.verifyClick()}>
+            <Icon name='magnifc' size={this.iconSize} color={this.state.tabColors[1]}></Icon>
+          </Button>
           <Right>
             <Button transparent onPress={() => this.selectSection(2)}>
-              <Icon ref= 'chat' name='wechat' size={this.iconSize}  color = {this.state.tabColors[2]}></Icon>
+              <Icon ref='chat' name='wechat' size={this.iconSize} color={this.state.tabColors[2]}></Icon>
             </Button>
           </Right>
         </Header>
-        {this.renderSection()}
+        {this.state.clickedSearch ?
+          (<View style={{ flex: 1 }}>
+
+            <Left>
+              <Input placeholder={"Pesquisar"} />
+            </Left>
+            <Right>
+              <Button >
+                <Text>
+                  Pesquisar
+              </Text>
+              </Button>
+            </Right>
+          </View>) : this.renderSection()
+        }
       </View>
     );
   }
@@ -363,10 +394,10 @@ export default class App extends React.Component {
   // verifica se a república está na lista de conversas do user
   // se estiver é porque já foi dado um match
   isMatch = (repId) => {
-    for (let i = 0; i < repMatchs.length; i ++) {
+    for (let i = 0; i < repMatchs.length; i++) {
       id = repMatchs[i]
 
-      if(id == repId) {
+      if (id == repId) {
         return true
       }
     }
@@ -387,15 +418,15 @@ export default class App extends React.Component {
   pontuation = (rep, tags) => {
     rep.point = 0
 
-    if(!rep.tags) {
+    if (!rep.tags) {
       return
     }
 
     // verifica cada key do user
     // a cada key que a rep tiver o mesmo valor, ganha um ponto
     Object.keys(tags).forEach((key) => {
-      if(tags[key] == rep.tags[key]) {
-        rep.point ++
+      if (tags[key] == rep.tags[key]) {
+        rep.point++
       }
     })
   }
@@ -404,15 +435,15 @@ export default class App extends React.Component {
     // recuperando as tags do usuario
     userRef = await firebase.firestore().collection('users').doc(this.refUser).get()
     tags = userRef._data.tags
-    if(!tags) {
+    if (!tags) {
       return
     }
 
     Reps = Reps.sort((rep1, rep2) => {
-      if(rep1.point == undefined) this.pontuation(rep1, tags)
-      if(rep2.point == undefined) this.pontuation(rep2, tags)
+      if (rep1.point == undefined) this.pontuation(rep1, tags)
+      if (rep2.point == undefined) this.pontuation(rep2, tags)
 
-      if(rep1.point > rep2.point) {
+      if (rep1.point > rep2.point) {
         return -1
       } else {
         return 1
@@ -420,7 +451,7 @@ export default class App extends React.Component {
     })
   }
 
-  getIndex = () => {return this.state.currentIndex == Reps.length ? Reps.length : this.state.currentIndex%Reps.length}
+  getIndex = () => { return this.state.currentIndex == Reps.length ? Reps.length : this.state.currentIndex % Reps.length }
 
   async getDados() {
     Reps = []   // 'limpando' a lista de reps
@@ -470,7 +501,7 @@ export default class App extends React.Component {
         // recupera os membros da república
         var id = repData._docs[i]._ref.id
         await this.getMembers(id, rep)
-        index ++
+        index++
       }
 
       await this.sortReps()
@@ -488,7 +519,7 @@ export default class App extends React.Component {
     if (notificationOpen) {
       this.selectSection(2)
       // se for uma notificacao de invite
-      if(notificationOpen.notification.data.invite == 'true') {
+      if (notificationOpen.notification.data.invite == 'true') {
         invite(notificationOpen.notification)
       }
     }
@@ -504,18 +535,18 @@ export default class App extends React.Component {
     ref.doc(this.refUser)
       .get()
       .then((userData) => {
-          userData = userData.data();
-          // update user with token
-          ref.doc(userData.uid).set({
-            age: userData.age,
-            bio: userData.bio,
-            email: userData.email,
-            gotUrl: userData.gotUrl,
-            name: userData.name,
-            photoURL: userData.photoURL,
-            uid: this.refUser,
-            token: this.fcmToken
-          })
+        userData = userData.data();
+        // update user with token
+        ref.doc(userData.uid).set({
+          age: userData.age,
+          bio: userData.bio,
+          email: userData.email,
+          gotUrl: userData.gotUrl,
+          name: userData.name,
+          photoURL: userData.photoURL,
+          uid: this.refUser,
+          token: this.fcmToken
+        })
       })
   }
 
