@@ -24,7 +24,8 @@ exports.sendPushNotification = functions.firestore.document('chats/{userId}/{rep
           data: {
             invite: invite.toString(),
             user: userName,
-            closeAnnounce: closeAnnounce.toString()
+            closeAnnounce: closeAnnounce.toString(),
+            userId: userId
           }
         }
 

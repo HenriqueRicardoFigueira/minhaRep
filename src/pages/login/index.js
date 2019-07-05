@@ -5,6 +5,7 @@ import RepCard from '../repCard';
 import { firebase } from '../../../Firebase'
 import fb_aux from 'react-native-firebase'
 import { Alert, AppState } from 'react-native';
+import { createMessage, resolveName } from '../../components/message';
 
 export default class LoginPage extends Component {
 
@@ -31,16 +32,28 @@ export default class LoginPage extends Component {
     }
   }
 
-  confirma = (notification) => {
+  confirma = async (notification, confirm, message) => {
+    uid = firebase.auth().currentUser.uid
+    userId = notification.data.userId
 
+    await firebase.firestore()
+      .collection('chats')
+      .doc(uid)
+      .collection(userId)
+      .doc()
+      .set(await createMessage(message, uid, {exists: false}))
+
+    if (confirm && notification.data.closeAnnounce == 'true') {
+      // close announce
+    }
   }
 
-  showDialog = (notification) => {
+  showDialog = async (notification) => {
     Alert.alert(
       notification.data.user + ' enviou um convite.', 'Deseja aceitar ?',
       [
-        { text: 'CANCEL', style: 'cancel' },
-        { text: 'OK', onPress: () => this.confirma(notification) }
+        { text: 'NÃO', onPress: async () => await this.confirma(notification, false, await resolveName(firebase.auth().currentUser.uid) + " não aceitou o convite.") },
+        { text: 'SIM', onPress: async () => await this.confirma(notification, true,  await resolveName(firebase.auth().currentUser.uid) + " aceitou o convite.") }
       ]
     )
   }
