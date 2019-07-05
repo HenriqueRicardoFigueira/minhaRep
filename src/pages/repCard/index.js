@@ -7,7 +7,7 @@ import { handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert } fr
 import Swiper from 'react-native-swiper';
 import ChatList from '../../components/ChatList'
 import Options from '../options/index'
-import { Header, Button, Right, Left, Body, Input } from 'native-base';
+import { Header, Button, Right, Left, Body, Input, Label } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { EventRegister } from 'react-native-event-listeners'
 import { invite } from '../../components/message'
@@ -28,6 +28,7 @@ export default class App extends React.Component {
     this.state = {
       currentIndex: 0,
       clickedSearch: false,
+      filter: null,
       tabColors: ['#6F6F7F', '#eff7f9', '#6F6F7F']
     }
 
@@ -208,10 +209,11 @@ export default class App extends React.Component {
       })
     }
   }
-  renderReps = () => {
+  renderReps = (filter) => {
     return Reps.map((item, i) => {
-
-      if (i == this.state.currentIndex % Reps.length && !this.isMatch(item.id)) {
+      if(filter === item.city)
+        console.log("noix")
+      if (i == this.state.currentIndex % Reps.length && !this.isMatch(item.id) && (filter == null || filter == item.city)) {
         return (
 
           <Animated.View
@@ -231,7 +233,7 @@ export default class App extends React.Component {
           </Animated.View>
         )
       }
-      else if (i == this.state.currentIndex % Reps.length + 1 && !this.isMatch(item.id)) {
+      else if (i == this.state.currentIndex % Reps.length + 1 && !this.isMatch(item.id) && (filter == null || filter == item.city)) {
         return (
           <Animated.View
             key={item.id} style={[{
@@ -272,7 +274,7 @@ export default class App extends React.Component {
   sectionReps() {
     return (
       [<View style={styles.screen.width * 2} key={0}>
-        {this.renderReps()}
+        {this.renderReps(this.state.filter)}
       </View>]
     )
   }
@@ -320,7 +322,10 @@ export default class App extends React.Component {
       this.selectTab(index)
     }
   }
-
+  filterAction = () => {
+    this.verifyClick()
+    this.sectionReps()
+  }
 
   renderSection = () => {
     const sectionOptionsArray = this.sectionOptions();
@@ -353,7 +358,7 @@ export default class App extends React.Component {
             </Button>
           </Body>
           <Button transparent onPress={() => this.verifyClick()}>
-            <Icon name='magnifc' size={this.iconSize} color={this.state.tabColors[1]}></Icon>
+            <Icon name='magnify' size={this.iconSize} color={this.state.tabColors[1]}></Icon>
           </Button>
           <Right>
             <Button transparent onPress={() => this.selectSection(2)}>
@@ -365,10 +370,10 @@ export default class App extends React.Component {
           (<View style={{ flex: 1 }}>
 
             <Left>
-              <Input placeholder={"Pesquisar"} />
+              <Input onChangeText={(filter) => this.setState({ filter })} placeholder={"Pesquisar"} />
             </Left>
             <Right>
-              <Button >
+              <Button onPress={() => this.filterAction()}>
                 <Text>
                   Pesquisar
               </Text>
