@@ -10,6 +10,7 @@ import Options from '../options/index'
 import { Header, Button, Right, Left, Body } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { EventRegister } from 'react-native-event-listeners'
+import { invite } from '../../components/message'
 
 var Reps = [];
 var repMatchs = null
@@ -486,6 +487,10 @@ export default class App extends React.Component {
     const notificationOpen = await firebase.notifications().getInitialNotification()
     if (notificationOpen) {
       this.selectSection(2)
+      // se for uma notificacao de invite
+      if(notificationOpen.notification.data.invite == 'true') {
+        invite(notificationOpen.notification)
+      }
     }
 
     this.getDados();
