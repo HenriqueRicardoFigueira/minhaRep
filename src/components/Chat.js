@@ -185,7 +185,7 @@ class Chat extends Component {
       .doc(user)
       .collection(repId)
       .doc()
-      .set(await createMessage('Você foi convidado para a república', user, {invite: true, user: await resolveName(user), closeAnnounce: close}))
+      .set(await createMessage('Você foi convidado para a república', user, {exists: true, invite: true, user: await resolveName(user), closeAnnounce: close}))
   }
 
   confirmRemoveVacancies = async () => {
@@ -236,8 +236,8 @@ class Chat extends Component {
       'Deseja adicionar usuário à república?',
       await resolveName(this.state.repId),
       [
-        { text: 'CANCEL', style: 'cancel' },
-        { text: 'OK', onPress: () => this.add() }
+        { text: 'NAO', style: 'cancel' },
+        { text: 'SIM', onPress: () => this.add() }
       ]
     )
   }

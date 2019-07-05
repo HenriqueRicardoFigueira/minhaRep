@@ -175,7 +175,7 @@ class RepCard extends Component {
       .doc(uid)
       .collection(repId)
       .doc('minicial')
-      .set(await createMessage('Você tem um novo match', uid, null))
+      .set(await createMessage('Você tem um novo match', uid, {exists: false}))
 
     chatRef = firebase.firestore().collection('chats').doc(uid)
     await chatRef.get().then((data) => {
