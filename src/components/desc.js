@@ -89,7 +89,7 @@ class Desc extends Component {
                         <Label> Membros: </Label>
                     </Left>
                     <Right>
-                        <Label>{this.state.members}</Label>
+                        <Label>{/*this.state.members*/}</Label>
                     </Right>
                 </ListItem>
                 <ListItem Text >

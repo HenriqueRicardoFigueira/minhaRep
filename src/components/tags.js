@@ -18,6 +18,7 @@ class Tags extends Component {
   }
 
   componentWillMount() {
+    /*
     if (this.props != null)
       t = this.props.tags
       console.log(t);
@@ -31,6 +32,7 @@ class Tags extends Component {
         this.setState({partyColor: '#8002ff' })
       if(t.wifi == true)
         this.setState({wifiColor: '#8002ff' })
+        */
   }
   // logica usada é quando alguem clicar em um botao ele troca de cor e seta um status true no estado
   // foi feito dessa forma pois tive problemas com setState em objetos
@@ -39,7 +41,6 @@ class Tags extends Component {
 
 
       <Row>
-        <Label>Tags:    </Label>
         <Button transparent onPress={() => {
           if (this.state.suitsColor == '#c6dcf4') {
             this.setState({ suitsColor: '#8002ff' });
