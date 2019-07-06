@@ -209,11 +209,27 @@ export default class App extends React.Component {
       })
     }
   }
+
+  // deixa tudo minúsculo
+  // remove ~ ´ ^ ç
+  formatName = (name) => {
+    return name.toLowerCase()
+                .replace('ã', 'a')
+                .replace('á', 'a')
+                .replace('â', 'a')
+                .replace('é', 'e')
+                .replace('ê', 'e')
+                .replace('í', 'i')
+                .replace('õ', 'o')
+                .replace('ô', 'o')
+                .replace('ç', 'c')
+  }
+
   renderReps = (filter) => {
     return Reps.map((item, i) => {
-      if(filter === item.city)
-        console.log("noix")
-      if (i == this.state.currentIndex % Reps.length && !this.isMatch(item.id) && (filter == null || filter == item.city)) {
+
+      console.log(item)
+      if (i == this.state.currentIndex % Reps.length && !this.isMatch(item.id) && (filter == null || this.formatName(filter) == this.formatName(item.city))) {
         return (
 
           <Animated.View
@@ -233,7 +249,7 @@ export default class App extends React.Component {
           </Animated.View>
         )
       }
-      else if (i == this.state.currentIndex % Reps.length + 1 && !this.isMatch(item.id) && (filter == null || filter == item.city)) {
+      else if (i == this.state.currentIndex % Reps.length + 1 && !this.isMatch(item.id) && (filter == null || this.formatName(filter) == this.formatName(item.city))) {
         return (
           <Animated.View
             key={item.id} style={[{
@@ -322,9 +338,10 @@ export default class App extends React.Component {
       this.selectTab(index)
     }
   }
+
   filterAction = () => {
     this.verifyClick()
-    this.sectionReps()
+    this.forceUpdate()
   }
 
   renderSection = () => {
