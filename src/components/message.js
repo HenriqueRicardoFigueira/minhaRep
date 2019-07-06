@@ -57,23 +57,82 @@ createChannel = () => {
   firebase.notifications().android.createChannel(channel)
 }
 
+close = async (uid, data) => {
+  firebase.firestore().collection('republics').doc(data.admUID).update({
+    // apenas estes dois campos são atualizados
+    vacancies: data.vacancies-1,
+    isAnnounced: data.vacancies-1 == 0 ? false : data.isAnnounced,
+    bathroom: data.bathroom,
+    bed: data.bed,
+    name: data.name,
+    bio: data.bio,
+    numberHome: data.numberHome,
+    street: data.street,
+    cep: data.cep,
+    city: data.city,
+    uf: data.uf,
+    latitude: data.latitude,
+    longitude: data.longitude,
+    tags: data.tags,
+    admUID: data.admUID,
+    photoURL: data.photoURL,
+    gotUrl: data.gotUrl,
+    value: data.value
+  })
+
+  if(data.vacancies-1 == 0) {
+    await firebase.firestore()
+      .collection('chats')
+      .doc(uid)
+      .collection(data.admUID)
+      .doc()
+      .set(await createMessage('Anunciou da república foi fechado.', uid, {exists: false}))
+  }
+}
+
 confirma = async (notification, confirm, message) => {
   uid = firebase.auth().currentUser.uid
   userId = notification.data.userId
 
-  uid = 'VQgYIhsbngRYH1wNM9uYJ94rnll1'
-  userId = 'XSfhxSVNswMgkrJphNgCGFonnAP2'
+  await firebase.firestore().collection('republics').doc(userId).get()
+    .then(async (data) => {
 
-  await firebase.firestore()
-    .collection('chats')
-    .doc(uid)
-    .collection(userId)
-    .doc()
-    .set(await createMessage(message, uid, {exists: false}))
+      data = data.data()
+      if(!confirm) {
+        // responde com não
+        await firebase.firestore()
+          .collection('chats')
+          .doc(uid)
+          .collection(userId)
+          .doc()
+          .set(await createMessage(message, uid, {exists: false}))
 
-  if (confirm && notification.data.closeAnnounce == 'true') {
-    // close announce
-  }
+          return
+      } else if (data.vacancies == 0) {
+        alert('O anuncio já foi fechado. Por favor, contate o admin da rep.')
+        return
+      }
+
+      // responde com sim
+      await firebase.firestore()
+        .collection('chats')
+        .doc(uid)
+        .collection(userId)
+        .doc()
+        .set(await createMessage(message, uid, {exists: false}))
+
+      // adiciona na república
+      await firebase.firestore().collection('republics/' + userId + '/members')
+      .doc(userId)
+      .set({
+        name: await resolveName(uid),
+        uid: uid
+      })
+
+      if(notification.data.closeAnnounce == 'true') {
+        await close(uid, data)
+      }
+  })
 }
 
 showDialog = async (notification) => {
