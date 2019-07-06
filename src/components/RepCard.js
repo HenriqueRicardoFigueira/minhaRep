@@ -179,11 +179,16 @@ class RepCard extends Component {
 
     chatRef = firebase.firestore().collection('chats').doc(uid)
     await chatRef.get().then((data) => {
-      repIds = data.data().repIds ? data.data().repIds : []
-      repIds.push(repId)
-      chatRef.update({
-        repIds: repIds
-      })
+
+      if(data.exists) {
+        repIds = data.data().repIds ? data.data().repIds : []
+        repIds.push(repId)
+        chatRef.update({
+          repIds: repIds
+        })
+      } else {
+        firebase.firestore().collection('chats').doc(uid).set({repIds: [repId]})
+      }
     })
 
     this.props.navigation.navigate('Chat', { repId });
