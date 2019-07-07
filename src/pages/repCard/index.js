@@ -270,7 +270,7 @@ export default class App extends React.Component {
           </Animated.View>
         )
       } else {
-        return null;
+        return null
       }
     }).reverse()
   }
@@ -345,6 +345,7 @@ export default class App extends React.Component {
   }
 
   renderSection = () => {
+
     const sectionOptionsArray = this.sectionOptions();
     const sectionRepsArray = this.sectionReps();
     const sectionChatsListArray = this.sectionChatsList();
@@ -387,12 +388,12 @@ export default class App extends React.Component {
           (<View style={{ flex: 1 }}>
 
             <Left>
-              <Input onChangeText={(filter) => this.setState({ filter })} placeholder={"Pesquisar"} />
+              <Input onChangeText={(filter) => this.setState({ filter })} placeholder={"Filtrar por cidades!"} />
             </Left>
             <Right>
-              <Button onPress={() => this.filterAction()}>
-                <Text>
-                  Pesquisar
+              <Button style={styles.button} onPress={() => this.filterAction()}>
+                <Text style={styles.buttonText}>
+                  Filtrar
               </Text>
               </Button>
             </Right>
