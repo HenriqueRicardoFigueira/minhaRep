@@ -76,6 +76,10 @@ class MembersList extends Component {
   }
 
   renderHeader = (item) => {
+    if(!item) {
+      return null
+    }
+
     return (
       <View style={styles.content}>
         <Text style={styles.listText}>
