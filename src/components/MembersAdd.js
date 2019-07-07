@@ -5,6 +5,7 @@ import { styles } from './styles';
 import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, Container, Accordion, Button, Body, Title } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { firebase } from '../../Firebase'
+const cnlg = require('cnlg')
 
 class MembersList extends Component {
   constructor(props) {
@@ -14,9 +15,11 @@ class MembersList extends Component {
     this.refRep = firebase.firestore().collection('republics');
 
     this.state = {
-      users: [],
-      isLoading: true
+      isLoading: true,
+      nameSearch: '',
     };
+
+    this.usersBackup = []
   }
   _isMounted = false;
 
@@ -40,8 +43,9 @@ class MembersList extends Component {
         })
       });
       if (this._isMounted) {
+
+        this.usersBackup = users
         this.setState({
-          users,
           isLoading: false
         })
       }
@@ -81,25 +85,28 @@ class MembersList extends Component {
     );
   }
 
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View>
-          <Text />
-        </View>
-      )
-    }
+  searchByName = (nameSearch) => {
+    this.users = this.usersBackup.map(item => {
+      if(item && item.name.toLowerCase().startsWith(nameSearch.toLowerCase())) {
+        return item;
+      } else {
+        return undefined
+      }
+    })
+  }
+
+  search = () => {
+    if (this.state.nameSearch == '')
+      return
+
+    this.searchByName(this.state.nameSearch)
+
     return (
       <ScrollView>
         <Container>
-          <Header style={styles.header}>
-            <Body style={styles.body}>
-              <Title style={styles.buttonText}>Membros</Title>
-            </Body>
-          </Header>
           <Content padder style={styles.content}>
             <Accordion
-              dataArray={this.state.users}
+              dataArray={this.users}
               animation={true}
               expanded={true}
               renderHeader={this.renderHeader}
@@ -108,6 +115,28 @@ class MembersList extends Component {
           </Content>
         </Container>
       </ScrollView>
+    )
+  }
+
+  render() {
+    return (
+      <View>
+        <Header style={styles.header}>
+          <Body style={styles.body}>
+            <Title style={styles.buttonText}>Membros</Title>
+          </Body>
+        </Header>
+
+        <View style={{borderColor: 'gray', borderWidth: 2, borderRadius: 10, padding: 10}}>
+          <Input
+            value={this.state.nameSearch}
+            autoCapitalize={'none'}
+            onChangeText={(nameSearch) => this.setState({ nameSearch })}
+          />
+        </View>
+
+        {this.search()}
+      </View>
     );
   }
 }
