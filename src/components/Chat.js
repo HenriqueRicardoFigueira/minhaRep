@@ -17,17 +17,19 @@ class Chat extends Component {
 
     this.ref = firebase.firestore().collection('chats'); // COLEÇÃO DE DESTINO DAS CONVERSAS
     this.refUsers = firebase.firestore().collection('users'); // COLEÇÃO DOS USERS
+    var repId = props.navigation.getParam('repId', 'Default');
 
     this.state = {
       messages: [],
 
-      repId: '',
+      repId: repId,
       name: '',
       photoURL: '',
 
       isLoaded: false,
     };
 
+    this.plus = false
   };
 
   get user() {
@@ -47,11 +49,6 @@ class Chat extends Component {
 
   componentDidMount = async () => {
     if (!this.isLoaded) {
-
-      var repId = this.props.navigation.getParam('repId', 'Default');
-      this.setState({
-        repId: repId,
-      })
       this.ref = this.refFirestore;
 
       var userUid = firebaseSvc.uid;
@@ -78,10 +75,12 @@ class Chat extends Component {
       this.setState(this.state);
       this.isLoaded = true
     }
+
+    this.canAdd()
   }
 
   componentWillMount = () => {
-    this.setState(this.state);
+    //this.setState(this.state);
   }
 
   refOn = async () => {
@@ -199,6 +198,7 @@ class Chat extends Component {
     )
   }
 
+  // retorna true o false se o usuário já foi adicionado
   isAdd = async (user, repId) => {
     resp = false
     await firebase.firestore().collection('republics/' + user + '/members').doc(repId)
@@ -247,21 +247,19 @@ class Chat extends Component {
     user = firebase.auth().currentUser.uid
     resp = false
 
-     await firebase.firestore().collection('chats').doc(user)
+    await firebase.firestore().collection('chats/' + this.state.repId + '/' + user).doc('minicial')
       .get()
-      .then(async (data) => {
-        if(!data.exists)
-          return
-
-        resp = data.data().repIds.indexOf(this.state.repId) == -1 ? false : true
+      .then((data) => {
+        if(data.exists)
+          resp = true
       })
 
-    return resp
-
+    this.plus = resp
+    this.forceUpdate()
   }
 
   getPlus = () => {
-    if(this.canAdd()) {
+    if(this.plus) {
       return (
         <View style={{paddingTop: styles.screen.height*0.01, paddingLeft: styles.screen.width*0.85}}>
           <FontAwesome name='user-plus' size={35} color='#c6dcf4' onPress={() => this.confirmAdd()} />
@@ -284,7 +282,6 @@ class Chat extends Component {
           user={this.user}
         />
       </View>
-
     );
   }
 
