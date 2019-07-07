@@ -118,7 +118,7 @@ confirma = async (notification, confirm, message) => {
         .collection('chats')
         .doc(uid)
         .collection(userId)
-        .doc()
+        .doc(uid)
         .set(await createMessage(message, uid, {exists: false}))
 
       // adiciona na república
