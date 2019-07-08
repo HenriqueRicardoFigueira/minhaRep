@@ -6,6 +6,7 @@ import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, C
 import { withNavigation } from 'react-navigation';
 import { firebase } from '../../Firebase'
 import firebaseSvc from './FirebaseSvc';
+import { resolveName } from './message'
 
 if (!Array.prototype.forEach) {
   Array.prototype.forEach = function (fun /*, thisp*/) {
@@ -41,9 +42,10 @@ class ChatList extends Component {
 
     await this.refChats.doc(userUid).get().then(function (doc) { // PEGA OS DADOS DO DOCUMENTO
       if (doc.exists) {
-        doc.data().repIds.forEach(repId => { // PASSA O ARRAY DO BANCO PRO STATE
+        doc.data().repIds.forEach(async repId => { // PASSA O ARRAY DO BANCO PRO STATE
           chats.push({
-            repId
+            repId,
+            repName: await resolveName(repId)
           });
         });
       } else {
@@ -65,6 +67,7 @@ class ChatList extends Component {
   }
 
   exclude = async (otherUser) => {
+    this.forceUpdate()
     var user = firebase.auth().currentUser.uid
     docs = await firebase.firestore().collection('chats/' + user + '/' + otherUser).get()
 
@@ -91,11 +94,11 @@ class ChatList extends Component {
       })
   }
 
-  confirmExclude = (item) => {
+  confirmExclude = async (item) => {
     otherUser = item.repId
 
     Alert.alert(
-      'Deseja apagar a conversa com ' + otherUser + ' ?',
+      'Deseja apagar a conversa com ' + await resolveName(otherUser) + ' ?',
       '',
       [
         { text: 'CANCEL', style: 'cancel' },
@@ -105,14 +108,18 @@ class ChatList extends Component {
   }
 
   renderContent = (item) => {
+    // diminuindo o botao
+    var style = Object.assign({}, styles.button)
+    style.width = styles.screen.width*0.4
+
     return (
       <View style={styles.containerList}>
-        <Container style={styles.content}>
-          <Button style={styles.button} onPress={() => this.chatNavigate(item)}>
+        <Container style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#eff7f9'}}>
+          <Button style={style} onPress={() => this.chatNavigate(item)}>
             <Text style={styles.buttonText}> Ver </Text>
           </Button>
 
-          <Button style={styles.button} onPress={() => this.confirmExclude(item)}>
+          <Button style={style} onPress={() => this.confirmExclude(item)}>
             <Text style={styles.buttonText}> Excluir </Text>
           </Button>
         </Container>
@@ -124,7 +131,7 @@ class ChatList extends Component {
     return (
       <View style={styles.content}>
         <Text style={styles.listText}>
-          {item.repId}
+          {item.repName}
         </Text>
       </View>
     );
