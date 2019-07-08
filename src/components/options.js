@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Text, List, ListItem, Left, Right, Body, Container } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
+import { View, TouchableOpacity, ScrollView, Image, Alert, Linking } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { firebase } from '../../Firebase'
 import { styles } from './styles';
@@ -123,6 +123,21 @@ class Options extends Component {
             </Left>
             <Container style={{ backgroundColor: '#eff7f9', width: this.buttonWidth * 0.8, height: this.buttonHeight, position: "absolute", left: 30 }}>
               <Text style={{ color: '#6F6F6F', alignSelf: "center" }}>Criar anúncio</Text>
+            </Container>
+            <Right>
+              <Icon active name="chevron-right" size={this.iconSize * 0.6} />
+            </Right>
+          </Button>
+        </ListItem>
+        <ListItem button>
+          <Button transparent style={{ width: this.buttonWidth, height: this.buttonHeight }} onPress={() => {
+            Linking.openURL('https://youtu.be/kiY4BuIUQsk');
+          }}>
+            <Left>
+              <Icon active name="help-circle-outline" size={this.iconSize}></Icon>
+            </Left>
+            <Container style={{ backgroundColor: '#eff7f9', width: this.buttonWidth * 0.8, height: this.buttonHeight, position: "absolute", left: 30 }}>
+              <Text style={{ color: '#6F6F6F', alignSelf: "center" }}>Ajuda</Text>
             </Container>
             <Right>
               <Icon active name="chevron-right" size={this.iconSize * 0.6} />
