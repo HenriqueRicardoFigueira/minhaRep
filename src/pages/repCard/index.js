@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, View, Animated, PanResponder, Text } from 'react-native';
+import { Alert, View, Animated, PanResponder, Text, TextInput } from 'react-native';
 import RepCard from '../../components/RepCard';
 import { firebase } from '../../../Firebase'
 import { styles } from '../../components/styles';
@@ -7,7 +7,7 @@ import { handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert } fr
 import Swiper from 'react-native-swiper';
 import ChatList from '../../components/ChatList'
 import Options from '../options/index'
-import { Header, Button, Right, Left, Body, Input, Label } from 'native-base';
+import { Header, Button, Right, Left, Body, Label } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { EventRegister } from 'react-native-event-listeners'
 import { invite } from '../../components/message'
@@ -27,9 +27,8 @@ export default class App extends React.Component {
     this.position = new Animated.ValueXY()
     this.state = {
       currentIndex: 0,
-      clickedSearch: false,
       filter: null,
-      tabColors: ['#6F6F7F', '#eff7f9', '#6F6F7F']
+      tabColors: ['#6F6F7F', '#eff7f9', '#6F6F7F', '#6F6F7F' ]
     }
 
     this.rotate = this.position.x.interpolate({
@@ -167,8 +166,7 @@ export default class App extends React.Component {
     }
   }
 
-  async componentWillMount() {
-
+  componentWillMount() {
     this.PanResponder = PanResponder.create({
 
       onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -195,43 +193,32 @@ export default class App extends React.Component {
 
     handleAndroidBackButton(exitAlert);
   }
-  verifyClick() {
-    if (this.state.clickedSearch == true) {
-      console.log(this.state.clickedSearch)
-      this.setState({
-        clickedSearch: false
-      })
-    }
-    else {
-      console.log(this.state.clickedSearch)
-      this.setState({
-        clickedSearch: true
-      })
-    }
-  }
 
   // deixa tudo minúsculo
   // remove ~ ´ ^ ç
   formatName = (name) => {
     return name.toLowerCase()
-                .replace('ã', 'a')
-                .replace('á', 'a')
-                .replace('â', 'a')
-                .replace('é', 'e')
-                .replace('ê', 'e')
-                .replace('í', 'i')
-                .replace('õ', 'o')
-                .replace('ô', 'o')
-                .replace('ç', 'c')
+      .replace('ã', 'a')
+      .replace('á', 'a')
+      .replace('â', 'a')
+      .replace('é', 'e')
+      .replace('ê', 'e')
+      .replace('í', 'i')
+      .replace('õ', 'o')
+      .replace('ô', 'o')
+      .replace('ç', 'c')
   }
 
   renderReps = (filter) => {
     return Reps.map((item, i) => {
+      if (filter != null) {
+        filter = this.formatName(filter)
+        cp = this.formatName(item.city)
+      }
 
-      console.log(item)
-      if (i == this.state.currentIndex % Reps.length && !this.isMatch(item.id) && (filter == null || this.formatName(filter) == this.formatName(item.city))) {
+      if (i == this.state.currentIndex % Reps.length && !this.isMatch(item.id) && (filter == null || filter == cp)) {
+
         return (
-
           <Animated.View
             {...this.PanResponder.panHandlers}
             key={item.id} style={[this.rotateAndTranslate, { height: styles.screen.height - 120, width: styles.screen.width, padding: 10, position: 'absolute' }]}>
@@ -287,6 +274,20 @@ export default class App extends React.Component {
       ]
     )
   }
+
+  sectionSearch() {
+    return (
+      [<View style={{ flex: 1 }} key={0}>
+          <TextInput onChangeText={(filter) => this.setState({ filter })} placeholder={"Filtrar por cidades!"} /> 
+          <Button style={styles.button} onPress={() => this.selectSection(1)}>
+            <Text style={styles.buttonText}>
+              Filtrar
+            </Text>
+          </Button>
+      </View>]
+    )
+  }
+
   sectionReps() {
     return (
       [<View style={styles.screen.width * 2} key={0}>
@@ -302,46 +303,54 @@ export default class App extends React.Component {
       </View>]
     )
   }
+
   selectTab(index) {
     if (index === 0) {
       pageIndex = index;
       this.setState({
-        tabColors: ['#eff7f9', '#6F6F6F', '#6F6F6F']
+        tabColors: ['#eff7f9', '#6F6F6F', '#6F6F6F', '#6F6F6F']
       })
     } else if (index === 1) {
       pageIndex = index;
       this.setState({
-        tabColors: ['#6F6F6F', '#eff7f9', '#6F6F6F']
+        tabColors: ['#6F6F6F', '#eff7f9', '#6F6F6F','#6F6F6F']
       })
     } else if (index === 2) {
       pageIndex = index;
       this.setState({
-        tabColors: ['#6F6F6F', '#6F6F6F', '#eff7f9']
+        tabColors: ['#6F6F6F', '#6F6F6F','#6F6F6F', '#eff7f9']
+      })
+    }
+    else if (index === 3) {
+      pageIndex = index;
+      this.setState({
+        tabColors: ['#6F6F6F', '#6F6F6F', '#eff7f9', '#6F6F6F']
       })
     }
   }
   selectSection(index) {
+    //this.verifyClick()
     if (index === 0) {
       finalIndex = index - pageIndex;
-      console.log(finalIndex)
+      console.log(finalIndex, index, pageIndex)
       this.refs.swiper.scrollBy(finalIndex);
       this.selectTab(index)
     } else if (index === 1) {
       finalIndex = index - pageIndex;
-      console.log(finalIndex)
+      console.log(finalIndex, index, pageIndex)
       this.refs.swiper.scrollBy(finalIndex);
       this.selectTab(index)
     } else if (index === 2) {
       finalIndex = index - pageIndex;
-      console.log(finalIndex)
+      console.log(finalIndex, index, pageIndex)
+      this.refs.swiper.scrollBy(finalIndex);
+      this.selectTab(index)
+    } else if (index == 3) {
+      finalIndex = index - pageIndex;
+      console.log(finalIndex, index, pageIndex)
       this.refs.swiper.scrollBy(finalIndex);
       this.selectTab(index)
     }
-  }
-
-  filterAction = () => {
-    this.verifyClick()
-    this.forceUpdate()
   }
 
   renderSection = () => {
@@ -349,8 +358,9 @@ export default class App extends React.Component {
     const sectionOptionsArray = this.sectionOptions();
     const sectionRepsArray = this.sectionReps();
     const sectionChatsListArray = this.sectionChatsList();
+    const sectionSearchArray = this.sectionSearch();
 
-    const componentReturn = [...sectionOptionsArray, ...sectionRepsArray, ...sectionChatsListArray]
+    const componentReturn = [...sectionOptionsArray, ...sectionRepsArray, ...sectionChatsListArray, ...sectionSearchArray]
     const componentList = componentReturn.map((item, i) => item);
     return (
       <Swiper ref='swiper' index={1} onIndexChanged={(index) =>
@@ -375,30 +385,18 @@ export default class App extends React.Component {
               <Icon name='home' size={this.iconSize} color={this.state.tabColors[1]}></Icon>
             </Button>
           </Body>
-          <Button transparent onPress={() => this.verifyClick()}>
-            <Icon name='magnify' size={this.iconSize} color={this.state.tabColors[1]}></Icon>
-          </Button>
+          <Body>
+            <Button transparent onPress={() => this.selectSection(3)}>
+              <Icon name='magnify' size={this.iconSize} ></Icon>
+            </Button>
+          </Body>
           <Right>
             <Button transparent onPress={() => this.selectSection(2)}>
               <Icon ref='chat' name='wechat' size={this.iconSize} color={this.state.tabColors[2]}></Icon>
             </Button>
           </Right>
         </Header>
-        {this.state.clickedSearch ?
-          (<View style={{ flex: 1 }}>
-
-            <Left>
-              <Input onChangeText={(filter) => this.setState({ filter })} placeholder={"Filtrar por cidades!"} />
-            </Left>
-            <Right>
-              <Button style={styles.button} onPress={() => this.filterAction()}>
-                <Text style={styles.buttonText}>
-                  Filtrar
-              </Text>
-              </Button>
-            </Right>
-          </View>) : this.renderSection()
-        }
+        {this.renderSection()}
       </View>
     );
   }
