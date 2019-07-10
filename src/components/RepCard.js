@@ -161,6 +161,22 @@ class RepCard extends Component {
     }
   }
 
+  addInChat = async (uid, repId) => {
+    chatRef = firebase.firestore().collection('chats').doc(uid)
+    await chatRef.get().then((data) => {
+
+      if(data.exists) {
+        repIds = data.data().repIds ? data.data().repIds : []
+        repIds.push(repId)
+        chatRef.update({
+          repIds: repIds
+        })
+      } else {
+        firebase.firestore().collection('chats').doc(uid).set({repIds: [repId]})
+      }
+    })
+  }
+
   match = async () => {
     repId = this.state.id
     uid = firebase.auth().currentUser.uid
@@ -177,19 +193,9 @@ class RepCard extends Component {
       .doc('minicial')
       .set(await createMessage('Você tem um novo match', uid, {exists: false}))
 
-    chatRef = firebase.firestore().collection('chats').doc(uid)
-    await chatRef.get().then((data) => {
-
-      if(data.exists) {
-        repIds = data.data().repIds ? data.data().repIds : []
-        repIds.push(repId)
-        chatRef.update({
-          repIds: repIds
-        })
-      } else {
-        firebase.firestore().collection('chats').doc(uid).set({repIds: [repId]})
-      }
-    })
+    // adiciona na lista de conversas de ambos
+    await this.addInChat(uid, repId)
+    await this.addInChat(repId, uid)
 
     this.props.navigation.navigate('Chat', { repId });
   }
