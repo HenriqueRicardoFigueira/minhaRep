@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Platform, Image, FlatList, ScrollView } from 'react-native';
+import { TextInput, View, Platform, Image, FlatList, ScrollView } from 'react-native';
 //import firebase from 'react-native-firebase';
 import { styles } from './styles';
 import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, Container, Accordion, Button, Body, Title } from 'native-base';
@@ -101,7 +101,7 @@ class MembersList extends Component {
 
   search = () => {
     if (this.state.nameSearch == '')
-      return
+      return ( <View style={{backgroundColor: '#eff7f9'}} />)
 
     this.searchByName(this.state.nameSearch)
 
@@ -131,13 +131,13 @@ class MembersList extends Component {
           </Body>
         </Header>
 
-        <View style={{borderColor: 'gray', borderWidth: 2, borderRadius: 10, padding: 10}}>
-          <Input
-            value={this.state.nameSearch}
-            autoCapitalize={'none'}
-            onChangeText={(nameSearch) => this.setState({ nameSearch })}
-          />
-        </View>
+        <TextInput
+          style={{height: styles.screen.height*0.08, borderColor: 'gray', borderWidth: 2, borderRadius: 10}}
+          value={this.state.nameSearch}
+          autoCapitalize={'none'}
+          placeholder={'Digite um nome'}
+          onChangeText={(nameSearch) => this.setState({ nameSearch })}
+        />
 
         {this.search()}
       </View>
