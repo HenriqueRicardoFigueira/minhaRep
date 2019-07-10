@@ -165,8 +165,18 @@ showNotification = (notification) => {
     firebase.notifications().displayNotification(notificationForeground)
 }
 
+// envia uma mensagem com alguns dados a mais
+enviaConvite = async (user, repId, close) => {
+  await firebase.firestore()
+    .collection('chats')
+    .doc(user)
+    .collection(repId)
+    .doc()
+    .set(await createMessage('Você foi convidado para a república', user, {exists: true, invite: true, user: await resolveName(user), closeAnnounce: close}))
+}
+
 requestPermission()
 createChannel()
 createHandler()
 
-module.exports = { createMessage, resolveName, invite }
+module.exports = { createMessage, resolveName, invite, enviaConvite }

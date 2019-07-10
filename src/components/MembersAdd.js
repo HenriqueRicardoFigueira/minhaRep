@@ -5,7 +5,8 @@ import { styles } from './styles';
 import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, Container, Accordion, Button, Body, Title } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { firebase } from '../../Firebase'
-//const cnlg = require('cnlg')
+const cnlg = require('cnlg')
+import { enviaConvite } from './message'
 
 class MembersList extends Component {
   constructor(props) {
@@ -53,14 +54,15 @@ class MembersList extends Component {
   }
 
   addMember = async (item) => {
-    var user = firebase.auth().currentUser;
+    var uid = firebase.auth().currentUser.uid;
+    var repId = item.uid
 
-    this.refRep.doc(user.uid).collection('members').doc(item.uid).set({
-      uid: item.uid,
-      name: item.name,
-    }).catch((error) => {
-      console.error("Error addding user: ", error);
-    })
+    if(repId == uid) {
+      alert('Impossível enviar convite para si mesmo.')
+    } else {
+      await enviaConvite(uid, repId, false)
+      alert('Convite enviado')
+    }
   }
 
   renderContent = (item) => {
@@ -89,9 +91,24 @@ class MembersList extends Component {
     );
   }
 
+// deixa tudo minúsculo
+  // remove ~ ´ ^ ç
+  formatName = (name) => {
+    return name.toLowerCase()
+      .replace('ã', 'a')
+      .replace('á', 'a')
+      .replace('â', 'a')
+      .replace('é', 'e')
+      .replace('ê', 'e')
+      .replace('í', 'i')
+      .replace('õ', 'o')
+      .replace('ô', 'o')
+      .replace('ç', 'c')
+  }
+
   searchByName = (nameSearch) => {
     this.users = this.usersBackup.map(item => {
-      if(item && item.name.toLowerCase().startsWith(nameSearch.toLowerCase())) {
+      if(item && this.formatName(item.name).startsWith(this.formatName(nameSearch))) {
         return item;
       } else {
         return undefined

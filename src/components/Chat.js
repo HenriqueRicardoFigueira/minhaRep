@@ -8,7 +8,7 @@ import { withNavigation } from 'react-navigation';
 import { GiftedChat } from 'react-native-gifted-chat'
 import firebaseSvc from './FirebaseSvc'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { createMessage, resolveName } from './message'
+import { resolveName, enviaConvite } from './message'
 
 
 class Chat extends Component {
@@ -174,26 +174,16 @@ class Chat extends Component {
       })
   }
 
-  // envia uma mensagem com alguns dados a mais
-  enviaConvite = async (close) => {
+  confirmRemoveVacancies = async () => {
     user = firebase.auth().currentUser.uid
     repId = this.state.repId
 
-    await firebase.firestore()
-      .collection('chats')
-      .doc(user)
-      .collection(repId)
-      .doc()
-      .set(await createMessage('Você foi convidado para a república', user, {exists: true, invite: true, user: await resolveName(user), closeAnnounce: close}))
-  }
-
-  confirmRemoveVacancies = async () => {
     Alert.alert(
       'Deseja remover uma vaga do anuncio?',
       'Somente se o usuário aceitar.',
       [
-        { text: 'NÃO', style: 'cancel', onPress: () => this.enviaConvite(false) },
-        { text: 'SIM', onPress: () => this.enviaConvite(true) }
+        { text: 'NÃO', style: 'cancel', onPress: async () => await enviaConvite(user, repId, false) },
+        { text: 'SIM', onPress: async () => await enviaConvite(user, repId, true) }
       ]
     )
   }
