@@ -8,7 +8,7 @@ import { withNavigation } from 'react-navigation';
 import { GiftedChat } from 'react-native-gifted-chat'
 import firebaseSvc from './FirebaseSvc'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { resolveName, enviaConvite } from './message'
+import { resolveName, enviaConvite, isAdd } from './message'
 
 let messages = [];
 
@@ -165,48 +165,35 @@ class Chat extends Component {
       'Deseja remover uma vaga do anuncio?',
       'Somente se o usuário aceitar.',
       [
-        { text: 'NÃO', style: 'cancel', onPress: async () => await enviaConvite(user, repId, false) },
-        { text: 'SIM', onPress: async () => await enviaConvite(user, repId, true) }
+        { text: 'NÃO', style: 'cancel', onPress: async () => await enviaConvite(user, repId, false, true) },
+        { text: 'SIM', onPress: async () => await enviaConvite(user, repId, true, true) }
       ]
     )
   }
 
-  // retorna true o false se o usuário já foi adicionado
-  isAdd = async (user, repId) => {
-    resp = false
-    await firebase.firestore().collection('republics/' + user + '/members').doc(repId)
-      .get()
-      .then(async (data) => {
-        console.log(data.exists)
-        resp = data.exists
-      })
-
-    return resp
-  }
-
   add = async () => {
     user = firebase.auth().currentUser.uid
-    isAdd = false
+    isInRep = false
 
     // verifica se user já foi adicionado
     await firebase.firestore().collection('users').doc(this.state.repId).get()
       .then(async (data) => {
 
         nameUser = data.data().name
-        isAdd = await this.isAdd(user, this.state.repId)
-        if (isAdd) {
+        isInRep = await isAdd(user, this.state.repId)
+        if(isInRep) {
           Alert.alert('Usuário já cadastrado na república', '')
           return
         }
       })
 
-    if (!isAdd)
+    if(!isInRep)
       this.confirmRemoveVacancies()
   }
 
   confirmAdd = async () => {
     Alert.alert(
-      'Deseja adicionar usuário à república?',
+      'Deseja enviar um convite ao usuário?',
       await resolveName(this.state.repId),
       [
         { text: 'NAO', style: 'cancel' },
@@ -249,7 +236,7 @@ class Chat extends Component {
       <View style={{ flex: 1 }}>
         {this.getPlus()}
         <GiftedChat
-          messages={messages}
+          messages={this.state.messages}
           isAnimated={true}
           onSend={this.send}
           user={this.user}

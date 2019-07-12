@@ -118,12 +118,12 @@ confirma = async (notification, confirm, message) => {
         .collection('chats')
         .doc(uid)
         .collection(userId)
-        .doc(uid)
+        .doc()
         .set(await createMessage(message, uid, {exists: false}))
 
       // adiciona na república
       await firebase.firestore().collection('republics/' + userId + '/members')
-      .doc(userId)
+      .doc(uid)
       .set({
         name: await resolveName(uid),
         uid: uid
@@ -165,8 +165,40 @@ showNotification = (notification) => {
     firebase.notifications().displayNotification(notificationForeground)
 }
 
+// verifica se o usuário já está na república
+isAdd = async (user, repId) => {
+  resp = false
+  await firebase.firestore().collection('republics/' + user + '/members').doc(repId)
+    .get()
+    .then( data => {
+      resp = data.exists
+    }
+  )
+
+  return resp
+}
+
+//verifica se a rep possui vaga
+hasVaccancies = async (user) => {
+  resp = true
+  await firebase.firestore().collection('republics').doc(user).get()
+    .then(async (data) => {
+      resp = data.data().vacancies
+    })
+
+  return !resp
+}
+
 // envia uma mensagem com alguns dados a mais
-enviaConvite = async (user, repId, close) => {
+enviaConvite = async (user, repId, close, verifyVac) => {
+  if(await isAdd(user, repId)) {
+    alert('Usuário já cadastrado na república.')
+    return
+  } else if(verifyVac && await hasVaccancies(user)) {
+    alert('Não há mais vagas em tua república. Por favor, convide o usuário pela Lista de Membros.', '')
+    return
+  }
+
   await firebase.firestore()
     .collection('chats')
     .doc(user)
@@ -179,4 +211,4 @@ requestPermission()
 createChannel()
 createHandler()
 
-module.exports = { createMessage, resolveName, invite, enviaConvite }
+module.exports = { createMessage, resolveName, invite, enviaConvite, isAdd }
