@@ -67,6 +67,7 @@ class ChatList extends Component {
   }
 
   exclude = async (otherUser) => {
+    this.forceUpdate()
     var user = firebase.auth().currentUser.uid
     docs = await firebase.firestore().collection('chats/' + user + '/' + otherUser).get()
 
@@ -91,17 +92,6 @@ class ChatList extends Component {
 
         firebase.firestore().collection('chats').doc(user).update({repIds})
       })
-
-    var i
-    var chats = this.state.chats
-    for(i = 0; i < chats.length; i ++) {
-      if(chats[i].repId == otherUser) {
-        break
-      }
-    }
-
-    chats.splice(i, 1)
-    this.setState({chats,})
   }
 
   confirmExclude = async (item) => {

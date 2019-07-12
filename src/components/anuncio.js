@@ -157,7 +157,7 @@ class Anuncio extends Component {
           ></Input>
         </Item>
 
-        <Tags tags = {this.props}/>
+        <Tags />
 
 
         <Button style={styles.button} onPress={() => this.registerRep()}>
