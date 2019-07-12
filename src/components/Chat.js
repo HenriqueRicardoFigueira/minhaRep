@@ -87,9 +87,9 @@ class Chat extends Component {
     var messages = [];
     await this.refFirestore
       .limit(20)
+      .orderBy('createdAt')
       .onSnapshot(function (querySnapshot) { // PUXA AS MENSAGENS DO BANCO E COLOCAM EM UM ARRAY 
         querySnapshot.forEach(function (doc) {
-          console.log('DATA FROM SNAPSHOT', doc);
           const { createdAt, text, user } = doc.data();
           const timestamp = new Date(createdAt);
 
@@ -100,30 +100,28 @@ class Chat extends Component {
             user,
           };
           messages.push(message);
-          console.log('MESSAGES ARRAY', messages);
         });
       });
 
-    console.log('SETSTATE ANTES', this.state.messages);
     this.setState({ // COLOCA O ARRAY EM STATE
       messages,
     })
-    this.setState(this.state);
-    console.log('SETSTATE DEPOIS', this.state.messages);
   }
 
   send = messages => { // MANDA AS MENSAGES
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
+      const timestamp = firebaseSvc.timestamp;
       const message = {
         text,
         user,
-        createdAt: firebaseSvc.timestamp,
+        createdAt: timestamp
       };
-      console.log('SEND FUNC, MESSAGE: ', message)
+
+      //this.refFirestore.doc(timestamp).set(message);
       this.refFirestore.add(message);
+
     };
-    this.setState(this.state);
   };
 
   onSend(messages = []) { // ATUALIZA A API
@@ -134,8 +132,6 @@ class Chat extends Component {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }))
-    console.log('ONSEND METHOD MESSAGES depois: ', messages)
-    this.setState(this.state)
   }
 
 
@@ -248,7 +244,6 @@ class Chat extends Component {
   }
 
   render() {
-    console.log('Mensagens na render()', this.state.messages);
     return (
       <View style={{ flex: 1 }}>
         {this.getPlus()}
@@ -257,6 +252,7 @@ class Chat extends Component {
           isAnimated={true}
           onSend={this.send}
           user={this.user}
+          inverted={false}
         />
       </View>
     );
