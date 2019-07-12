@@ -8,7 +8,7 @@ import { withNavigation } from 'react-navigation';
 import { GiftedChat } from 'react-native-gifted-chat'
 import firebaseSvc from './FirebaseSvc'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { resolveName, enviaConvite } from './message'
+import { resolveName, enviaConvite, isAdd } from './message'
 
 
 class Chat extends Component {
@@ -188,36 +188,23 @@ class Chat extends Component {
     )
   }
 
-  // retorna true o false se o usuário já foi adicionado
-  isAdd = async (user, repId) => {
-    resp = false
-    await firebase.firestore().collection('republics/' + user + '/members').doc(repId)
-      .get()
-      .then(async (data) => {
-        console.log(data.exists)
-        resp = data.exists
-      })
-
-    return resp
-  }
-
   add = async () => {
     user = firebase.auth().currentUser.uid
-    isAdd = false
+    isInRep = false
 
     // verifica se user já foi adicionado
     await firebase.firestore().collection('users').doc(this.state.repId).get()
       .then(async (data) => {
 
         nameUser = data.data().name
-        isAdd = await this.isAdd(user, this.state.repId)
-        if(isAdd) {
+        isInRep = await isAdd(user, this.state.repId)
+        if(isInRep) {
           Alert.alert('Usuário já cadastrado na república', '')
           return
         }
       })
 
-    if(!isAdd)
+    if(!isInRep)
       this.confirmRemoveVacancies()
   }
 

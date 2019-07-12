@@ -5,6 +5,7 @@ import { styles } from './styles';
 import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, Container, Accordion, Button, Body, Title } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { firebase } from '../../Firebase'
+import { resolveName } from './message'
 
 class MembersList extends Component {
   constructor(props) {
@@ -41,7 +42,13 @@ class MembersList extends Component {
     });
   }
 
-  removeMember(item) {
+  remove = (user, item) => {
+    this.refRep.doc(user).collection('members').doc(item.uid).delete().catch((error) => {
+      console.error("Error deleting user: ", error);
+    });
+  }
+
+  async removeMember (item) {
     var user = firebase.auth().currentUser.uid;
 
     if(user == item.uid) {
@@ -49,9 +56,14 @@ class MembersList extends Component {
       return
     }
 
-    this.refRep.doc(user).collection('members').doc(item.uid).delete().catch((error) => {
-      console.error("Error deleting user: ", error);
-    });
+    Alert.alert(
+      'Deseja remover o usuário da república?',
+      await resolveName(item.uid),
+      [
+        { text: 'NAO', style: 'cancel' },
+        { text: 'SIM', onPress: () => this.remove(user, item) }
+      ]
+    )
   }
 
   renderContent = (item) => {

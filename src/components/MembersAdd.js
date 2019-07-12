@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TextInput, View, Platform, Image, FlatList, ScrollView } from 'react-native';
+import { Alert, TextInput, View, Platform, Image, FlatList, ScrollView } from 'react-native';
 //import firebase from 'react-native-firebase';
 import { styles } from './styles';
 import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, Container, Accordion, Button, Body, Title } from 'native-base';
@@ -60,8 +60,18 @@ class MembersList extends Component {
     if(repId == uid) {
       alert('Impossível enviar convite para si mesmo.')
     } else {
-      await enviaConvite(uid, repId, false)
-      alert('Convite enviado')
+      Alert.alert(
+        'Deseja enviar um convite para ' + await resolveName(repId),
+        '',
+        [
+          { text: 'NÃO' },
+          { text: 'SIM', onPress: async () => {
+              await enviaConvite(uid, repId, false)
+              //alert('Convite enviado')
+            }
+          }
+        ]
+      )
     }
   }
 

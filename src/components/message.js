@@ -165,8 +165,26 @@ showNotification = (notification) => {
     firebase.notifications().displayNotification(notificationForeground)
 }
 
+// verifica se o usuário já está na república
+isAdd = async (user, repId) => {
+  resp = false
+  await firebase.firestore().collection('republics/' + user + '/members').doc(repId)
+    .get()
+    .then( data => {
+      resp = data.exists
+    }
+  )
+
+  return resp
+}
+
 // envia uma mensagem com alguns dados a mais
 enviaConvite = async (user, repId, close) => {
+  if(await isAdd(user, repId)) {
+    alert('Usuário já cadastrado na república.')
+    return
+  }
+
   await firebase.firestore()
     .collection('chats')
     .doc(user)
@@ -179,4 +197,4 @@ requestPermission()
 createChannel()
 createHandler()
 
-module.exports = { createMessage, resolveName, invite, enviaConvite }
+module.exports = { createMessage, resolveName, invite, enviaConvite, isAdd }
