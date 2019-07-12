@@ -178,10 +178,24 @@ isAdd = async (user, repId) => {
   return resp
 }
 
+//verifica se a rep possui vaga
+hasVaccancies = async (user) => {
+  resp = true
+  await firebase.firestore().collection('republics').doc(user).get()
+    .then(async (data) => {
+      resp = data.data().vacancies
+    })
+
+  return !resp
+}
+
 // envia uma mensagem com alguns dados a mais
-enviaConvite = async (user, repId, close) => {
+enviaConvite = async (user, repId, close, verifyVac) => {
   if(await isAdd(user, repId)) {
     alert('Usuário já cadastrado na república.')
+    return
+  } else if(verifyVac && await hasVaccancies(user)) {
+    alert('Não há mais vagas em tua república. Por favor, convide o usuário pela Lista de Membros.', '')
     return
   }
 

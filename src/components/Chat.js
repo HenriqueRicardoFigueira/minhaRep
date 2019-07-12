@@ -182,8 +182,8 @@ class Chat extends Component {
       'Deseja remover uma vaga do anuncio?',
       'Somente se o usuário aceitar.',
       [
-        { text: 'NÃO', style: 'cancel', onPress: async () => await enviaConvite(user, repId, false) },
-        { text: 'SIM', onPress: async () => await enviaConvite(user, repId, true) }
+        { text: 'NÃO', style: 'cancel', onPress: async () => await enviaConvite(user, repId, false, true) },
+        { text: 'SIM', onPress: async () => await enviaConvite(user, repId, true, true) }
       ]
     )
   }

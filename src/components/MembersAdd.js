@@ -66,8 +66,8 @@ class MembersList extends Component {
         [
           { text: 'NÃO' },
           { text: 'SIM', onPress: async () => {
-              await enviaConvite(uid, repId, false)
-              //alert('Convite enviado')
+              await enviaConvite(uid, repId, false, false)
+              alert('Convite enviado')
             }
           }
         ]
