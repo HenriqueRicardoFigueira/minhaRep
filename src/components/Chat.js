@@ -10,6 +10,7 @@ import firebaseSvc from './FirebaseSvc'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { resolveName, enviaConvite } from './message'
 
+let messages = [];
 
 class Chat extends Component {
   constructor(props) {
@@ -31,7 +32,6 @@ class Chat extends Component {
 
     this.plus = false
   };
-
   get user() {
     return {
       _id: firebaseSvc.uid,
@@ -40,52 +40,32 @@ class Chat extends Component {
     };
   }
 
-  get refFirestore() { // REF DA FIRESTORE
+  get ref() {
     return firebase.firestore()
       .collection('chats')
       .doc(firebaseSvc.uid)
       .collection(this.state.repId)
   }
 
-  componentDidMount = async () => {
-    if (!this.isLoaded) {
-      this.ref = this.refFirestore;
+  parse = snapshot => {
+    const { timestamp: numberStamp, text, user } = snapshot.val();
+    const { key: id } = snapshot;
+    const { key: _id } = snapshot; //needed for giftedchat
+    const timestamp = new Date(numberStamp);
 
-      var userUid = firebaseSvc.uid;
-      await this.refUsers //PUXA OS DADOS DO USUÁRIO
-        .doc(userUid)
-        .get()
-        .then((userData) => {
-          if (userData.exists) {
-            const userP = userData.data();
-            this.setState({
-              name: userP.name,
-              photoURL: userP.photoURL,
-            })
-          } else {
-            console.log("Não existe usuário");
-          }
-        })
+    const message = {
+      id,
+      _id,
+      timestamp,
+      text,
+      user,
+    };
+    return message;
+  };
 
-      this.refOn(message => // PEGAS AS MSGS DA CONVERSA ANTERIOR
-        this.setState(previousState => ({
-          messages: GiftedChat.append(previousState.messages, message),
-        }))
-      );
-      this.setState(this.state);
-      this.isLoaded = true
-    }
-
-    this.canAdd()
-  }
-
-  componentWillMount = () => {
-    //this.setState(this.state);
-  }
 
   refOn = async () => {
-    var messages = [];
-    await this.refFirestore
+    await this.ref
       .limit(20)
       .onSnapshot(function (querySnapshot) { // PUXA AS MENSAGENS DO BANCO E COLOCAM EM UM ARRAY 
         querySnapshot.forEach(function (doc) {
@@ -106,13 +86,15 @@ class Chat extends Component {
 
     console.log('SETSTATE ANTES', this.state.messages);
     this.setState({ // COLOCA O ARRAY EM STATE
-      messages,
+      messages: messages
     })
-    this.setState(this.state);
+    //this.setState(this.state);
     console.log('SETSTATE DEPOIS', this.state.messages);
-  }
+}
 
-  send = messages => { // MANDA AS MENSAGES
+
+  // send the message to the Backend
+  send = messages => {
     for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
       const message = {
@@ -120,24 +102,25 @@ class Chat extends Component {
         user,
         createdAt: firebaseSvc.timestamp,
       };
-      console.log('SEND FUNC, MESSAGE: ', message)
-      this.refFirestore.add(message);
-    };
-    this.setState(this.state);
+      this.ref.add(message);
+    }
   };
 
-  onSend(messages = []) { // ATUALIZA A API
-    var arr = this.state.messages.shift();
-    this.setState({
-      messages: arr,
-    })
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }))
-    console.log('ONSEND METHOD MESSAGES depois: ', messages)
-    this.setState(this.state)
+  refOff() {
+    this.ref.off();
   }
 
+  
+  componentDidMount() {
+    this.refOn(message =>
+      this.setState(previousState => ({
+        messages: GiftedChat.append(previousState.messages, message),
+      }))
+    );
+  }
+  componentWillUnmount() {
+    this.refOff();
+  }
 
   remove = async () => {
     user = firebase.auth().currentUser.uid
@@ -148,8 +131,8 @@ class Chat extends Component {
         data = data.data()
         firebase.firestore().collection('republics').doc(user).update({
           // apenas estes dois campos são atualizados
-          vacancies: data.vacancies-1 > 0 ? data.vacancies-1 : 0,
-          isAnnounced: data.vacancies-1 > 0 ? data.isAnnounced : false,
+          vacancies: data.vacancies - 1 > 0 ? data.vacancies - 1 : 0,
+          isAnnounced: data.vacancies - 1 > 0 ? data.isAnnounced : false,
           bathroom: data.bathroom,
           bed: data.bed,
           name: data.name,
@@ -168,7 +151,7 @@ class Chat extends Component {
           value: data.value
         })
 
-        if(data.vacancies-1 == 0) {
+        if (data.vacancies - 1 == 0) {
           Alert.alert('O anuncio foi fechado pois todas as vagas foram preenchidas', '')
         }
       })
@@ -211,13 +194,13 @@ class Chat extends Component {
 
         nameUser = data.data().name
         isAdd = await this.isAdd(user, this.state.repId)
-        if(isAdd) {
+        if (isAdd) {
           Alert.alert('Usuário já cadastrado na república', '')
           return
         }
       })
 
-    if(!isAdd)
+    if (!isAdd)
       this.confirmRemoveVacancies()
   }
 
@@ -240,7 +223,7 @@ class Chat extends Component {
     await firebase.firestore().collection('chats/' + this.state.repId + '/' + user).doc('minicial')
       .get()
       .then((data) => {
-        if(data.exists)
+        if (data.exists)
           resp = true
       })
 
@@ -249,9 +232,9 @@ class Chat extends Component {
   }
 
   getPlus = () => {
-    if(this.plus) {
+    if (this.plus) {
       return (
-        <View style={{paddingTop: styles.screen.height*0.01, paddingLeft: styles.screen.width*0.85}}>
+        <View style={{ paddingTop: styles.screen.height * 0.01, paddingLeft: styles.screen.width * 0.85 }}>
           <FontAwesome name='user-plus' size={35} color='#c6dcf4' onPress={() => this.confirmAdd()} />
         </View>
       )
@@ -266,7 +249,7 @@ class Chat extends Component {
       <View style={{ flex: 1 }}>
         {this.getPlus()}
         <GiftedChat
-          messages={this.state.messages}
+          messages={messages}
           isAnimated={true}
           onSend={this.send}
           user={this.user}
@@ -274,7 +257,6 @@ class Chat extends Component {
       </View>
     );
   }
-
 }
 
 export default withNavigation(Chat);

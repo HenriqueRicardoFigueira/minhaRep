@@ -5,7 +5,7 @@ import { styles } from './styles';
 import { Item, Input, Label, Thumbnail, Header, Content, List, ListItem, Text, Container, Accordion, Button, Body, Title } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { firebase } from '../../Firebase'
-const cnlg = require('cnlg')
+//const cnlg = require('cnlg')
 import { enviaConvite } from './message'
 
 class MembersList extends Component {
