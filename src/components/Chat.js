@@ -170,20 +170,6 @@ class Chat extends Component {
       })
   }
 
-  confirmRemoveVacancies = async () => {
-    user = firebase.auth().currentUser.uid
-    repId = this.state.repId
-
-    Alert.alert(
-      'Deseja remover uma vaga do anuncio?',
-      'Somente se o usuário aceitar.',
-      [
-        { text: 'NÃO', style: 'cancel', onPress: async () => await enviaConvite(user, repId, false, true) },
-        { text: 'SIM', onPress: async () => await enviaConvite(user, repId, true, true) }
-      ]
-    )
-  }
-
   add = async () => {
     user = firebase.auth().currentUser.uid
     isInRep = false
@@ -195,13 +181,13 @@ class Chat extends Component {
         nameUser = data.data().name
         isInRep = await isAdd(user, this.state.repId)
         if(isInRep) {
-          Alert.alert('Usuário já cadastrado na república', '')
+          Alert.alert('Usuário já cadastrado na república', 'Convite não enviado')
           return
         }
       })
 
     if(!isInRep)
-      this.confirmRemoveVacancies()
+      await enviaConvite(user, this.state.repId, true)
   }
 
   confirmAdd = async () => {

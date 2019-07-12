@@ -15,7 +15,7 @@ exports.sendPushNotification = functions.firestore.document('chats/{userId}/{rep
 
   if(event._fieldsProto.data && event._fieldsProto.data.mapValue.fields.exists.booleanValue) {
     invite = event._fieldsProto.data.mapValue.fields.invite.booleanValue
-    closeAnnounce = event._fieldsProto.data.mapValue.fields.exists.booleanValue
+    closeAnnounce = event._fieldsProto.data.mapValue.fields.closeAnnounce.booleanValue
   }
 
   //get the token of the user receiving the message

@@ -108,7 +108,7 @@ confirma = async (notification, confirm, message) => {
           .set(await createMessage(message, uid, {exists: false}))
 
           return
-      } else if (data.vacancies == 0) {
+      } else if (notification.data.closeAnnounce == 'true' && data.vacancies == 0) {
         alert('O anuncio já foi fechado. Por favor, contate o admin da rep.')
         return
       }
@@ -190,11 +190,11 @@ hasVaccancies = async (user) => {
 }
 
 // envia uma mensagem com alguns dados a mais
-enviaConvite = async (user, repId, close, verifyVac) => {
+enviaConvite = async (user, repId, close) => {
   if(await isAdd(user, repId)) {
     alert('Usuário já cadastrado na república.')
     return
-  } else if(verifyVac && await hasVaccancies(user)) {
+  } else if(close && await hasVaccancies(user)) {
     alert('Não há mais vagas em tua república. Por favor, convide o usuário pela Lista de Membros.', '')
     return
   }
@@ -205,6 +205,8 @@ enviaConvite = async (user, repId, close, verifyVac) => {
     .collection(repId)
     .doc()
     .set(await createMessage('Você foi convidado para a república', user, {exists: true, invite: true, user: await resolveName(user), closeAnnounce: close}))
+
+  alert('Convite enviado')
 }
 
 requestPermission()
