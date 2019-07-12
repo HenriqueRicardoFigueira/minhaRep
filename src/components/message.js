@@ -17,11 +17,11 @@ createMessage = async (text, uid, data) => {
 }
 
 resolveName = async (uid) => {
-	name = ''
+	name = uid
 	await firebase.firestore().collection('users').doc(uid)
 	.get()
 	.then( data => {
-		name = data._data.name
+		name = data.data().name
 	})
 
 	return name

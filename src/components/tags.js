@@ -8,13 +8,17 @@ import { EventRegister } from 'react-native-event-listeners'
 
 class Tags extends Component {
 
-  state = {
-    iconSize: styles.screen.width * 0.1,
-    garageColor: '#c6dcf4',
-    suitsColor: '#c6dcf4',
-    wifiColor: '#c6dcf4',
-    partyColor: '#c6dcf4',
-    petsColor: '#c6dcf4',
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      iconSize: styles.screen.width * 0.1,
+      garageColor: '#c6dcf4',
+      suitsColor: '#c6dcf4',
+      wifiColor: '#c6dcf4',
+      partyColor: '#c6dcf4',
+      petsColor: '#c6dcf4',
+    }
   }
 
   componentWillMount() {
