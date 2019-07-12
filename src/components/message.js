@@ -118,12 +118,12 @@ confirma = async (notification, confirm, message) => {
         .collection('chats')
         .doc(uid)
         .collection(userId)
-        .doc(uid)
+        .doc()
         .set(await createMessage(message, uid, {exists: false}))
 
       // adiciona na república
       await firebase.firestore().collection('republics/' + userId + '/members')
-      .doc(userId)
+      .doc(uid)
       .set({
         name: await resolveName(uid),
         uid: uid

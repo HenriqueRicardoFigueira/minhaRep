@@ -223,7 +223,7 @@ class Chat extends Component {
 
   confirmAdd = async () => {
     Alert.alert(
-      'Deseja adicionar usuário à república?',
+      'Deseja enviar um convite ao usuário?',
       await resolveName(this.state.repId),
       [
         { text: 'NAO', style: 'cancel' },
